@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="android-chrome-512x512.png">
+    <meta name="msapplication-TileColor" content="#4A00E0">
+    <meta name="theme-color" content="#4A00E0">
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Tabs - Fatima Rabi</title>
+    <meta name="description" content="A spec campaign for Headspace that visualizes the chaotic mental searches running through our heads during peaceful moments. Creative concept by Fatima Rabi.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="project-2.css">
+</head>
+<body>
+    <a href="#main-content" class="skip-link">skip to content</a>
+    
+    <header class="header" role="banner">
+        <div class="container">
+            <nav class="nav" role="navigation">
+                <a href="index.html" class="logo">
+                    <img src="images/fatima-logo-horizontal.svg" 
+                         alt="Fatima Rabi - Marketing Communications Designer"
+                         width="180" 
+                         height="36">
+                </a>
+                
+                <button class="menu-toggle" aria-expanded="false">☰</button>
+                
+                <ul class="nav-menu">
+                    <li><a href="index.html#work">Work</a></li>
+                    <li><a href="index.html#about">About</a></li>
+                    <li><a href="personal.html">Personal</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <main id="main-content">
+        <section class="project-hero">
+            <div class="container">
+                <div class="project-hero-content">
+                    <a href="index.html#work" class="back-link">← back to work</a>
+                    
+                    <div class="project-meta">02 — Headspsce</div>
+                    <h1 class="project-title">Mental Tabs</h1>
+                    <p class="project-overview">
+                        Brains are terrible at taking breaks. Always running too many tabs at once, and saving its loudest questions for the quietest moments.
+                    </p>
+                    <button class="info-button" onclick="toggleHeadspace()">+ Why Headspace?</button>
+
+                    <div id="headspace-info" class="headspace-explanation">
+                        <p>Headspace already talks to people dealing with racing minds, but most meditation apps focus on the solution. This campaign starts with the problem everyone recognizes: that feeling when your brain won't shut up. It's relatable before it's aspirational, which feels more honest than promising instant zen.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="project-content">
+            <div class="container">
+                <!-- Strategy Section -->
+                <div class="strategy-section">
+                    <h2 class="strategy-title">Two (uncomfortable) truths.</h2>
+                    
+                    <div class="insights-grid">
+                        <div class="insight-card">
+                            <h3>Insight #1</h3>
+                            <p>Our brains <em>never stop working</em>. Even during moments designed for peace, our minds spiral through scenarios. By the way, did you remember to lock the door?</p>
+                        </div>
+                        
+                        <div class="insight-card">
+                            <h3>Insight #2</h3>
+                            <p>Search histories are windows into our <em>mental chaos</em>. All those anxieties, random questions, and overthinking moments.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="strategy-conclusion">
+                        <h3>The Campaign</h3>
+                        <p>Make those uninvited thoughts visible as literal Google queries floating above people's heads.</p>
+                    </div>
+                </div>
+
+                <!-- Hero Executions -->
+                <div class="hero-executions">
+                    <div class="primary-executions">
+                        <div class="execution-showcase">
+                            <img src="images/headspace-execution-1.png" 
+                                 alt="Young man relaxing on couch with mental search queries floating overhead" 
+                                 class="execution-image">
+                        </div>
+                        
+                        <div class="execution-showcase">
+                            <img src="images/headspace-execution-2.png" 
+                                 alt="Woman in bed with anxious search queries visualized above her head" 
+                                 class="execution-image">
+                        </div>
+                    </div>
+                    
+                    <div class="executions-intro">
+                        <p>Every execution follows the same formula: people in peaceful moments, with their chaotic mental searches made visible. It's the overthinking we all recognize, finally given form.</p>
+                    </div>
+
+                    <!-- Process Sketch Section - NOW POSITIONED HERE -->
+                    <div class="process-section">
+                        <button class="info-button" onclick="toggleProcess()">+ The napkin version.</button>
+                        
+                        <div id="process-info" class="process-explanation">
+                            <div class="sketch-showcase">
+                                <img src="images/headspace-sketches.jpg" 
+                                     alt="Early concept sketches showing people with floating search queries - the original napkin version of the Mental Tabs campaign" 
+                                     class="process-sketch">
+                                <p class="sketch-caption">The glamorous part of the creative process.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Wide Execution -->
+                <div class="wide-execution-section">
+                    <img src="images/headspace-execution-wide.png" 
+                         alt="Digital ad showing woman with coffee and laptop, mental search queries floating overhead" 
+                         class="wide-execution-image">
+                </div>
+
+                <!-- Tagline & Conclusion -->
+                <div class="tagline-section">
+                    <h3>Close your mental tabs.</h3>
+                    <p>The tagline acknowledges that our brains work like overloaded browsers. Nothing can clear our cache entirely, but Headspace can help us close those tabs we don't need.</p>
+                </div>
+            </div>
+        </section>
+        
+        <nav class="project-navigation">
+            <div class="container">
+                <div class="nav-grid">
+                    <a href="project-1.html" class="nav-link">
+                        <div class="nav-content">
+                            <div class="nav-label">← previous</div>
+                            <div class="nav-title">Connection Campaign</div>
+                        </div>
+                    </a>
+                    <a href="project-3.html" class="nav-link">
+                        <div class="nav-content">
+                            <div class="nav-label">next project →</div>
+                            <div class="nav-title">No One Knows</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </main>
+    
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-content">
+                <p>© 2025 — Fatima Rabi</p>
+                <a href="https://www.linkedin.com/in/fatima-rabi-191758298/" class="footer-linkedin" target="_blank" rel="noopener">LinkedIn</a>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="project-2.js"></script>
+</body>
+</html>

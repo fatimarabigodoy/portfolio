@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="android-chrome-512x512.png">
+<meta name="msapplication-TileColor" content="#4A00E0">
+<meta name="theme-color" content="#4A00E0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Work</title>
+    <meta name="description" content="Personal creative projects and explorations by Fatima Rabi.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="personal.css">
+</head>
+<body>
+    <a href="#main-content" class="skip-link">skip to content</a>
+    
+    <header class="header" role="banner">
+        <div class="container">
+            <nav class="nav" role="navigation">
+                <a href="index.html" class="logo">
+    <img src="images/fatima-logo-horizontal.svg" 
+         alt="Fatima Rabi - Marketing Communications Designer"
+         width="180" 
+         height="36">
+</a>
+                
+                <button class="menu-toggle" aria-expanded="false">☰</button>
+                
+                <ul class="nav-menu">
+                    <li><a href="index.html#work">Work</a></li>
+                    <li><a href="index.html#about">About</a></li>
+                    <li><a href="personal.html" class="current">Personal</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <main id="main-content">
+        <section class="page-hero">
+            <div class="container">
+                <div class="page-hero-content">
+                    <a href="index.html" class="back-link">← back to home</a>
+                    
+                    <div class="page-meta">01 — Personal work</div>
+                    <h1 class="page-title">The creative itch</h1>
+                    <p class="page-overview">
+                        Personal creative work that keeps the art kid in me satisfied.
+                    </p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="personal-content">
+            <div class="container">
+                                <article class="hero-feature">
+                    <div class="hero-feature-image">
+                        <img src="images/made-in-peru.jpg" 
+                             alt="Illustration featuring a woman with dark hair next to a brown llama, surrounded by colorful flowers on a red background" 
+                             loading="eager">
+                    </div>
+                    <div class="hero-feature-info">
+                        <div class="featured-category">Digital Illustration</div>
+                        <h2 class="hero-feature-title">Made in Peru</h2>
+                        <button class="info-button" onclick="openModal('peru-modal')">+ More on this</button>
+                    </div>
+                </article>
+
+                                <article class="comic-feature">
+                    <div class="comic-layout">
+                        <div class="comic-text">
+                            <div class="featured-category">Sequential Art</div>
+                            <h2 class="comic-title">A Cat Named Molly</h2>
+                            <button class="info-button" onclick="openModal('comic-modal')">+ The story behind this</button>
+                        </div>
+                        
+                        <div class="comic-carousel-container">
+                            <div class="comic-carousel" id="comic-carousel">
+        <div class="comic-slide active">
+            <img src="images/molly-1.jpg" alt="Panel 1: My parasocial relationship with a cat named Molly." loading="lazy">
+        </div>
+        <div class="comic-slide">
+            <img src="images/molly-2.jpg" alt="Panel 2: There is a café a few blocks away from my house that my parents and I have been frequenting since its opening." loading="lazy">
+        </div>
+        <div class="comic-slide">
+            <img src="images/molly-3.jpg" alt="Panel 3: Sometimes, a cat appears - Molly lives next door to the café, she's been part of the scene for years." loading="lazy">
+        </div>
+        <div class="comic-slide">
+            <img src="images/molly-4.jpg" alt="Panel 4: We don't see her that often, even though we pass by all the time." loading="lazy">
+        </div>
+        <div class="comic-slide">
+            <img src="images/molly-5.jpg" alt="Panel 5: It's almost become a little inside game with my parents - to see if we spot her." loading="lazy">
+        </div>
+        <div class="comic-slide">
+            <img src="images/molly-6.jpg" alt="Panel 6: She probably has no idea who we are, but we adore her." loading="lazy">
+        </div>
+        <div class="comic-slide">
+            <img src="images/molly-7.jpg" alt="Panel 7: There's nothing profound about it, just a small silly attachment to a cat who's sometimes there when I have coffee with my parents." loading="lazy">
+        </div>
+        <div class="comic-slide">
+            <img src="images/molly-8.jpg" alt="Panel 8: Maybe it's the rarity, maybe it's my love for cats, maybe it's because I don't live here anymore and these coffee moments feel fleeting." loading="lazy">
+        </div>
+    </div>
+                            
+                            <!-- Navigation Arrows -->
+                            <button class="carousel-arrow carousel-arrow-prev" aria-label="Previous slide">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="15,18 9,12 15,6"></polyline>
+                                </svg>
+                            </button>
+                            <button class="carousel-arrow carousel-arrow-next" aria-label="Next slide">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="9,18 15,12 9,6"></polyline>
+                                </svg>
+                            </button>
+                            
+                            <!-- Slide Indicators -->
+                            <div class="carousel-indicators">
+                                <button class="indicator active" aria-label="Go to slide 1" data-slide="0"></button>
+                                <button class="indicator" aria-label="Go to slide 2" data-slide="1"></button>
+                                <button class="indicator" aria-label="Go to slide 3" data-slide="2"></button>
+                                <button class="indicator" aria-label="Go to slide 4" data-slide="3"></button>
+                                <button class="indicator" aria-label="Go to slide 5" data-slide="4"></button>
+                                <button class="indicator" aria-label="Go to slide 6" data-slide="5"></button>
+                                <button class="indicator" aria-label="Go to slide 7" data-slide="6"></button>
+                                <button class="indicator" aria-label="Go to slide 8" data-slide="7"></button>
+                            </div>
+                            
+                            <!-- Keyboard Navigation Hint -->
+                            <div class="carousel-hint">Use ← → keys</div>
+                        </div>
+                    </div>
+                </article>
+                
+                                <article class="book-series">
+                    <div class="floating-books">
+                        <div class="book-item" style="--delay: 0s">
+                            <img src="images/book-cover-1.png" alt="Book cover design 1: Pink and orange abstract design with flowing shapes" loading="lazy">
+                        </div>
+                        <div class="book-item" style="--delay: 0.2s">
+                            <img src="images/book-cover-2.png" alt="Book cover design 2: Open book showing colorful typography and quotes layout" loading="lazy">
+                        </div>
+                        <div class="book-item" style="--delay: 0.4s">
+                            <img src="images/book-cover-3.png" alt="Book cover design 3: Dynamic flowing typography with pink and blue color scheme" loading="lazy">
+                        </div>
+                        <div class="book-item" style="--delay: 0.6s">
+                            <img src="images/book-cover-4.png" alt="Book cover design 4: Flat pink design with praise quotes and clean typography" loading="lazy">
+                        </div>
+                    </div>
+                    
+                    <div class="book-series-footer">
+                        <div class="featured-category">Book Cover Design</div>
+                        <h2 class="book-series-title">Breasts and Eggs Book Cover Redesign</h2>
+                        <button class="info-button" onclick="openModal('book-modal')">+ About this project</button>
+                    </div>
+                </article>
+            </div>
+        </section>
+        
+        <section class="contact-cta">
+            <div class="container">
+                <div class="cta-content">
+                    <h2 class="cta-title">Like what you see?</h2>
+                    <p class="cta-text">
+                        Whether you need marketing communications or want to collaborate on something creative, 
+                        I'd love to hear about your project.
+                    </p>
+                    <a href="mailto:fatimarabigodoy@gmail.com" class="cta-link">Let's talk</a>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer class="footer" role="contentinfo">
+    <div class="container">
+        <div class="footer-content">
+            <p>© 2025 — Fatima Rabi</p>
+            <a href="https://www.linkedin.com/in/fatima-rabi-191758298/" class="footer-linkedin" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+    </div>
+</footer>
+    
+    <!-- Modal overlays for project details -->
+<div id="peru-modal" class="modal-overlay">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModal('peru-modal')">&times;</button>
+        <h3>Made in Peru</h3>
+        <div class="modal-category">Digital Illustration</div>
+        <p>Turns out moving away from your home country at 18 gives you a lot to unpack, creatively speaking. This illustration combines traditional Peruvian imagery with a contemporary illustration style, far more clean than mine. Sometimes the constraint of anchor points makes you try something different.</p>
+        <p>Created using Adobe Illustrator.</p>
+    </div>
+</div>
+
+<div id="book-modal" class="modal-overlay">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModal('book-modal')">&times;</button>
+        <h3>Breasts and Eggs Cover Redesign</h3>
+        <p>Summer break reading led to highlighting every other page of this book. When a book moves you that much, you have to do something with that energy, right? Unsolicited cover redesign for Mieko Kawakami's novel. Focuses on symbolic imagery, and creating shelf appeal.</p>
+        <p>Slightly more abstract than my usual work, but sometimes you follow where the concept leads.</p>
+    </div>
+</div>
+
+<div id="comic-modal" class="modal-overlay">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModal('comic-modal')">&times;</button>
+        <h3>A Cat Named Molly</h3>
+        <div class="modal-category">Sequential Art</div>
+        <p>Nothing is stronger than the bond between a girl and some cat that doesn't even know she exists. Originally shared as an Instagram carousel, this 8-slide story explores how small habits—spotting a neighbourhood cat during coffee runs with my parents—can become unexpectedly significant when you're navigating distance and change.</p>
+        <p>Made in Procreate.</p>
+    </div>
+</div>
+
+    <script src="personal.js"></script>
+</body>
+</html>
