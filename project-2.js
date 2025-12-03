@@ -55,7 +55,7 @@
                 button.textContent = '+ Why Headspace?';
             } else {
                 info.classList.add('expanded');
-                button.textContent = '+ Why Headspace?';
+                button.textContent = '- Why Headspace?';
             }
         }
 
@@ -69,6 +69,6 @@
                 button.textContent = '+ The napkin version.';
             } else {
                 info.classList.add('expanded');
-                button.textContent = '+ The napkin version.';
+                button.textContent = '- The napkin version.';
             }
         }
