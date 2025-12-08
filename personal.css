@@ -229,8 +229,54 @@
             letter-spacing: 0.1em;
             margin-bottom: var(--space-3);
         }
+
+               /* Video Hero Feature - NEW */
+        .video-hero-feature {
+            margin-bottom: var(--space-24);
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
         
-        /* Hero Feature: Made in Peru - UNCHANGED */
+        .video-hero-container {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            background: var(--midnight);
+            box-shadow: 0 12px 48px rgba(10, 10, 11, 0.12);
+            margin-bottom: var(--space-8);
+        }
+        
+        .hero-video-player {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .video-hero-info {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .video-hero-title {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--midnight);
+            line-height: 1.1;
+        }
+        
+        .video-hero-description {
+            font-size: var(--text-lg);
+            color: var(--charcoal);
+            line-height: 1.5;
+            font-weight: 300;
+        }
+        
+        /* Hero Feature: Made in Peru */
         .hero-feature {
             display: grid;
             gap: var(--space-8);
