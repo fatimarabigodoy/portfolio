@@ -195,7 +195,27 @@
             line-height: 1.4;
             max-width: 600px;
         }
-        
+
+        .project-press {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: #9A9A9A;
+    margin-top: 0.75rem;
+    letter-spacing: 0.02em;
+}
+
+.project-press a {
+    color: #4A00E0;
+    text-decoration: none;
+    border-bottom: 1px solid #4A00E0;
+    padding-bottom: 1px;
+    transition: opacity 0.2s ease;
+}
+
+.project-press a:hover {
+    opacity: 0.65;
+}
+
         /* Info Button */
         .info-button {
             background: none;
