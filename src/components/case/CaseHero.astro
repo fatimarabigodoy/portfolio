@@ -1,0 +1,110 @@
+---
+/**
+ * Red top of a case study: big headline, the roles, and a couple of detail lines.
+ *
+ * Write each headline line inside its own <span class="line"><span>…</span></span>
+ * so it can slide up from behind a mask (same effect as the Work page).
+ *
+ * Optional "side" slot: something that sits to the right of the headline on
+ * wide screens (and underneath it on smaller ones), e.g. Headspace's search bars.
+ */
+interface Props {
+  /** e.g. "Concept development / Design" */
+  roles: string[];
+}
+
+const { roles } = Astro.props;
+const hasSide = Astro.slots.has('side');
+---
+
+<section class="case-hero theme-red">
+  <div class:list={['container', { 'case-hero__grid': hasSide }]}>
+    <div class="case-hero__main">
+      <h1 class="case-hero__title" data-hero-lines>
+        <slot name="title" />
+      </h1>
+      <p class="case-hero__roles" data-reveal data-reveal-delay="0.35">
+        {
+          roles.map((r, i) => (
+            <>
+              {i > 0 && (
+                <>
+                  <span aria-hidden="true">/</span>
+                  <span class="sr-only">,</span>
+                  {/* Lets a long list wrap after a slash on narrow phones */}
+                  <wbr />
+                </>
+              )}
+              {r}
+            </>
+          ))
+        }
+      </p>
+      <div class="case-hero__details" data-reveal data-reveal-delay="0.45">
+        <slot />
+      </div>
+    </div>
+    {
+      hasSide && (
+        <div class="case-hero__side" data-reveal data-reveal-delay="0.55">
+          <slot name="side" />
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .case-hero {
+    padding-block: calc(var(--header-h) + var(--space-xl)) var(--space-xl);
+  }
+  /* With a "side": headline left, side right on wide screens */
+  @media (min-width: 80rem) {
+    .case-hero__grid {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: end;
+      gap: clamp(3rem, 6vw, 7rem);
+    }
+  }
+
+  .case-hero__title {
+    font-size: clamp(3.25rem, 2rem + 5vw, 6rem); /* 52 → 96 */
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+  }
+  .case-hero__title :global(.line) {
+    display: block;
+  }
+  .case-hero__title :global(.line > span) {
+    display: inline-block;
+  }
+  /* Before the reveal, each line hides behind a mask (with room for the marks) */
+  :global(html.js-motion) .case-hero__title :global(.line:not(.is-in)) {
+    clip-path: inset(-0.6em -1em -0.3em -1em);
+  }
+  :global(html.js-motion) .case-hero__title :global(.line:not(.is-in) > span) {
+    opacity: 0;
+  }
+
+  .case-hero__roles {
+    margin-top: var(--space-l);
+    font-size: clamp(0.875rem, 0.75rem + 0.45vw, 1.25rem); /* 14 → 20 */
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.5;
+    text-transform: uppercase;
+  }
+  .case-hero__roles span[aria-hidden] {
+    margin-inline: 0.5em;
+  }
+  .case-hero__details {
+    margin-top: var(--space-2xs);
+    font-size: clamp(1rem, 0.9rem + 0.4vw, 1.25rem); /* 16 → 20 */
+    letter-spacing: -0.01em;
+    line-height: 1.5;
+  }
+  .case-hero__details :global(p) {
+    margin: 0;
+  }
+</style>

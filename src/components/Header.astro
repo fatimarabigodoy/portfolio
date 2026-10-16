@@ -1,0 +1,202 @@
+---
+import Wordmark from '../assets/wordmark.svg';
+import Scribble from './Scribble.astro';
+import { nav, site } from '../data/site';
+
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
+---
+
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a href="/" class="logo" aria-label={`${site.name}, home`}>
+      <Wordmark aria-hidden="true" />
+    </a>
+
+    <nav class="nav-pill" aria-label="Main">
+      <ul>
+        {
+          nav.map((item) => (
+            <li>
+              <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+                {isActive(item.href) ? (
+                  <Scribble type="circle" draw="load" delay={0.5} color="var(--red)">
+                    {item.label}
+                  </Scribble>
+                ) : (
+                  <Scribble type="underline" draw="hover" color="var(--red)">
+                    {item.label}
+                  </Scribble>
+                )}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mobile-menu" data-menu-toggle>
+      <span class="menu-btn__open">Menu</span>
+      <span class="menu-btn__close" aria-hidden="true">Close</span>
+    </button>
+  </div>
+
+  <div class="mobile-menu theme-red" id="mobile-menu" data-mobile-menu hidden>
+    <ul>
+      <li><a href="/" data-menu-link aria-current={path === '/' ? 'page' : undefined}>Home</a></li>
+      {
+        nav.map((item) => (
+          <li>
+            <a href={item.href} data-menu-link aria-current={isActive(item.href) ? 'page' : undefined}>
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <div class="mobile-menu__foot" data-menu-link>
+      <button class="btn copy-email" type="button" data-copy-email={btoa(site.email)}>
+        <span data-copy-label>Copy my email</span>
+      </button>
+      {site.socials.map((s) => <a href={s.href} target="_blank" rel="noopener">{s.label} ↗</a>)}
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    --header-fg: var(--cream);
+    --pill-bg: var(--cream);
+    --pill-fg: var(--ink);
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 50;
+    transition: translate 0.45s var(--ease-out);
+  }
+  /* Over cream sections the logo turns red and the pill turns red */
+  .site-header[data-theme='cream'] {
+    --header-fg: var(--red);
+    --pill-bg: var(--red);
+    --pill-fg: var(--cream);
+  }
+  .site-header.is-hidden:not(.menu-open) {
+    translate: 0 -110%;
+  }
+
+  .site-header__inner {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--header-h);
+    max-width: var(--max-width);
+    margin-inline: auto;
+    padding-inline: clamp(1rem, 0.5rem + 2.5vw, 5rem);
+  }
+
+  .logo {
+    width: clamp(4.5rem, 4rem + 1.5vw, 5.75rem);
+    color: var(--header-fg);
+    transition:
+      color 0.35s var(--ease-out),
+      transform 0.35s var(--ease-out);
+  }
+  .logo:hover {
+    transform: rotate(-4deg) scale(1.04);
+  }
+  .logo :global(svg) {
+    width: 100%;
+    height: auto;
+  }
+
+  .nav-pill ul {
+    display: flex;
+    gap: clamp(1.25rem, 1rem + 1vw, 2rem);
+    padding: 0.8rem 1.6rem;
+    list-style: none;
+    border-radius: var(--radius-pill);
+    background: var(--pill-bg);
+    color: var(--pill-fg);
+    font-size: var(--step--1);
+    font-weight: 500;
+    line-height: 1;
+    transition:
+      background-color 0.35s var(--ease-out),
+      color 0.35s var(--ease-out);
+  }
+  .site-header[data-theme='cream'] .nav-pill :global(.scribble) {
+    --scribble-color: var(--cream);
+  }
+
+  .menu-btn {
+    display: none;
+    padding: 0.7rem 1.2rem;
+    border-radius: var(--radius-pill);
+    background: var(--pill-bg);
+    color: var(--pill-fg);
+    font-size: var(--step--1);
+    font-weight: 500;
+    line-height: 1;
+    transition:
+      background-color 0.35s var(--ease-out),
+      color 0.35s var(--ease-out);
+  }
+  .menu-btn__close {
+    display: none;
+  }
+
+  /* ---------- Phone & small tablet ---------- */
+  @media (max-width: 47.99rem) {
+    .nav-pill {
+      display: none;
+    }
+    .menu-btn {
+      display: block;
+    }
+  }
+
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: calc(var(--header-h) + 2rem) var(--gutter) 2rem;
+    clip-path: inset(0 0 100% 0);
+  }
+  .mobile-menu ul {
+    list-style: none;
+    padding: 0;
+  }
+  .mobile-menu li a {
+    display: inline-block;
+    font-family: var(--font-serif);
+    font-size: clamp(3rem, 14vw, 5rem);
+    line-height: 1.05;
+  }
+  .mobile-menu li a[aria-current='page'] {
+    font-style: italic;
+    color: var(--blue);
+  }
+  .mobile-menu__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-m);
+    font-size: var(--step-0);
+  }
+
+  .menu-open {
+    --header-fg: var(--cream);
+    --pill-bg: var(--cream);
+    --pill-fg: var(--red);
+  }
+  .menu-open .menu-btn__open {
+    display: none;
+  }
+  .menu-open .menu-btn__close {
+    display: inline;
+  }
+</style>

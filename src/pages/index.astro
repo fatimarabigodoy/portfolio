@@ -1,0 +1,281 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Scribble from '../components/Scribble.astro';
+import LogoMarquee from '../components/LogoMarquee.astro';
+import FeaturedCards from '../components/FeaturedCards.astro';
+import headshot from '../assets/home/headshot.png';
+import { site } from '../data/site';
+
+// Hero headline, word by word (each word rises in on its own).
+// The two marked words get a hand-drawn underline.
+const hero = [
+  'A', 'multidisciplinary', 'designer', 'who', 'loves', 'the',
+  { word: 'thinking', type: 'underline', delay: 0.9 },
+  'just', 'as', 'much', 'as', 'the',
+  { word: 'making.', type: 'underline', delay: 1.3 },
+] as const;
+---
+
+<Base>
+  <div data-home>
+    <!-- ---------- Hero ---------- -->
+    <section class="hero theme-red">
+      <div class="container hero__inner">
+        <h1 class="hero__title" data-home-title>
+          {
+            hero.map((w) => (
+              <>
+                <span class="hw">
+                  <span>
+                    {typeof w === 'string' ? (
+                      w
+                    ) : (
+                      <Scribble type={w.type} draw="load" delay={w.delay} redraw color="var(--blue)">
+                        {w.word}
+                      </Scribble>
+                    )}
+                  </span>
+                </span>{' '}
+              </>
+            ))
+          }
+        </h1>
+      </div>
+
+      <LogoMarquee />
+    </section>
+
+    <!-- ---------- Featured work ---------- -->
+    <section class="featured theme-cream" aria-labelledby="featured-title">
+      <div class="container">
+        <p class="eyebrow" data-reveal>Featured work</p>
+        <h2 class="section-title" id="featured-title" data-reveal data-reveal-delay="0.05">Show me what you got!</h2>
+
+        <div class="featured__cards" data-reveal data-reveal-delay="0.1">
+          <FeaturedCards />
+        </div>
+
+        <p class="featured__more" data-reveal>
+          <a class="more-link" href="/work">
+            <Scribble type="underline" draw="hover">See all work</Scribble>
+            <span class="more-link__arrow" aria-hidden="true">↗</span>
+          </a>
+        </p>
+      </div>
+    </section>
+
+    <!-- ---------- About teaser ---------- -->
+    <section class="about theme-cream" aria-labelledby="about-title">
+      <div class="container about__grid">
+        <div class="portrait" data-reveal>
+          <div class="portrait__arch" aria-hidden="true"></div>
+          <div class="portrait__photo" data-portrait-photo>
+            <Image
+              src={headshot}
+              alt="Fatima smiling, wearing a “Hello, my name is Fatima” name tag."
+              widths={[300, 505]}
+              sizes="(min-width: 48rem) 20rem, 16rem"
+            />
+          </div>
+        </div>
+
+        <div class="about__text">
+          <h2 class="section-title about__title" id="about-title" data-reveal>
+            Who are you and what are you doing in my{' '}
+            <Scribble type="strike" color="var(--blue-deep)" delay={0.4}>swamp</Scribble>{' '}
+            screen?
+          </h2>
+          <div class="about__body" data-reveal data-reveal-delay="0.1">
+            <p>
+              Hi, I’m Fatima and I’m terrible with labels! Designer by trade, Art Director by title, illustrator by
+              passion, but really just a maker of creative things by heart.
+            </p>
+            <p>
+              I’ve worked on advertising campaigns, brand creation, web design, editorial, socials, and all kinds of
+              prints, from flyers to OOH. Most of my work comes from my time as Art Director at BOLD LIP Studio, where I
+              worked across small businesses and large national campaigns.
+            </p>
+            <p>Always interested in new projects. Let’s create together :)</p>
+          </div>
+          <div class="about__cta" data-reveal data-reveal-delay="0.15">
+            <button class="btn" type="button" data-copy-email={btoa(site.email)}>
+              <span data-copy-label aria-live="polite">Get in touch</span>
+              <span class="sr-only">(copies my email address)</span>
+            </button>
+            <a class="more-link" href="/about">
+              <Scribble type="underline" draw="hover">More about me</Scribble>
+              <span class="more-link__arrow" aria-hidden="true">↗</span>
+            </a>
+          </div>
+          <p class="about__aside" data-reveal data-reveal-delay="0.2">
+            (There’s also{' '}
+            <a href="/about#portfolio-comic">a comic about how badly I overthought my last portfolio</a>.)
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+</Base>
+
+<style>
+  /* ---------- Hero ---------- */
+
+  .hero {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    padding-top: var(--header-h);
+    padding-bottom: var(--space-s);
+    overflow: hidden;
+  }
+  .hero__inner {
+    flex: 1;
+    display: grid;
+    place-items: center;
+    padding-block: var(--space-xl);
+  }
+  .hero__title {
+    font-size: var(--step-4);
+    line-height: 1.12;
+    max-width: 11.5em;
+    margin-inline: auto;
+    text-align: center;
+    will-change: transform;
+  }
+  /* Each word rises from behind its own mask (with room for the hand-drawn lines) */
+  .hw {
+    display: inline-block;
+  }
+  .hw > span {
+    display: inline-block;
+  }
+  :global(html.js-motion) .hero__title:not(.is-in) .hw {
+    clip-path: inset(-0.2em -0.2em -0.45em -0.2em);
+  }
+
+  /* ---------- Shared section bits ---------- */
+
+  .section-title {
+    font-size: clamp(2.5rem, 1.6rem + 3.6vw, 4rem); /* 40 → 64 */
+    line-height: 1;
+    color: var(--red);
+  }
+  .eyebrow + .section-title {
+    margin-top: var(--space-xs);
+  }
+
+  .more-link {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.35em;
+    color: var(--red);
+    font-size: var(--step-1);
+    font-weight: 600;
+    --scribble-color: var(--red);
+  }
+  .more-link__arrow {
+    display: inline-block;
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+  .more-link:hover .more-link__arrow,
+  .more-link:focus-visible .more-link__arrow {
+    transform: translate(3px, -3px);
+  }
+
+  /* ---------- Featured work ---------- */
+
+  .featured {
+    padding-top: var(--space-2xl);
+    padding-bottom: var(--space-xl);
+  }
+  .featured__cards {
+    margin-top: var(--space-l);
+  }
+  .featured__more {
+    margin-top: var(--space-l);
+    text-align: center;
+  }
+
+  /* ---------- About teaser ---------- */
+
+  .about {
+    padding-top: var(--space-xl);
+    padding-bottom: var(--space-2xl);
+  }
+  .about__grid {
+    display: grid;
+    gap: var(--space-l);
+    align-items: center;
+  }
+  @media (min-width: 48rem) {
+    .about__grid {
+      max-width: calc(74rem + 2 * var(--gutter));
+      grid-template-columns: clamp(15rem, 8rem + 14vw, 22rem) 1fr;
+      gap: clamp(2.5rem, 1rem + 4vw, 5.5rem);
+    }
+  }
+
+  /* Blue arch with the cut-out photo standing in front, head popping out the top */
+  .portrait {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 505 / 870;
+    margin-inline: auto;
+  }
+  .portrait__arch {
+    position: absolute;
+    inset: 12% 0 0;
+    border-radius: 999px;
+    background: var(--blue);
+  }
+  .portrait__photo {
+    position: absolute;
+    inset: 0;
+  }
+  .portrait__photo :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: bottom;
+  }
+  @media (max-width: 47.99rem) {
+    .portrait {
+      width: min(70%, 16rem);
+    }
+  }
+
+  .about__body {
+    margin-top: var(--space-m);
+  }
+  .about__body p + p {
+    margin-top: 0.85em;
+  }
+  .about__cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-m) var(--space-l);
+    margin-top: var(--space-l);
+  }
+  .about__cta .more-link {
+    font-size: var(--step-0);
+  }
+  /* Small note pointing at the portfolio comic on the About page */
+  .about__aside {
+    margin-top: var(--space-m);
+    font-size: var(--step--1);
+    font-weight: 500;
+    color: var(--blue-deep);
+  }
+  .about__aside a {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+  .about__aside a:hover,
+  .about__aside a:focus-visible {
+    color: var(--red);
+  }
+</style>

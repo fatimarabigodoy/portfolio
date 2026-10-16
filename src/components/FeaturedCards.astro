@@ -1,0 +1,289 @@
+---
+/**
+ * Home page "Show me what you got!" cards.
+ *
+ * Computer: a row of equal, blue-tinted cards. Hover or keyboard-focus one
+ * and it opens: about twice as wide, full colour, headline relaxed onto
+ * fewer lines, description shown. Move away and they all shut again.
+ *
+ * Phone: a swipeable row. The card in the middle is the open one, with
+ * little dots underneath to show where you are.
+ *
+ * Moving parts live in src/scripts/home.ts.
+ */
+import { Picture } from 'astro:assets';
+import { featured } from '../data/projects';
+import { widthsFor } from '../utils/image';
+
+const escape = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const rich = (s = '') => escape(s).replace(/\*(.+?)\*/g, '<em>$1</em>');
+---
+
+<div class="feature" data-feature>
+  <ul class="feature__list" role="list" data-feature-list>
+    {
+      featured.map((p, i) => (
+        <li class="feature__item" data-feature-item>
+          <a
+            class="fcard"
+            href={`/work/${p.slug}`}
+            aria-labelledby={`f-${p.slug}-title`}
+            aria-describedby={`f-${p.slug}-text`}
+            style={`--focus: ${p.focus ?? '50% 50%'}`}
+          >
+            <div class="fcard__media" aria-hidden="true">
+              <Picture
+                src={p.cover!}
+                alt=""
+                formats={['avif', 'webp']}
+                widths={widthsFor(p.cover!, [500, 800, 1200, 1600, 2000])}
+                sizes="(min-width: 48rem) 55vw, 85vw"
+                loading={i === 0 ? 'eager' : 'lazy'}
+              />
+            </div>
+
+            <span class="fcard__tag">{p.tag}</span>
+
+            <div class="fcard__copy" data-copy>
+              <h3 class="fcard__title" id={`f-${p.slug}-title`}>
+                <span class="sr-only">{p.title}: </span>
+                {p.headline}
+              </h3>
+              <p class="fcard__text" id={`f-${p.slug}-text`} set:html={rich(p.summary)} />
+            </div>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+
+  <!-- Phone only: where am I in the row -->
+  <div class="feature__dots" data-feature-dots>
+    {
+      featured.map((p, i) => (
+        <button type="button" class:list={['feature__dot', { 'is-on': i === 0 }]} data-feature-dot={i} tabindex="-1">
+          <span class="sr-only">Show {p.title}</span>
+        </button>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .feature__list {
+    padding: 0;
+  }
+  .feature__item {
+    list-style: none;
+    min-width: 0;
+  }
+
+  .fcard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    height: 100%;
+    padding: clamp(1.25rem, 0.9rem + 1vw, 2rem);
+    border-radius: 12px;
+    overflow: hidden;
+    isolation: isolate;
+    color: var(--cream);
+  }
+
+  /* ---------- Picture: blue duotone, full colour when open ---------- */
+
+  .fcard__media {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--blue);
+  }
+  .fcard__media :global(picture) {
+    display: block;
+    height: 100%;
+  }
+  .fcard__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--focus);
+    filter: grayscale(1) contrast(1.08);
+    transform: scale(1.04);
+    transition:
+      filter 0.8s var(--ease-out),
+      transform 1.2s var(--ease-out);
+  }
+  .fcard__media::before,
+  .fcard__media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  /* grey picture × light blue = the duotone */
+  .fcard__media::before {
+    z-index: 1;
+    background: var(--blue);
+    mix-blend-mode: multiply;
+    transition: opacity 0.8s var(--ease-out);
+  }
+  /* deep-blue shade behind the text so it always reads */
+  .fcard__media::after {
+    z-index: 2;
+    background:
+      linear-gradient(to bottom, rgb(20 34 64 / 0.35), transparent 22%),
+      linear-gradient(to top, rgb(20 34 64 / 0.9), rgb(20 34 64 / 0.62) 38%, transparent 68%);
+  }
+  .is-open .fcard__media :global(img) {
+    filter: grayscale(0) contrast(1);
+    transform: scale(1);
+  }
+  .is-open .fcard__media::before {
+    opacity: 0;
+  }
+
+  /* ---------- Text ---------- */
+
+  .fcard__tag {
+    padding: 0.2rem 0.85rem;
+    border: 1px solid currentColor;
+    border-radius: var(--radius-pill);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    line-height: 1.4;
+    text-transform: uppercase;
+  }
+
+  .fcard__copy {
+    width: 100%;
+  }
+  .fcard__title {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: clamp(1.625rem, 1.2rem + 1.1vw, 2.25rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  .fcard__text {
+    max-width: 34rem;
+    font-size: clamp(0.9375rem, 0.9rem + 0.12vw, 1rem);
+    line-height: 1.5;
+    /* hidden until the card is open; it fades in after the card has grown */
+    display: none;
+  }
+  .is-wide .fcard__text {
+    display: block;
+    padding-top: 0.75rem;
+    animation: text-in 0.6s var(--ease-out) 0.1s both;
+  }
+  @keyframes text-in {
+    from {
+      opacity: 0;
+      translate: 0 0.6rem;
+    }
+  }
+
+  .fcard:focus-visible {
+    outline: 3px solid var(--blue-deep);
+    outline-offset: 5px;
+    border-radius: 12px;
+  }
+
+  /* ---------- Computer: accordion row ---------- */
+
+  @media (min-width: 48rem) {
+    .feature__list {
+      display: flex;
+      gap: clamp(0.5rem, 0.2rem + 0.6vw, 0.75rem);
+      height: clamp(26rem, 14rem + 22vw, 36rem);
+    }
+    .feature__item {
+      flex: 1 1 0;
+    }
+    /* Shut cards: headline keeps to the narrow width so it never squashes */
+    .feature__item:not(.is-wide) .fcard__title {
+      max-width: 12ch;
+    }
+    .feature__dots {
+      display: none;
+    }
+  }
+
+  /* ---------- Phone: swipeable row ---------- */
+
+  @media (max-width: 47.99rem) {
+    .feature__list {
+      display: flex;
+      gap: 0.75rem;
+      margin-inline: calc(var(--gutter) * -1);
+      padding-inline: var(--gutter);
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scroll-snap-type: x mandatory;
+      scroll-padding-inline: var(--gutter);
+      scrollbar-width: none;
+    }
+    .feature__list::-webkit-scrollbar {
+      display: none;
+    }
+    .feature__item {
+      flex: 0 0 84%;
+      aspect-ratio: 4 / 5;
+      scroll-snap-align: center;
+      transition:
+        scale 0.6s var(--ease-out),
+        opacity 0.6s var(--ease-out);
+    }
+    .feature__item:not(.is-open) {
+      scale: 0.94;
+      opacity: 0.8;
+    }
+
+    .feature__dots {
+      display: flex;
+      justify-content: center;
+      gap: 0.25rem;
+      margin-top: var(--space-s);
+    }
+    .feature__dot {
+      position: relative;
+      width: 1.75rem;
+      height: 1.75rem; /* big enough to tap */
+    }
+    .feature__dot::before {
+      content: '';
+      position: absolute;
+      inset: 50% auto auto 50%;
+      width: 0.5rem;
+      height: 0.5rem;
+      translate: -50% -50%;
+      border-radius: var(--radius-pill);
+      background: color-mix(in srgb, var(--red) 30%, transparent);
+      transition:
+        width 0.4s var(--ease-out),
+        background-color 0.4s var(--ease-out);
+    }
+    .feature__dot.is-on::before {
+      width: 1.4rem;
+      background: var(--red);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fcard__media :global(img),
+    .is-open .fcard__media :global(img) {
+      transform: none;
+      transition: filter 0.3s linear;
+    }
+    .is-wide .fcard__text {
+      animation: none;
+    }
+    .feature__item {
+      transition: none;
+    }
+  }
+</style>

@@ -1,0 +1,254 @@
+---
+/**
+ * Headspace: "Close-a-Tab", the campaign as an in-app session.
+ *
+ * A phone screen built in code. Open tabs (searches) float around Headspace's
+ * orange dot. Hold to breathe in (the dot grows), let go to breathe out: each
+ * proper exhale closes a tab. If nobody touches it, it breathes by itself.
+ * Mouse, touch, and Space / Enter all work. Logic in src/scripts/headspace.ts.
+ *
+ * With reduced motion it's a still screen.
+ */
+const tabs = [
+  { q: 'did i say something weird in that meeting', x: 6, y: 3 },
+  { q: 'is my landlord ignoring me', x: 38, y: 14 },
+  { q: 'what if i peaked in high school', x: 2, y: 25 },
+  { q: 'can you burn out from doing nothing', x: 22, y: 69 },
+  { q: 'how to stop doomscrolling', x: 34, y: 80 },
+  { q: 'is it too late to learn piano', x: 4, y: 90 },
+];
+---
+
+<div class="breath" data-breath>
+  <div
+    class="breath__device"
+    data-breath-screen
+    role="button"
+    tabindex="0"
+    aria-label="Close-a-Tab. Hold to breathe in, let go to breathe out and close a tab."
+  >
+    <div class="breath__screen">
+      <span class="breath__island" aria-hidden="true"></span>
+
+      <header class="breath__top" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" /></svg>
+        <p class="breath__name">Close-a-Tab<small>1 min</small></p>
+        <span class="breath__count" data-breath-count>6 open</span>
+      </header>
+
+      <div class="breath__stage" aria-hidden="true">
+        {
+          tabs.map((t) => (
+            <span class="breath__tab" style={`left: ${t.x}%; top: ${t.y}%`} data-breath-tab>
+              <span class="breath__text">{t.q}</span>
+              <span class="breath__icons">
+                <svg viewBox="0 0 24 24" class="breath__search">
+                  <circle cx="10" cy="10" r="6.5" />
+                  <path d="M15 15l5.5 5.5" />
+                </svg>
+                <svg viewBox="0 0 24 24" class="breath__x">
+                  <path d="M6 6l12 12M18 6L6 18" />
+                </svg>
+              </span>
+            </span>
+          ))
+        }
+        <span class="breath__ring" data-breath-ring></span>
+        <span class="breath__dot" data-breath-dot></span>
+        <span class="breath__cue" data-breath-cue>Hold to breathe in</span>
+      </div>
+
+      <footer class="breath__foot" aria-hidden="true">
+        <span class="breath__pips">{tabs.map(() => <span data-breath-pip />)}</span>
+        <p class="breath__hint" data-breath-hint>Every slow exhale closes one.</p>
+      </footer>
+    </div>
+  </div>
+  <p class="sr-only" aria-live="polite" data-breath-live></p>
+</div>
+
+<style>
+  .breath {
+    display: grid;
+    justify-items: center;
+  }
+  .breath__device {
+    /* All sizes inside are in cqw, so the whole screen scales as one */
+    container-type: inline-size;
+    width: min(20rem, 78vw);
+    aspect-ratio: 300 / 630;
+    padding: 2.6%;
+    border-radius: 15% / 7.2%;
+    background: #1b1919;
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    cursor: pointer;
+    outline: none;
+  }
+  .breath__device:focus-visible {
+    box-shadow: 0 0 0 3px var(--cream), 0 0 0 6px var(--blue-deep);
+  }
+  .breath__screen {
+    position: relative;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 12.5% / 6%;
+    background: #fbf5ee;
+    color: #2d2b2a;
+    font-family: var(--font-sans);
+  }
+  .breath__island {
+    position: absolute;
+    top: 2.6cqw;
+    left: 50%;
+    width: 27cqw;
+    height: 7.6cqw;
+    translate: -50% 0;
+    border-radius: 99px;
+    background: #1b1919;
+  }
+
+  .breath__top {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 15cqw 6cqw 0;
+  }
+  .breath__top svg {
+    width: 6cqw;
+    height: 6cqw;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .breath__name {
+    display: grid;
+    justify-items: center;
+    font-size: 5cqw;
+    font-weight: 650;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+  .breath__name small {
+    font-size: 3.6cqw;
+    font-weight: 450;
+    opacity: 0.6;
+  }
+  .breath__count {
+    justify-self: end;
+    padding: 1cqw 2.6cqw;
+    border-radius: 99px;
+    background: #f1e6da;
+    font-size: 3.4cqw;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .breath__stage {
+    position: relative;
+    margin: 4cqw 4cqw 0;
+  }
+  .breath__tab {
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    gap: 2cqw;
+    max-width: 88%;
+    padding: 1.9cqw 2.4cqw 1.9cqw 3.4cqw;
+    border: 1px solid rgb(45 43 42 / 0.16);
+    border-radius: 99px;
+    background: #fff;
+    font-size: 3.7cqw;
+    line-height: 1.2;
+    white-space: nowrap;
+    z-index: 2;
+  }
+  .breath__text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .breath__icons {
+    display: grid;
+    flex: none;
+  }
+  .breath__icons > svg {
+    grid-area: 1 / 1;
+    width: 3.9cqw;
+    height: 3.9cqw;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+  .breath__x {
+    opacity: 0;
+    color: #c1121f;
+  }
+
+  /* The orange dot: the breathing guide */
+  .breath__dot,
+  .breath__ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 30cqw;
+    height: 30cqw;
+    margin: -15cqw 0 0 -15cqw;
+    border-radius: 50%;
+  }
+  .breath__dot {
+    background: #ff7300;
+    z-index: 1;
+  }
+  .breath__ring {
+    border: 1px dashed rgb(255 115 0 / 0.45);
+    scale: 1.55;
+  }
+  .breath__cue {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    translate: 0 -50%;
+    text-align: center;
+    font-size: 3.6cqw;
+    font-weight: 600;
+    color: #fff;
+    pointer-events: none;
+  }
+
+  .breath__foot {
+    display: grid;
+    justify-items: center;
+    gap: 2.6cqw;
+    padding: 0 8cqw 10cqw;
+    text-align: center;
+  }
+  .breath__pips {
+    display: flex;
+    gap: 1.6cqw;
+  }
+  .breath__pips > span {
+    width: 1.8cqw;
+    height: 1.8cqw;
+    border-radius: 50%;
+    background: rgb(45 43 42 / 0.18);
+    transition: background-color 0.4s;
+  }
+  .breath__pips > span.is-done {
+    background: #ff7300;
+  }
+  .breath__hint {
+    min-height: 2.6em;
+    font-size: 3.6cqw;
+    line-height: 1.3;
+    opacity: 0.75;
+  }
+</style>

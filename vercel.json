@@ -1,0 +1,43 @@
+{
+  "framework": "astro",
+  "installCommand": "npm ci",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "redirects": [
+    {
+      "source": "/index.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/project-1.html",
+      "destination": "/work/connection/",
+      "permanent": true
+    },
+    {
+      "source": "/project-2.html",
+      "destination": "/work/headspace/",
+      "permanent": true
+    },
+    {
+      "source": "/project-3.html",
+      "destination": "/work/planet-fitness/",
+      "permanent": true
+    },
+    {
+      "source": "/project-4.html",
+      "destination": "/work/ottawa-public-library/",
+      "permanent": true
+    },
+    {
+      "source": "/project-5.html",
+      "destination": "/work/puku-puku/",
+      "permanent": true
+    },
+    {
+      "source": "/personal.html",
+      "destination": "/fun-stuff/",
+      "permanent": true
+    }
+  ]
+}

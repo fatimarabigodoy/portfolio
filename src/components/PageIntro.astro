@@ -1,0 +1,44 @@
+---
+/** Temporary red page-top used by pages we haven't designed in code yet. */
+interface Props {
+  title: string;
+  note?: string;
+}
+const { title, note = 'This page gets built in its own phase. The header, footer and page transitions are live.' } =
+  Astro.props;
+---
+
+<section class="intro theme-red">
+  <div class="container">
+    <h1 data-reveal><slot name="title">{title}</slot></h1>
+  </div>
+</section>
+<section class="theme-cream placeholder">
+  <div class="container">
+    <p class="eyebrow" data-reveal>Coming soon</p>
+    <p class="placeholder__note" data-reveal>{note}</p>
+  </div>
+</section>
+
+<style>
+  .intro {
+    min-height: 70svh;
+    display: flex;
+    align-items: flex-end;
+    padding-block: calc(var(--header-h) + var(--space-xl)) var(--space-xl);
+  }
+  h1 {
+    font-size: var(--step-5);
+    line-height: 0.95;
+  }
+  .placeholder {
+    padding-block: var(--space-2xl);
+  }
+  .placeholder .eyebrow {
+    margin-bottom: var(--space-s);
+  }
+  .placeholder__note {
+    max-width: 40ch;
+    font-size: var(--step-1);
+  }
+</style>

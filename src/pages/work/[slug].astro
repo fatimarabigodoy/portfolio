@@ -1,0 +1,20 @@
+---
+// Temporary page for each project that doesn't have its own case-study file yet.
+import Base from '../../layouts/Base.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import { projects } from '../../data/projects';
+
+export function getStaticPaths() {
+  // Projects with their own file in this folder (e.g. elmwood.astro) are skipped here.
+  const ownPages = Object.keys(import.meta.glob('./*.astro')).map((f) => f.slice(2, -'.astro'.length));
+  return projects
+    .filter((p) => p.hasPage && !ownPages.includes(p.slug))
+    .map((p) => ({ params: { slug: p.slug }, props: { project: p } }));
+}
+
+const { project } = Astro.props;
+---
+
+<Base title={project.title}>
+  <PageIntro title={project.title} note="This case study gets its layout in the next phase. Head back to the Work page in the meantime." />
+</Base>

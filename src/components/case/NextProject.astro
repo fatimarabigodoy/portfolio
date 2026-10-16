@@ -1,0 +1,116 @@
+---
+/**
+ * Bottom of a case study: the previous project on the left, the next on the right.
+ * Order comes from src/data/projects.ts (projects with a page only) and loops
+ * round at both ends, so you can click through every project in a circle.
+ */
+import Scribble from '../Scribble.astro';
+import { projects } from '../../data/projects';
+
+interface Props {
+  slug: string;
+}
+
+const { slug } = Astro.props;
+const withPages = projects.filter((p) => p.hasPage && p.cover);
+const here = withPages.findIndex((p) => p.slug === slug);
+const n = withPages.length;
+const prev = withPages[(here - 1 + n) % n];
+const next = withPages[(here + 1) % n];
+---
+
+<nav class="case-next theme-red" aria-label="More projects">
+  <div class="container case-next__row">
+    {
+      prev && prev.slug !== slug && (
+        <a class="case-next__link case-next__link--back" href={`/work/${prev.slug}`} aria-label={`Previous project: ${prev.title}`}>
+          <span class="case-next__arrow case-next__arrow--back" aria-hidden="true"><svg viewBox="0 0 40 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13.5C9 9 15 8.5 21 11.5S31 13.5 36 9.5" /><path d="M28 5C31.2 6.2 34 7.6 36.4 9.3C35 11.6 34 14 33.4 16.8" /></svg></span>
+          <span class="case-next__title">
+            <Scribble type="underline" draw="hover" color="var(--blue)">{prev.title}</Scribble>
+          </span>
+        </a>
+      )
+    }
+    {
+      next && next.slug !== slug && (
+        <a class="case-next__link case-next__link--next" href={`/work/${next.slug}`} aria-label={`Next project: ${next.title}`}>
+          <span class="case-next__title">
+            <Scribble type="underline" draw="hover" color="var(--blue)">{next.title}</Scribble>
+            <span class="case-next__arrow" aria-hidden="true"><svg viewBox="0 0 40 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13.5C9 9 15 8.5 21 11.5S31 13.5 36 9.5" /><path d="M28 5C31.2 6.2 34 7.6 36.4 9.3C35 11.6 34 14 33.4 16.8" /></svg></span>
+          </span>
+        </a>
+      )
+    }
+  </div>
+</nav>
+
+<style>
+  .case-next {
+    padding-block: var(--space-xl);
+    border-bottom: 1px solid rgb(255 246 232 / 0.2);
+  }
+  .case-next__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-l);
+  }
+  .case-next__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 1.5rem + 2vw, 3rem); /* 32 → 48 */
+    line-height: 1;
+  }
+  .case-next__link--next {
+    margin-left: auto;
+  }
+
+  .case-next__title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+  }
+  /* Phones: long names (e.g. Big Brothers Big Sisters of Ottawa) wrap onto
+     two lines. The hover underline is single-line only, and phones can't
+     hover anyway, so it's switched off there. */
+  @media (max-width: 40rem) {
+    .case-next__link--back,
+    .case-next__link--next {
+      max-width: 100%;
+    }
+    .case-next__title :global(.scribble) {
+      white-space: normal;
+    }
+    .case-next__title :global(.scribble__svg) {
+      display: none;
+    }
+  }
+  /* Hand-drawn arrow: a slightly wobbly line with a soft head. The back one is
+     the same drawing flipped. */
+  .case-next__arrow {
+    display: inline-flex;
+    color: var(--blue);
+    transition: transform var(--dur) var(--ease-out);
+  }
+  .case-next__arrow svg {
+    width: 1.05em;
+    height: auto;
+  }
+  .case-next__arrow--back svg {
+    transform: scaleX(-1);
+  }
+  .case-next__link--back:hover .case-next__arrow {
+    transform: translateX(-0.3em);
+  }
+  .case-next__link--next:hover .case-next__arrow {
+    transform: translateX(0.3em);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .case-next__arrow {
+      transition: none;
+    }
+  }
+</style>

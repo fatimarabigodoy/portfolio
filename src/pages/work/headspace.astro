@@ -1,0 +1,585 @@
+---
+// Case study: Headspace, "Mental Tabs" (spec campaign).
+// Copy rewritten from the old fatimarabi.com/project-2.html. Same case pieces as
+// Connection, plus three search-bar moments wired up in src/scripts/headspace.ts:
+// the hero's typing search stack, the heckle in truth #1, and the tabs that
+// close one by one at the end.
+import Base from '../../layouts/Base.astro';
+import Scribble from '../../components/Scribble.astro';
+import CaseHero from '../../components/case/CaseHero.astro';
+import CaseText from '../../components/case/CaseText.astro';
+import CaseMedia from '../../components/case/CaseMedia.astro';
+import NextProject from '../../components/case/NextProject.astro';
+import SearchAd from '../../components/headspace/SearchAd.astro';
+import BreathApp from '../../components/headspace/BreathApp.astro';
+
+import couch from '../../assets/headspace/poster-couch.jpg';
+import bed from '../../assets/headspace/poster-bed.jpg';
+import shelter from '../../assets/headspace/shelter.jpg';
+import sketches from '../../assets/headspace/sketches.jpg';
+
+// Real queries from the posters. The hero types these out one after another.
+const queries = [
+  'is it normal to have no plans on weekends',
+  'signs you’re wasting your twenties',
+  'how long to wait if someone doesn’t text back',
+  'no 5 year plan is that bad',
+  'weird mole should i see a doctor',
+  'is 32 too old to change careers',
+  'how long can i ignore an email',
+  'should i say hi to people in elevators',
+  'how much savings should i have by 30',
+  'excel recovery unsaved work',
+  'am i behind everyone else',
+];
+
+// The tabs that close at the end. top / left are % of the screen, w = width in rem.
+const tabs = [
+  { q: 'early burnout signs', top: 14, left: 8, w: 17 },
+  { q: 'coffee addiction withdrawal timeline', top: 22, left: 46, w: 26 },
+  { q: 'do i need life insurance single person', top: 33, left: 2, w: 27 },
+  { q: 'how to politely decline extra work', top: 40, left: 40, w: 25 },
+  { q: 'is wfh making me antisocial', top: 50, left: 16, w: 21 },
+  { q: 'average credit score by age', top: 58, left: 52, w: 21 },
+  { q: 'is networking really that important', top: 66, left: 6, w: 25 },
+  { q: 'jobs that AI will replace 2025', top: 74, left: 42, w: 23 },
+  { q: 'did i lock the door', top: 82, left: 18, w: 16 },
+];
+---
+
+<Base
+  title="Headspace: Mental Tabs"
+  description="Mental Tabs: a spec campaign for Headspace that turns intrusive thoughts into search bars floating over people’s heads. By Fatima Rabi."
+>
+  <div data-case class="hs">
+    <CaseHero roles={['Concept', 'Art direction']}>
+      <Fragment slot="title">
+        <span class="line"><span>Your brain has</span></span>
+        <span class="line"><span><span data-tab-count>57</span> tabs open.</span></span>
+      </Fragment>
+      <p>Spec campaign for Headspace</p>
+      <!-- Decorative: the search bars type themselves out (see headspace.ts) -->
+      <div slot="side" class="stack" data-stack data-queries={JSON.stringify(queries)} aria-hidden="true">
+        {
+          queries.slice(0, 4).reverse().map((q, i) => (
+            <span class="q stack__bar" style={`--slot: ${3 - i}`}>
+              <span class="q__text">{q}</span>
+              <svg class="q__icon" viewBox="0 0 24 24"><circle cx="10" cy="10" r="6.5" /><path d="M15 15l5.5 5.5" /></svg>
+            </span>
+          ))
+        }
+      </div>
+    </CaseHero>
+
+    <!-- The problem -->
+    <section class="case-section theme-cream" aria-labelledby="angle-title">
+      <div class="container">
+        <CaseText eyebrow="The problem" id="angle">
+          <Fragment slot="heading">Most meditation ads sell the calm. This one starts with the noise.</Fragment>
+          <p>
+            Headspace already talks to people with racing minds. But most meditation apps lead with the solution: a
+            serene person, a sunrise, instant zen. Nobody’s brain looks like that at 2 a.m.
+          </p>
+          <p>
+            So this campaign starts with the problem everyone recognizes: <strong
+              >that feeling when your brain simply won’t shut up.</strong
+            >
+          </p>
+          <p>Relatable before aspirational. Which feels a lot more honest than promising enlightenment in ten minutes.</p>
+        </CaseText>
+
+        <CaseMedia
+          class="case-section__media"
+          image={shelter}
+          alt="Street poster in a sunlit plaza: a woman at her kitchen table with coffee, search bars over her head: “is 32 too old to change careers”. Close your mental tabs."
+        />
+      </div>
+    </section>
+
+    <!-- The insight -->
+    <section class="case-section case-section--tight theme-cream" aria-labelledby="truths-title">
+      <div class="container">
+        <CaseText eyebrow="The insight" id="truths">
+          <Fragment slot="heading">Two (uncomfortable) truths.</Fragment>
+          <p>Neither will surprise you. That’s sort of the point.</p>
+        </CaseText>
+
+        <ol class="truths">
+          <li class="truth" data-reveal>
+            <p class="truth__label">Truth #1</p>
+            <p class="truth__title">Our brains{' '}<Scribble type="scribble">never stop working.</Scribble></p>
+            <p class="truth__body">
+              Even in moments literally designed for peace, our minds spiral through scenarios. Bath. Yoga. Lying very
+              still in the dark.{' '}
+              <span class="q q--inline" data-heckle
+                ><span class="q__text" data-text="did i lock the door">did i lock the door</span><svg
+                  class="q__icon"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"><circle cx="10" cy="10" r="6.5"></circle><path d="M15 15l5.5 5.5"></path></svg
+                ></span
+              >{' '}
+              Sorry, where were we?
+            </p>
+          </li>
+          <li class="truth" data-reveal data-reveal-delay="0.1">
+            <p class="truth__label">Truth #2</p>
+            <p class="truth__title">Search histories are windows into our{' '}<Scribble type="circle">mental chaos.</Scribble></p>
+            <p class="truth__body">
+              Every anxiety, random question and 3 a.m. spiral, typed out in lowercase with zero punctuation. It’s the
+              most honest diary most of us will ever keep.
+            </p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- The napkin version -->
+    <section class="case-section napkin theme-red" aria-labelledby="napkin-title">
+      <div class="container">
+        <CaseText eyebrow="The napkin version" id="napkin">
+          <Fragment slot="heading">The glamorous part of the creative process.</Fragment>
+          <p>Before any of the polish, there was this: a couch, a bed, and a lot of red rectangles.</p>
+          <p>
+            Most of the thinking went into picking moments that are supposed to be relaxing. The calmer the scene, the
+            funnier (and slightly sadder) the searches get.
+          </p>
+          <CaseMedia
+            slot="aside"
+            class="napkin__sketch"
+            image={sketches}
+            sharp
+            alt="Two pencil sketches: a man slumped on a couch and a woman asleep in bed, red search bars stacked over their heads, with blue handwritten notes."
+            sizes="(min-width: 56rem) 28rem, min(22rem, calc(100vw - 2 * var(--gutter)))"
+          />
+        </CaseText>
+      </div>
+    </section>
+
+    <!-- The answer -->
+    <section class="case-section theme-cream" aria-labelledby="answer-title">
+      <div class="container">
+        <CaseText eyebrow="The answer" id="answer">
+          <Fragment slot="heading">Make the uninvited thoughts{' '}<Scribble type="underline">visible.</Scribble></Fragment>
+          <p><strong>Literally. As Google searches, floating above people’s heads.</strong></p>
+          <p>
+            One formula, every execution: someone in a peaceful moment, their mental search history hovering right on top.
+            The overthinking we all recognize, finally given a shape (and a search button).
+          </p>
+        </CaseText>
+
+        <div class="posters">
+          <CaseMedia
+            image={couch}
+            sharp
+            alt="Poster: a young man slumped on a couch with chips, search bars over his head: “signs you’re wasting your twenties”, “am i behind everyone else”. Close your mental tabs. Headspace."
+            sizes="(min-width: 40rem) 45vw, calc(100vw - 2 * var(--gutter))"
+          />
+          <CaseMedia
+            image={bed}
+            sharp
+            alt="Poster: a woman asleep in bed, search bars over her head: “no 5 year plan is that bad”, “weird mole should i see a doctor”. Close your mental tabs. Headspace."
+            sizes="(min-width: 40rem) 45vw, calc(100vw - 2 * var(--gutter))"
+          />
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Where it runs: the search results page -->
+    <section class="case-section theme-red" aria-labelledby="buy-title">
+      <div class="container">
+        <CaseText eyebrow="Where it runs" id="buy">
+          <Fragment slot="heading">The best ad space is the search bar itself.</Fragment>
+          <p>
+            Truth #2 says search history is the most honest diary we keep. So the campaign shows up right where people
+            write in it: the top of the results, at 2:47 a.m., mid-spiral.
+          </p>
+          <p>Same line, same formula. Only this time it’s one tap away from doing something about it.</p>
+          <p class="hs-aside hs-motion">(Tap the ad. Keep an eye on the tab count.)</p>
+          <SearchAd slot="aside" />
+        </CaseText>
+      </div>
+    </section>
+
+    <!-- Beyond the ad: the line as an in-app session -->
+    <section class="case-section app theme-cream" aria-labelledby="app-title">
+      <div class="container">
+        <CaseText id="app">
+          <Fragment slot="heading">Then it stops being an ad.</Fragment>
+          <p>
+            The posters tell you to close your tabs, so the app should let you. Close-a-Tab is a one-minute session:
+            your thoughts float in as open tabs, and every slow exhale closes one.
+          </p>
+          <p>It’s the campaign line, turned into something you can actually do on a bad night.</p>
+          <div slot="aside" class="app-side">
+            <BreathApp />
+            <p class="nudge hs-aside hs-motion" aria-hidden="true">(Go on, hold it down. Nobody’s watching.)</p>
+          </div>
+        </CaseText>
+      </div>
+    </section>
+
+    <!-- The line: the tabs close one by one as you scroll -->
+    <section class="close theme-red" aria-labelledby="close-title" data-close>
+      <div class="close__stage" data-close-stage>
+        <div class="container close__copy">
+          <h2 class="close__title" id="close-title">Close your mental tabs.</h2>
+          <p class="close__body">
+            Our brains work like overloaded browsers. Nothing clears the cache entirely, but Headspace can help close the
+            tabs we don’t need.
+          </p>
+          <p class="close__after" data-close-after aria-hidden="true">Ahh. Much better.</p>
+          <p class="close__note">Spec work: Headspace didn’t ask. (Yet.)</p>
+        </div>
+
+        <div class="close__tabs" aria-hidden="true">
+          {
+            tabs.map((t) => (
+              <span class="q close__tab" style={`--top: ${t.top}%; --left: ${t.left}%; --w: ${t.w}rem`} data-close-tab>
+                <span class="q__text">{t.q}</span>
+                <span class="close__icons">
+                  <svg class="q__icon close__search" viewBox="0 0 24 24">
+                    <circle cx="10" cy="10" r="6.5" />
+                    <path d="M15 15l5.5 5.5" />
+                  </svg>
+                  <svg class="q__icon close__x" viewBox="0 0 24 24">
+                    <path d="M6 6l12 12M18 6L6 18" />
+                  </svg>
+                </span>
+              </span>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <NextProject slug="headspace" />
+  </div>
+</Base>
+
+<style>
+  .case-section {
+    padding-block: var(--space-xl);
+  }
+  .case-section :global(.case-section__media) {
+    margin-top: var(--space-xl);
+  }
+  .case-section--tight {
+    padding-top: calc(var(--space-2xl) - var(--space-xl));
+  }
+
+  /* ---------- The search bar look (from the posters) ---------- */
+
+  .q {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.9em;
+    padding: 0.55em 0.75em 0.55em 1.25em;
+    border: 1.5px solid currentColor;
+    border-radius: var(--radius-pill);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+  .q__icon {
+    flex: none;
+    width: 1.15em;
+    height: 1.15em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+  }
+
+  /* ---------- Hero: stack of searches ---------- */
+
+  /* Four slots, newest at the bottom. The script types a new search into the
+     bottom slot and pushes the older ones up, fading them out. */
+  .stack {
+    --row: 3.4rem;
+    position: relative;
+    height: calc(var(--row) * 4);
+    max-width: 38rem;
+    margin-top: var(--space-l);
+    font-size: clamp(0.9375rem, 0.85rem + 0.4vw, 1.25rem);
+  }
+  @media (min-width: 80rem) {
+    .stack {
+      --row: 3.1rem;
+      margin: 0 0 0 auto;
+      width: 100%;
+      max-width: 36rem;
+      font-size: 1.0625rem;
+    }
+  }
+  .stack__bar {
+    position: absolute;
+    left: calc(var(--slot) * 2.5%);
+    bottom: calc(var(--slot) * var(--row));
+    max-width: calc(100% - var(--slot) * 2.5%);
+    border-color: rgb(255 246 232 / 0.85);
+    background: rgb(255 246 232 / 0.08);
+    opacity: calc(1 - var(--slot) * 0.25);
+    transform-origin: left center;
+  }
+  .stack__bar .q__text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  /* Blinking cursor while it types */
+  .stack__bar.is-typing .q__text::after {
+    content: '';
+    display: inline-block;
+    width: 1.5px;
+    height: 1.05em;
+    margin-left: 2px;
+    vertical-align: -0.15em;
+    background: currentColor;
+    animation: caret 0.9s steps(1) infinite;
+  }
+  @keyframes caret {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  /* ---------- The insight ---------- */
+
+  .truths {
+    display: grid;
+    gap: var(--space-xl) clamp(2rem, 1rem + 5vw, 5rem);
+    margin-top: var(--space-xl);
+    padding: 0;
+    list-style: none;
+  }
+  @media (min-width: 56rem) {
+    .truths {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .truth {
+    padding-top: var(--space-m);
+    border-top: 1px solid rgb(34 31 32 / 0.2);
+  }
+  .truth__label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--blue-deep);
+  }
+  .truth__title {
+    margin-top: var(--space-s);
+    font-family: var(--font-serif);
+    font-size: clamp(1.75rem, 1.3rem + 1.6vw, 2.5rem);
+    /* Roomy enough that the circle round "mental chaos" doesn't read as an
+       underline on the line above */
+    line-height: 1.25;
+    color: var(--red);
+  }
+  .truth__body {
+    margin-top: var(--space-s);
+    max-width: 34rem;
+    font-size: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+    line-height: 1.6;
+  }
+  /* The search that interrupts the paragraph */
+  .q--inline {
+    gap: 0.6em;
+    padding: 0.15em 0.5em 0.15em 0.85em;
+    border-width: 1px;
+    border-color: var(--blue-deep);
+    color: var(--blue-deep);
+    font-size: 0.95em;
+    vertical-align: 0.05em;
+  }
+  .q--inline.is-typing .q__text::after {
+    content: '';
+    display: inline-block;
+    width: 1px;
+    height: 1em;
+    margin-left: 1px;
+    vertical-align: -0.12em;
+    background: currentColor;
+    animation: caret 0.9s steps(1) infinite;
+  }
+
+  /* ---------- Napkin ---------- */
+
+  /* Kept compact so the executions come sooner */
+  .case-section.napkin {
+    padding-block: clamp(2.5rem, 1.5rem + 3vw, 4rem);
+  }
+  .hs :global(.napkin__sketch) {
+    max-width: 22rem;
+    margin-inline: auto;
+  }
+  @media (min-width: 56rem) {
+    .hs :global(.napkin__sketch) {
+      max-width: 28rem;
+      margin-right: 0;
+    }
+  }
+
+  /* ---------- Posters ---------- */
+
+  .posters {
+    display: grid;
+    gap: var(--space-l) clamp(1rem, 0.4rem + 1.8vw, 2.25rem);
+    margin-top: var(--space-xl);
+  }
+  @media (min-width: 40rem) {
+    .posters {
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+    }
+    /* Second poster sits lower, magazine-style */
+    .posters > :global(:nth-child(2)) {
+      margin-top: 18%;
+    }
+  }
+
+  /* ---------- Where it runs / the app ---------- */
+
+  .hs-aside {
+    font-size: var(--step--1);
+  }
+  .theme-red .hs-aside {
+    color: var(--cream);
+    opacity: 0.85;
+  }
+  /* Instructions only make sense when things move */
+  .hs-motion {
+    display: none;
+  }
+  :global(html.js-motion) .hs-motion {
+    display: block;
+  }
+
+  /* The app, with a note in the space beside it */
+  .app-side {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-m);
+  }
+  .nudge {
+    max-width: 16rem;
+    color: var(--blue-deep);
+    font-weight: 500;
+    text-align: center;
+  }
+  @media (min-width: 56rem) {
+    .app-side {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(1.5rem, 0.5rem + 2vw, 3rem);
+    }
+    .nudge {
+      flex: 0 1 11rem;
+      text-align: right;
+    }
+    /* Flipped for variety: app on the left (note on its outer side), copy on the right */
+    .app-side {
+      flex-direction: row-reverse;
+    }
+    .app :global(.case-text__aside) {
+      order: -1;
+    }
+  }
+
+  /* ---------- The line: tabs close as you scroll ---------- */
+
+  .close__stage {
+    position: relative;
+    display: grid;
+    align-items: center;
+    min-height: 100svh;
+    padding-block: var(--space-2xl);
+    overflow: hidden;
+  }
+  .close__copy {
+    position: relative;
+    text-align: center;
+  }
+  .close__title {
+    font-size: clamp(3rem, 1.5rem + 6.5vw, 8rem);
+    line-height: 0.95;
+  }
+  .close__body {
+    max-width: 34rem;
+    margin: var(--space-m) auto 0;
+    font-size: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+    line-height: 1.5;
+  }
+  .close__after {
+    display: none;
+    margin-top: var(--space-l);
+    font-family: var(--font-serif);
+    font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem);
+    font-style: italic;
+    color: var(--blue);
+  }
+  .close__note {
+    margin-top: var(--space-l);
+    font-size: 0.875rem;
+    opacity: 0.8;
+  }
+
+  /* The tabs only exist when the animation runs (not with reduced motion or
+     without JavaScript), so nothing ever covers the headline for good. */
+  .close__tabs {
+    display: none;
+  }
+  :global(html.js-motion) .close__tabs {
+    display: block;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    font-size: clamp(0.8125rem, 0.7rem + 0.45vw, 1.125rem);
+  }
+  :global(html.js-motion) .close__after {
+    display: block;
+    opacity: 0;
+  }
+  .close__tab {
+    position: absolute;
+    top: var(--top);
+    left: var(--left);
+    width: min(var(--w), 92vw);
+    border-color: rgb(255 246 232 / 0.75);
+    /* Frosted glass: the headline is blurry behind the tabs until they close */
+    background: rgb(193 18 31 / 0.55);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    color: var(--cream);
+  }
+  .close__tab .q__text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .close__icons {
+    display: grid;
+  }
+  .close__icons > * {
+    grid-area: 1 / 1;
+  }
+  .close__x {
+    opacity: 0;
+  }
+  @media (max-width: 40rem) {
+    .close__tab {
+      left: calc(var(--left) * 0.4);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .stack__bar.is-typing .q__text::after,
+    .q--inline.is-typing .q__text::after {
+      animation: none;
+    }
+  }
+</style>

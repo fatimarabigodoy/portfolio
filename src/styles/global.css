@@ -1,0 +1,254 @@
+/* ==========================================================================
+   DESIGN TOKENS: the site's colours, fonts, sizes and spacing.
+   Every page reads from here, so a change here updates the whole site.
+   ========================================================================== */
+
+:root {
+  /* Colours (sampled from the Figma Home frame) */
+  --red: #c1121f;
+  --red-deep: #9e0e19;
+  --cream: #fff6e8;
+  --ink: #221f20;
+  --blue: #a9c6ea;
+  /* Deeper blue for small text on cream. The light blue is too faint to read there. */
+  --blue-deep: #3f6aa8;
+  --white: #ffffff;
+
+  /* Fonts */
+  --font-serif: 'Instrument Serif', 'Times New Roman', serif;
+  --font-sans: 'Archivo Variable', 'Archivo', system-ui, sans-serif;
+
+  /* Type scale: each size grows smoothly from phone (min) to desktop (max) */
+  --step--1: clamp(0.8125rem, 0.78rem + 0.12vw, 0.875rem); /* 13 → 14 */
+  --step-0: clamp(0.9375rem, 0.9rem + 0.15vw, 1.0625rem);  /* 15 → 17 */
+  --step-1: clamp(1.125rem, 1.05rem + 0.35vw, 1.375rem);   /* 18 → 22 */
+  --step-2: clamp(1.5rem, 1.3rem + 0.9vw, 2.25rem);        /* 24 → 36 */
+  --step-3: clamp(2.25rem, 1.8rem + 2vw, 3.75rem);         /* 36 → 60 */
+  --step-4: clamp(2.75rem, 2rem + 3.4vw, 4.75rem);         /* 44 → 76 */
+  --step-5: clamp(3.5rem, 2rem + 7vw, 9rem);               /* 56 → 144 */
+
+  /* Spacing */
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-s: 1rem;
+  --space-m: 1.5rem;
+  --space-l: 2.5rem;
+  --space-xl: clamp(3rem, 2rem + 4vw, 6rem);
+  --space-2xl: clamp(5rem, 3rem + 8vw, 10rem);
+
+  /* Page edges and max width (Figma: 1440 frame, 120px side margins) */
+  --gutter: clamp(1rem, 0.4rem + 3vw, 7.5rem);
+  --max-width: 1440px;
+
+  --radius-s: 8px;
+  --radius-pill: 999px;
+
+  /* Motion: one shared feel for every animation */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 0.25s;
+  --dur: 0.6s;
+
+  --header-h: 5rem;
+}
+
+/* ==========================================================================
+   RESET & BASE
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100svh;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--step-0);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+}
+
+img,
+picture,
+video,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+::selection {
+  background: var(--blue);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* Lenis smooth scroll housekeeping */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+/* ==========================================================================
+   HELPERS used across pages
+   ========================================================================== */
+
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Section colour themes. The header reads these to switch its colours. */
+.theme-red {
+  background: var(--red);
+  color: var(--cream);
+}
+.theme-cream {
+  background: var(--cream);
+  color: var(--ink);
+}
+
+/* Small spaced-out caps label, e.g. "FEATURED WORK" */
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--blue-deep);
+}
+.theme-red .eyebrow {
+  color: var(--blue);
+}
+
+/* Pill button, e.g. "Get in touch" */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.85em 1.6em;
+  border-radius: var(--radius-pill);
+  background: var(--red);
+  color: var(--cream);
+  font-weight: 500;
+  line-height: 1;
+  transition:
+    transform var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+.btn:hover {
+  background: var(--red-deep);
+  transform: translateY(-2px);
+}
+.theme-red .btn {
+  background: var(--cream);
+  color: var(--red);
+}
+.theme-red .btn:hover {
+  background: var(--white);
+}
+/* Little blue "done!" moment after copying the email */
+.btn.is-copied,
+.theme-red .btn.is-copied {
+  background: var(--blue);
+  color: var(--ink);
+}
+.theme-red :focus-visible {
+  outline-color: var(--blue);
+}
+
+/* Screen-reader-only text */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 200;
+  padding: 0.6em 1em;
+  background: var(--ink);
+  color: var(--cream);
+  border-radius: var(--radius-pill);
+  transform: translateY(-200%);
+}
+.skip-link:focus {
+  transform: none;
+}
+
+/* Elements that animate in on scroll start hidden, but only once JS is
+   running and motion is allowed, so nothing ever gets stuck invisible. */
+html.js-motion [data-reveal] {
+  opacity: 0;
+}

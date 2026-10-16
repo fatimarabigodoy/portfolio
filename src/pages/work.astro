@@ -1,0 +1,158 @@
+---
+import Base from '../layouts/Base.astro';
+import WorkCard from '../components/WorkCard.astro';
+import Cursor from '../components/Cursor.astro';
+import { projects } from '../data/projects';
+
+const client = projects.filter((p) => p.group === 'client');
+const spec = projects.filter((p) => p.group === 'spec');
+
+const sections = [
+  {
+    id: 'out-in-the-wild',
+    title: 'Out in the wild',
+    theme: 'cream',
+    items: client,
+    intro: 'Some of the work that made the client-cut. Both the (unpolished) strategy and the production-y stuff.',
+  },
+  {
+    id: 'spec-work',
+    title: 'Real brands, spec work.',
+    theme: 'red',
+    items: spec,
+    intro: 'Things I made for the love of the game. A peek into how my brain works, if you will.',
+  },
+] as const;
+---
+
+<Base title="Work" description="Campaigns, brands and collateral by Fatima Rabi, a designer in Ottawa.">
+  <section class="work-hero theme-red">
+    <div class="container">
+      <h1 class="work-hero__title" data-hero-lines>
+        <span class="line"><span>Look mom,</span></span>
+        <span class="line"
+          ><span
+            >I made that<span class="bang">!</span><span class="bangs" aria-hidden="true" data-bangs
+              ><span>!</span><span>!</span><span>!</span><span>!</span><span>!</span><span>!</span></span
+            ></span
+          ></span
+        >
+      </h1>
+      <p class="work-hero__roles" data-reveal data-reveal-delay="0.35">
+        Art direction <span aria-hidden="true">/</span>
+        <span class="sr-only">,</span> Design <span aria-hidden="true">/</span>
+        <span class="sr-only">,</span> Concept development
+      </p>
+    </div>
+  </section>
+
+  {
+    sections.map((s, si) => (
+      <section class={`work-section theme-${s.theme}`} id={s.id} aria-labelledby={`${s.id}-title`}>
+        <div class="container">
+          <header class="work-section__head">
+            <h2 class="work-section__title" id={`${s.id}-title`} data-reveal>
+              {s.title}
+            </h2>
+            <p class="work-section__intro" data-reveal data-reveal-delay="0.1">
+              {s.intro}
+            </p>
+          </header>
+
+          <ul class="work-grid" role="list">
+            {s.items.map((p, i) => (
+              <WorkCard project={p} eager={si === 0 && i < 2} />
+            ))}
+          </ul>
+        </div>
+      </section>
+    ))
+  }
+
+  <Cursor />
+</Base>
+
+<style>
+  /* ---------- Hero ---------- */
+
+  .work-hero {
+    padding-block: calc(var(--header-h) + var(--space-xl)) var(--space-xl);
+  }
+
+  .work-hero__title {
+    font-size: clamp(3.5rem, 2.2rem + 5vw, 6rem); /* 56 → 96 */
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+  }
+  /* Each line slides up from behind a mask */
+  .line {
+    display: block;
+  }
+  .line > span {
+    display: inline-block;
+  }
+  /* The excited exclamation marks */
+  .bang,
+  .bangs > span {
+    display: inline-block;
+    color: var(--cream);
+  }
+  /* Extra marks wait offstage until the headline has landed */
+  :global(html.js-motion) .bangs > span {
+    opacity: 0;
+  }
+  /* Before the reveal, each line hides behind a mask */
+  :global(html.js-motion) .line:not(.is-in) {
+    clip-path: inset(-0.6em -1em -0.25em -1em);
+  }
+  :global(html.js-motion) .line:not(.is-in) > span {
+    opacity: 0;
+  }
+
+  .work-hero__roles {
+    margin-top: var(--space-m);
+    font-size: clamp(0.8125rem, 0.7rem + 0.45vw, 1.25rem); /* 13 → 20 */
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.5;
+    text-transform: uppercase;
+  }
+  .work-hero__roles span[aria-hidden] {
+    margin-inline: 0.35em;
+  }
+
+
+  /* ---------- Sections ---------- */
+
+  .work-section {
+    padding-block: var(--space-2xl);
+  }
+  .work-section__head {
+    margin-bottom: var(--space-l);
+  }
+  .work-section__title {
+    font-size: clamp(2.5rem, 1.6rem + 3.6vw, 4rem); /* 40 → 64 */
+    line-height: 1;
+  }
+  .theme-cream .work-section__title {
+    color: var(--red);
+  }
+  .work-section__intro {
+    margin-top: 1.25rem;
+    max-width: 52ch;
+    font-size: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+    letter-spacing: -0.01em;
+  }
+
+  .work-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
+    gap: clamp(1rem, 0.4rem + 1.8vw, 2.25rem);
+    padding: 0;
+  }
+  @media (min-width: 48rem) {
+    .work-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

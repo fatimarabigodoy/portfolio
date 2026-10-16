@@ -1,0 +1,342 @@
+---
+/**
+ * A picture or video in a case study, in a rounded frame that opens up as
+ * it scrolls into view.
+ *
+ *   <CaseMedia image={photo} alt="…" ratio="1200 / 529" />
+ *   <CaseMedia loop="/media/x.mp4" poster="/media/x.jpg" alt="…" />   silent looping clip (replaces GIFs)
+ *   <CaseMedia film="/media/x.mp4" poster="/media/x.jpg" alt="…" />   video with sound and a play button
+ *   <CaseMedia slides={[a, b, c]} alt="…" />   pictures that crossfade in turn (replaces slideshow GIFs)
+ *
+ * ratio = the frame's shape on wide screens ("width / height"). Leave it out
+ * to use the picture's own shape. Phones always use the picture's own shape
+ * unless mobileRatio is set.
+ * focus = which part of the picture stays in view when the frame crops it.
+ * Anything in the "caption" slot shows underneath.
+ * cutout = a see-through picture (e.g. an illustration PNG): no frame colour or
+ * rounded corners, and the whole picture always shows (never cropped).
+ * sharp = compress less, for pictures with small text people should be able to read.
+ */
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { widthsFor } from '../../utils/image';
+
+interface Props {
+  image?: ImageMetadata;
+  /** Several pictures shown in turn, crossfading. Same shape, please. */
+  slides?: ImageMetadata[];
+  /** Seconds each slide stays up */
+  interval?: number;
+  loop?: string;
+  film?: string;
+  poster?: string;
+  alt: string;
+  ratio?: string;
+  mobileRatio?: string;
+  focus?: string;
+  /** How wide it shows, for picking the right image size */
+  sizes?: string;
+  /** Fill the height of its parent instead of keeping a shape (wide screens) */
+  fill?: boolean;
+  cutout?: boolean;
+  sharp?: boolean;
+  class?: string;
+}
+
+const {
+  image: singleImage,
+  slides,
+  interval = 2.5,
+  loop,
+  film,
+  poster,
+  alt,
+  ratio,
+  mobileRatio,
+  focus = '50% 50%',
+  sizes = '(min-width: 90rem) 1200px, calc(100vw - 2 * var(--gutter))',
+  fill = false,
+  cutout = false,
+  sharp = false,
+  class: className,
+} = Astro.props;
+
+const image = singleImage ?? slides?.[0];
+const ownRatio = image ? `${image.width} / ${image.height}` : undefined;
+const style = [
+  `--ratio: ${ratio ?? ownRatio ?? '16 / 9'}`,
+  `--ratio-mobile: ${mobileRatio ?? ownRatio ?? ratio ?? '16 / 9'}`,
+  `--focus: ${focus}`,
+].join('; ');
+const hasCaption = Astro.slots.has('caption');
+---
+
+<figure class:list={['media', { 'media--fill': fill, 'media--cutout': cutout }, className]} style={style}>
+  <div class="media__frame" data-media>
+    <div class="media__inner" data-media-inner>
+      {
+        slides && (
+          <div class="media__slides" data-slides data-interval={interval} role="img" aria-label={alt}>
+            {slides.map((slide, i) => (
+              <Picture
+                src={slide}
+                alt=""
+                formats={['avif', 'webp']}
+                widths={widthsFor(slide)}
+                sizes={sizes}
+                loading="lazy"
+                class:list={['media__slide', { 'is-active': i === 0 }]}
+              />
+            ))}
+          </div>
+        )
+      }
+      {
+        singleImage && (
+          <Picture
+            src={image}
+            alt={alt}
+            formats={['avif', 'webp']}
+            widths={widthsFor(image)}
+            sizes={sizes}
+            quality={sharp ? 90 : undefined}
+            loading="lazy"
+          />
+        )
+      }
+      {
+        loop && (
+          <video
+            src={loop}
+            poster={poster}
+            muted
+            loop
+            playsinline
+            preload="none"
+            aria-label={alt}
+            data-loop-video
+          />
+        )
+      }
+      {
+        film && (
+          <video src={film} poster={poster} playsinline preload="none" aria-label={alt} data-film />
+        )
+      }
+    </div>
+
+    {
+      (loop || slides) && (
+        <button class="media__toggle" type="button" data-loop-toggle aria-label="Pause animation">
+          <svg viewBox="0 0 16 16" aria-hidden="true">
+            <path class="icon-pause" d="M4 3h3v10H4zM9 3h3v10H9z" />
+            <path class="icon-play" d="M5 2.5v11L13.5 8z" />
+          </svg>
+        </button>
+      )
+    }
+
+    {
+      film && (
+        <button class="media__play" type="button" data-film-play>
+          <span class="media__pill">
+            <span class="media__play-icon" aria-hidden="true">
+              <svg viewBox="0 0 16 16">
+                <path d="M5 2.5v11L13.5 8z" />
+              </svg>
+            </span>
+            Play the film
+          </span>
+        </button>
+      )
+    }
+  </div>
+  {
+    hasCaption && (
+      <figcaption class="media__caption">
+        <slot name="caption" />
+      </figcaption>
+    )
+  }
+</figure>
+
+<style>
+  .media {
+    position: relative;
+  }
+  .media__frame {
+    position: relative;
+    aspect-ratio: var(--ratio-mobile);
+    overflow: hidden;
+    border-radius: 12px;
+    background: rgb(34 31 32 / 0.06);
+  }
+  @media (min-width: 48rem) {
+    .media__frame {
+      aspect-ratio: var(--ratio);
+    }
+    .media--fill,
+    .media--fill .media__frame {
+      height: 100%;
+      aspect-ratio: auto;
+    }
+  }
+  .media__inner,
+  .media__inner :global(picture) {
+    width: 100%;
+    height: 100%;
+  }
+  .media__inner :global(img),
+  .media__inner video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--focus);
+  }
+
+  /* Slideshow: pictures stacked, the active one fades in on top */
+  .media__slides {
+    display: grid;
+    width: 100%;
+    height: 100%;
+  }
+  .media__slides > :global(*) {
+    grid-area: 1 / 1;
+    min-height: 0;
+  }
+  .media__slides :global(.media__slide) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--focus);
+    opacity: 0;
+    transition: opacity 0.45s var(--ease-in-out);
+  }
+  .media__slides :global(.media__slide.is-active) {
+    opacity: 1;
+  }
+
+  .media--cutout .media__frame {
+    border-radius: 0;
+    background: none;
+  }
+  .media--cutout .media__inner :global(img) {
+    object-fit: contain;
+  }
+
+  .media__caption {
+    margin-top: 0.6rem;
+    font-size: var(--step--1);
+    letter-spacing: -0.01em;
+  }
+  .media__caption :global(a) {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  /* Small pause / play button on looping clips */
+  .media__toggle {
+    position: absolute;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    background: rgb(255 246 232 / 0.85);
+    color: var(--ink);
+    opacity: 0;
+    transition:
+      opacity var(--dur-fast) var(--ease-out),
+      background-color var(--dur-fast) var(--ease-out);
+  }
+  .media__toggle svg {
+    width: 0.85rem;
+    fill: currentColor;
+  }
+  .media__toggle .icon-play,
+  .media__toggle.is-paused .icon-pause {
+    display: none;
+  }
+  .media__toggle.is-paused .icon-play {
+    display: block;
+  }
+  .media__frame:hover .media__toggle,
+  .media__toggle:focus-visible,
+  .media__toggle.is-paused {
+    opacity: 1;
+  }
+  .media__toggle:hover {
+    background: var(--cream);
+  }
+  @media (hover: none) {
+    .media__toggle {
+      opacity: 1;
+    }
+  }
+
+  /* Red "Play the film" pill in the corner of the video's cover picture.
+     The whole picture is clickable. */
+  .media__play {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    padding: clamp(0.75rem, 0.4rem + 1.5vw, 1.5rem);
+    background: linear-gradient(to top, rgb(34 31 32 / 0.25), transparent 40%);
+    transition:
+      opacity var(--dur) var(--ease-out),
+      visibility var(--dur);
+  }
+  .media__pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7em;
+    padding: 0.45em 1.3em 0.45em 0.45em;
+    border-radius: var(--radius-pill);
+    background: var(--red);
+    color: var(--cream);
+    font-size: clamp(0.875rem, 0.75rem + 0.5vw, 1.25rem);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    box-shadow: 0 0.6em 2em rgb(34 31 32 / 0.25);
+    transition:
+      transform var(--dur) var(--ease-out),
+      background-color var(--dur-fast);
+  }
+  .media__play-icon {
+    display: grid;
+    place-items: center;
+    width: 2.4em;
+    height: 2.4em;
+    border-radius: 50%;
+    background: var(--cream);
+    color: var(--red);
+    transition: transform var(--dur) var(--ease-out);
+  }
+  .media__play-icon svg {
+    width: 0.9em;
+    margin-left: 0.15em;
+    fill: currentColor;
+  }
+  .media__play:hover .media__pill {
+    transform: translateY(-3px);
+    background: var(--red-deep);
+  }
+  .media__play:hover .media__play-icon {
+    transform: rotate(-12deg) scale(1.08);
+  }
+  .media__frame.is-playing .media__play {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .media__slides :global(.media__slide),
+    .media__pill,
+    .media__play-icon {
+      transition: none;
+    }
+  }
+</style>

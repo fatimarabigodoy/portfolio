@@ -1,0 +1,728 @@
+---
+// Case study: Coach Cedar, "Making tech a little less tech-y."
+// Built from the shared case-study pieces in src/components/case/, plus
+// src/scripts/coach-cedar.ts: the coach's check-ins arrive in the hero.
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Base from '../../layouts/Base.astro';
+import Scribble from '../../components/Scribble.astro';
+import CaseHero from '../../components/case/CaseHero.astro';
+import CaseText from '../../components/case/CaseText.astro';
+import CaseMedia from '../../components/case/CaseMedia.astro';
+import NextProject from '../../components/case/NextProject.astro';
+import CaseLine from '../../components/case/CaseLine.astro';
+
+import billboards from '../../assets/coach-cedar/billboards.jpg';
+import appIcon from '../../assets/coach-cedar/app-icon.jpg';
+import appStore from '../../assets/coach-cedar/app-store.jpg';
+import tree from '../../assets/coach-cedar/concept-1.jpg';
+import treeIdea from '../../assets/coach-cedar/concept-1-idea.jpg';
+import treeVariations from '../../assets/coach-cedar/concept-1-variations.jpg';
+import treeIcons from '../../assets/coach-cedar/concept-1-icons.jpg';
+import human from '../../assets/coach-cedar/concept-2.jpg';
+import humanIdea from '../../assets/coach-cedar/concept-2-idea.jpg';
+import humanVariations from '../../assets/coach-cedar/concept-2-variations.jpg';
+import humanIcons from '../../assets/coach-cedar/concept-2-icons.jpg';
+import logoBlack from '../../assets/coach-cedar/logo-black.jpg';
+import logoReverse from '../../assets/coach-cedar/logo-reverse.jpg';
+import logoBlackStacked from '../../assets/coach-cedar/logo-black-stacked.jpg';
+import logoReverseStacked from '../../assets/coach-cedar/logo-reverse-stacked.jpg';
+import fontsColours from '../../assets/coach-cedar/fonts-colours.png';
+import markWhite from '../../assets/coach-cedar/mark-white.png';
+import system from '../../assets/coach-cedar/system.png';
+import halfpage1 from '../../assets/coach-cedar/halfpage-1.jpg';
+import halfpage2 from '../../assets/coach-cedar/halfpage-2.jpg';
+import halfpage3 from '../../assets/coach-cedar/halfpage-3.jpg';
+import womenAd1 from '../../assets/coach-cedar/women-ad-1.jpg';
+import womenAd2 from '../../assets/coach-cedar/women-ad-2.jpg';
+import womenAd3 from '../../assets/coach-cedar/women-ad-3.jpg';
+import womenAd4 from '../../assets/coach-cedar/women-ad-4.jpg';
+import womenAd5 from '../../assets/coach-cedar/women-ad-5.jpg';
+import womenAd6 from '../../assets/coach-cedar/women-ad-6.jpg';
+import instagram from '../../assets/coach-cedar/instagram.jpg';
+import appStoreScreens from '../../assets/coach-cedar/app-store-screens.png';
+import linkedin from '../../assets/coach-cedar/linkedin.jpg';
+import { widthsFor } from '../../utils/image';
+
+const media = '/media/coach-cedar';
+
+// Hero: the coach checking in (oldest first; newest shows on top, like a real lock screen)
+const checkIns = [
+  { time: '9:12', text: 'Haven’t seen you since Tuesday. All good?' },
+  { time: '9:13', text: 'Knee still cranky? I swapped the lunges for step-ups.' },
+  { time: 'now', text: 'Rest days count too. See you tomorrow.' },
+];
+
+const half = '(min-width: 48rem) min(46vw, 582px), calc(100vw - 2 * var(--gutter))';
+
+interface Concept {
+  title: string;
+  image: ImageMetadata;
+  alt: string;
+  body: string[];
+  idea: ImageMetadata;
+  ideaAlt: string;
+  variations: ImageMetadata;
+  variationsAlt: string;
+  /** The dropdown's label and what it reveals */
+  prompt: string;
+  bonus: string[];
+  icons: ImageMetadata;
+  iconsAlt: string;
+}
+
+const concepts: Concept[] = [
+  {
+    title: 'The Tree',
+    image: tree,
+    alt: 'Concept 1: the cedar-and-chevrons mark with a bold “coach cedar” wordmark, over two people resting after a run.',
+    body: [
+      'The mark is two ideas stacked. A cedar for strength (the thing still standing after winter), and forward chevrons for momentum. Layer them and you get a tree that’s also an arrow, which is the brand in one shape: something you can lean on that’s also going somewhere.',
+      'I started with the type: a heavy-ish sans that’s friendly without going soft. Then I drew the mark to match it, same weight and same curves, so the two look like they came from the same universe.',
+    ],
+    idea: treeIdea,
+    ideaAlt: 'A cedar tree plus three forward chevrons equals the Coach Cedar mark.',
+    variations: treeVariations,
+    variationsAlt: 'The Tree logo in horizontal and stacked versions, in black on white and white on charcoal.',
+    prompt: 'Bonus!',
+    bonus: [
+      'Supporting iconography! Every mark is drawn from the same curved stroke as the logo. Rotated, stacked, or mirrored; the system stays coherent.',
+      'The idea is that this icon system symbolizes every state: resting, pivoting, moving, progressing, still, stepping forward, etc.',
+    ],
+    icons: treeIcons,
+    iconsAlt:
+      'Six icons built from the tree mark: rest and recover, pivot or check-in, in motion, progress, stillness, next step.',
+  },
+  {
+    title: 'The Human™',
+    image: human,
+    alt: 'Concept 2: a person-shaped CC mark with a lighter “coach cedar” wordmark, over a close-up of someone stretching.',
+    body: [
+      'The brief said the CC monogram had legs, so I went back to it. Two Cs, one circular stroke. Since the whole point is “a person, not a product,” I asked what happens if the C becomes the person. Head, arms up, but not “just won a marathon” up. Somewhere between a stretch and a wave, if you squint.',
+      'The wordmark is lighter here. If it were an actual person, it’d be the nicer coach when compared to concept 1.',
+    ],
+    idea: humanIdea,
+    ideaAlt: 'The letters CC plus a person with arms raised equals the Human mark.',
+    variations: humanVariations,
+    variationsAlt: 'The Human logo in horizontal and stacked versions, in black on white and white on charcoal.',
+    prompt: 'Another bonus!',
+    bonus: [
+      'You guessed it! Supporting iconography again. The icons track the relationship rather than the workout: showing up, support, a milestone. There’s also a cedar tucked into the set, because I wasn’t going to waste a good tree.',
+    ],
+    icons: humanIcons,
+    iconsAlt: 'Six icons built from the Human mark: movement, the cedar, forward, support, breakthrough, milestone.',
+  },
+];
+---
+
+<Base
+  title="Coach Cedar: Making tech a little less tech-y"
+  description="Brand identity and visual system for Coach Cedar, an AI fitness coaching app that feels like a person, not a product, by Fatima Rabi."
+>
+  <div data-case class="cc">
+    <CaseHero roles={['Brand identity', 'Visual system']}>
+      <Fragment slot="title">
+        <span class="line"><span>Making tech a little</span></span>
+        <span class="line"
+          ><span
+            >less <Scribble type="underline" draw="load" delay={1} redraw color="var(--blue)">tech-y.</Scribble
+            ></span
+          ></span
+        >
+      </Fragment>
+      <p>Identity for Coach Cedar.</p>
+      <p>Created as Art Director while at BOLD LIP.</p>
+
+      <!-- Decorative: the coach's check-ins arrive one by one (coach-cedar.ts) -->
+      <ul slot="side" class="notes" data-lock aria-hidden="true">
+        {
+          [...checkIns].reverse().map((n) => (
+            <li class="note">
+              <span class="note__icon">
+                <Picture src={markWhite} alt="" widths={[96]} sizes="48px" formats={['avif', 'webp']} />
+              </span>
+              <span class="note__body">
+                <span class="note__head">
+                  <strong>Coach Cedar</strong>
+                  <span>{n.time}</span>
+                </span>
+                <span class="note__text">{n.text}</span>
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </CaseHero>
+
+    <!-- The ask -->
+    <section class="case-section theme-cream" aria-labelledby="ask-title">
+      <div class="container">
+        <CaseText eyebrow="The ask" id="ask">
+          <Fragment slot="heading">Coach Cedar is an AI fitness coach. It just can’t look like one.</Fragment>
+          <p>
+            Coach Cedar is a fitness app that remembers your history, adapts when life gets in the way, and checks in
+            before you disappear.
+          </p>
+          <p>
+            Even though it is explicitly an AI-powered product, the brand needed to make all that feel human, not
+            tech-y.
+          </p>
+          <p>
+            Somewhat warm, but not soft (think good-but-firm coach, not a wellness retreat). The logo had to be clean
+            and simple, and still hold up at app-icon size.
+          </p>
+        </CaseText>
+
+        <div class="case-stack case-section__media">
+          <CaseMedia
+            image={billboards}
+            alt="Three Coach Cedar posters on a stone wall: “Built to last”, the cedar mark, and “Still going”."
+            ratio="2400 / 1214"
+          />
+          <div class="ask-grid">
+            <CaseMedia
+              image={appIcon}
+              alt="Close-up of a phone home screen with the green Coach Cedar app icon."
+              ratio="582 / 675"
+              focus="78% 30%"
+              sizes={half}
+            />
+            <div class="ask-grid__col">
+              <CaseMedia
+                loop={`${media}/logo.mp4`}
+                poster={`${media}/logo-poster.jpg`}
+                alt="Animation: the cedar mark builds itself chevron by chevron, then the wordmark slides in beside it."
+                ratio="1080 / 300"
+                mobileRatio="1080 / 300"
+              />
+              <CaseMedia
+                image={appStore}
+                alt="Coach Cedar’s App Store page on a phone: 4.7 stars, number 8 in Fitness Apps."
+                ratio="582 / 477"
+                focus="50% 45%"
+                sizes={half}
+                fill
+                class="ask-grid__grow"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Initial concepts -->
+    <section class="case-section theme-red" aria-labelledby="concepts-title">
+      <div class="container">
+        <h2 class="case-section__title" id="concepts-title" data-reveal>Initial Concepts</h2>
+
+        <ul class="cc-concepts" role="list">
+          {
+            concepts.map((c, i) => (
+              <li class="cc-concept" data-concept>
+                <CaseMedia image={c.image} alt={c.alt} ratio="582 / 430" sizes={half} />
+                <h3 class="cc-concept__title" data-reveal>
+                  {c.title}
+                </h3>
+                <div class="cc-concept__body" data-reveal data-reveal-delay="0.1">
+                  {c.body.map((p) => (
+                    <p>{p}</p>
+                  ))}
+                </div>
+                <div class="cc-concept__cards">
+                  <CaseMedia
+                    image={c.idea}
+                    alt={c.ideaAlt}
+                    ratio="558 / 141"
+                    mobileRatio="2 / 1"
+                    sizes={half}
+                    class="cc-white"
+                  />
+                  <CaseMedia
+                    image={c.variations}
+                    alt={c.variationsAlt}
+                    ratio="558 / 314"
+                    sizes={half}
+                    class="cc-white"
+                  />
+                </div>
+
+                <button
+                  class="cc-concept__toggle"
+                  type="button"
+                  aria-expanded="false"
+                  aria-controls={`cc-bonus-${i}`}
+                  data-concept-toggle
+                >
+                  <span>{c.prompt}</span>
+                  <span class="cc-concept__plus" aria-hidden="true" />
+                </button>
+                <div class="cc-concept__panel" id={`cc-bonus-${i}`}>
+                  <div>
+                    <div class="cc-concept__bonus">
+                      {c.bonus.map((p) => (
+                        <p>{p}</p>
+                      ))}
+                      <div class="cc-concept__icons">
+                        <Picture
+                          src={c.icons}
+                          alt={c.iconsAlt}
+                          formats={['avif', 'webp']}
+                          widths={widthsFor(c.icons, [600, 900, 1200])}
+                          sizes={half}
+                          loading="lazy"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <!-- Logo development -->
+    <section class="case-section theme-cream" aria-labelledby="logo-title">
+      <div class="container">
+        <CaseText eyebrow="Logo development" id="logo">
+          <Fragment slot="heading">The mark stayed.<br />The type got friendlier.</Fragment>
+          <p>
+            The wordmark I had originally proposed for this concept was more geometric, a bit stiff for the client’s
+            preference. Which is a fair description of most fitness apps, and not what a coach who remembers your bad
+            knee should sound like. The final is rounder and lighter, with softer curves and more room to breathe.
+          </p>
+        </CaseText>
+
+        <div class="logo-grid case-section__media">
+          <CaseMedia
+            image={logoBlack}
+            alt="Final Coach Cedar logo, horizontal, in charcoal on white."
+            ratio="582 / 240"
+            sizes={half}
+            class="cc-white"
+          />
+          <CaseMedia
+            image={logoReverse}
+            alt="Final Coach Cedar logo, horizontal, in white on charcoal."
+            ratio="582 / 240"
+            sizes={half}
+          />
+          <CaseMedia
+            image={logoBlackStacked}
+            alt="Final Coach Cedar logo, stacked, in charcoal on white."
+            ratio="582 / 240"
+            sizes={half}
+            class="cc-white"
+          />
+          <CaseMedia
+            image={logoReverseStacked}
+            alt="Final Coach Cedar logo, stacked, in white on charcoal."
+            ratio="582 / 240"
+            sizes={half}
+          />
+        </div>
+
+        <div class="fonts" aria-labelledby="fonts-title">
+          <div class="fonts__text">
+            <h3 class="eyebrow fonts__eyebrow" id="fonts-title" data-reveal>Fonts &amp; colours</h3>
+            <div class="fonts__body" data-reveal data-reveal-delay="0.1">
+              <p>
+                Originally, I’d also proposed new colours. They did not survive V2. Cedar’s green was already
+                established in the UI, and when that colour is doing that job, replacing it is a big ask. So instead
+                of swapping the green out, I made it work harder: <strong>three stops of the main green</strong> instead
+                of one.
+              </p>
+              <p>
+                As for the brand’s fonts, the wordmark and UI had to stay in their own lane. For display, though, we
+                landed on a different pairing: Transducer Extended Black and Owners Wide Medium. The goal was a font
+                combo that would share a similar width but with enough difference in weight.
+              </p>
+            </div>
+          </div>
+          <CaseMedia
+            image={fontsColours}
+            alt="Type specimens for Transducer Extended Black and Owners Wide Medium, beside three swatches: deep, mid and bright green."
+            sizes={half}
+            cutout
+          />
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Visual system -->
+    <section class="case-section theme-red" aria-labelledby="system-title">
+      <div class="container">
+        <CaseText eyebrow="Visual system" id="system">
+          <Fragment slot="heading">The mark as architecture.</Fragment>
+          <p>The visual system is built from a single source: the cedar mark.</p>
+          <p>
+            The thin, curved strokes are the mark’s outlines. Scaled up to its curve and placed behind the subject, it
+            uses just the contour to frame and add movement.
+          </p>
+          <p>
+            The solid, full-colour mark is scaled too and sits over the image, adding dimension without overpowering
+            the image.
+          </p>
+          <CaseMedia
+            slot="aside"
+            image={system}
+            alt="Three fitness photos framed by thin green curves and a large solid green chevron from the cedar mark."
+            sizes={half}
+            cutout
+          />
+        </CaseText>
+      </div>
+    </section>
+
+    <!-- In the wild -->
+    <section class="case-section theme-cream" aria-label="Coach Cedar ads, app store and social">
+      <div class="container case-stack">
+        <CaseMedia
+          slides={[halfpage1, halfpage2, halfpage3]}
+          interval={1.3}
+          alt="A laptop showing a news site with a Coach Cedar half-page ad that cycles through three headlines: “Life proof.”, “Built on evidence.”, “Real life.”"
+          ratio="1200 / 647"
+          class="cc-cream"
+        />
+        <div class="wild-grid">
+          <CaseMedia
+            slides={[womenAd1, womenAd2, womenAd3, womenAd4, womenAd5, womenAd6]}
+            interval={1.1}
+            alt="Vertical Coach Cedar ads cycling through six women training, each with a headline like “Coaching that adapts” and “Plans break. Coaches don’t.”"
+            ratio="434 / 811"
+            sizes="(min-width: 48rem) min(36vw, 434px), calc(100vw - 2 * var(--gutter))"
+          />
+          <CaseMedia
+            image={instagram}
+            alt="A hand holding a phone in a gym, showing a Coach Cedar Instagram post: “6 things to look out for when you try Coach Cedar.”"
+            ratio="730 / 811"
+            focus="55% 50%"
+            sizes="(min-width: 48rem) min(60vw, 730px), calc(100vw - 2 * var(--gutter))"
+          />
+        </div>
+        <CaseMedia
+          image={appStoreScreens}
+          alt="Coach Cedar’s App Store listing on a phone, with a row of six green screenshots: “Your dedicated fitness coach for life”, “A coach who knows you”, “Plans break. Coaches don’t.”"
+          cutout
+        />
+        <CaseMedia
+          image={linkedin}
+          alt="Coach Cedar’s LinkedIn page on a laptop: “Your dedicated fitness coach. For life.”"
+          ratio="1200 / 621"
+        />
+      </div>
+    </section>
+
+    <CaseLine>
+      <Fragment slot="title">
+        Less tech-y. More{' '}<Scribble type="circle" color="var(--blue)" delay={0.4}>coach-y.</Scribble>
+      </Fragment>
+      It’s still an AI fitness app. It just shows up looking like the coach who remembers your bad knee.
+    </CaseLine>
+
+    <NextProject slug="coach-cedar" />
+  </div>
+</Base>
+
+<style>
+  .case-section {
+    padding-block: var(--space-xl);
+  }
+  .case-section :global(.case-section__media) {
+    margin-top: var(--space-xl);
+  }
+  .case-section__title {
+    margin-bottom: var(--space-l);
+    font-size: clamp(2.5rem, 1.6rem + 3.6vw, 4rem); /* 40 → 64 */
+    line-height: 1;
+  }
+
+  /* Pictures one under the other */
+  .case-stack {
+    display: grid;
+    gap: clamp(1rem, 0.4rem + 1.8vw, 2.25rem);
+  }
+
+  /* The ask: tall phone on the left, logo animation + App Store on the right */
+  .ask-grid,
+  .ask-grid__col {
+    display: grid;
+    gap: clamp(1rem, 0.4rem + 1.8vw, 2.25rem);
+  }
+  @media (min-width: 48rem) {
+    .ask-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .ask-grid__col {
+      grid-template-rows: auto 1fr;
+    }
+    /* The phone sets the row's height; the App Store fills what's left */
+    .ask-grid :global(.ask-grid__grow) {
+      min-height: 0;
+    }
+  }
+
+  /* Logo cards and concept diagrams are white, so their frames are too */
+  .case-section :global(.cc-white .media__frame) {
+    background: #fff;
+  }
+  .case-section :global(.cc-cream .media__frame) {
+    background: var(--cream);
+  }
+
+  /* ---------- Initial concepts: two columns ---------- */
+  .cc-concepts {
+    display: grid;
+    gap: var(--space-2xl) clamp(1rem, 0.4rem + 1.8vw, 2.25rem);
+    padding: 0;
+    list-style: none;
+  }
+  @media (min-width: 48rem) {
+    .cc-concepts {
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+    }
+  }
+  .cc-concept__title {
+    margin-top: var(--space-m);
+    font-family: var(--font-sans);
+    font-size: clamp(1.625rem, 1.3rem + 1.1vw, 2.25rem); /* 26 → 36 */
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .cc-concept__body,
+  .cc-concept__bonus {
+    display: grid;
+    gap: 1em;
+    font-size: clamp(1rem, 0.95rem + 0.2vw, 1.125rem); /* 16 → 18 */
+    line-height: 1.4;
+  }
+  .cc-concept__body {
+    margin-top: var(--space-s);
+  }
+  .cc-concept__cards {
+    display: grid;
+    gap: var(--space-s);
+    margin-top: var(--space-m);
+  }
+
+  /* "Bonus!" line that opens the icon set */
+  .cc-concept__toggle {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: var(--space-m);
+    padding-block: 0.5rem 0.6rem;
+    border-block: 1px solid rgb(255 246 232 / 0.5);
+    font-weight: 500;
+    font-size: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+    text-align: left;
+    transition: border-color var(--dur-fast);
+  }
+  .cc-concept__toggle:hover {
+    border-color: var(--cream);
+  }
+  .cc-concept__plus {
+    position: relative;
+    flex: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    transition:
+      transform var(--dur) var(--ease-out),
+      background-color var(--dur-fast);
+  }
+  .cc-concept__plus::before,
+  .cc-concept__plus::after {
+    content: '';
+    position: absolute;
+    inset: 50% 0.3rem auto;
+    height: 1.5px;
+    margin-top: -0.75px;
+    background: currentColor;
+    border-radius: 2px;
+  }
+  .cc-concept__plus::after {
+    rotate: 90deg;
+  }
+  .cc-concept__toggle:hover .cc-concept__plus {
+    background: rgb(255 246 232 / 0.15);
+  }
+  .cc-concept__toggle[aria-expanded='true'] .cc-concept__plus {
+    transform: rotate(135deg);
+    background: var(--blue);
+    color: var(--ink);
+  }
+
+  /* The icon set slides open (height animates via grid rows) */
+  .cc-concept__panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.6s var(--ease-out);
+  }
+  .cc-concept__panel > div {
+    min-height: 0;
+    overflow: hidden;
+  }
+  .cc-concept__bonus {
+    padding-top: var(--space-s);
+    opacity: 0;
+    translate: 0 -0.5rem;
+    transition:
+      opacity 0.4s var(--ease-out),
+      translate 0.6s var(--ease-out);
+  }
+  .cc-concept__icons {
+    overflow: hidden;
+    border-radius: 12px;
+    background: #fff;
+  }
+  .cc-concept__icons :global(img) {
+    width: 100%;
+    height: auto;
+  }
+  :global(.cc-concept.is-open) .cc-concept__panel {
+    grid-template-rows: 1fr;
+  }
+  :global(.cc-concept.is-open) .cc-concept__bonus {
+    opacity: 1;
+    translate: 0 0;
+    transition-delay: 0.12s;
+  }
+  /* Without JavaScript, everything is simply open */
+  :global(html:not(.js-ready)) .cc-concept__panel {
+    grid-template-rows: 1fr;
+  }
+  :global(html:not(.js-ready)) .cc-concept__bonus {
+    opacity: 1;
+    translate: none;
+  }
+  :global(html:not(.js-ready)) .cc-concept__toggle {
+    pointer-events: none;
+  }
+  :global(html:not(.js-ready)) .cc-concept__plus {
+    display: none;
+  }
+
+  /* ---------- Logo development ---------- */
+  .logo-grid {
+    display: grid;
+    gap: var(--space-s);
+  }
+  @media (min-width: 48rem) {
+    .logo-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .fonts {
+    display: grid;
+    gap: var(--space-l) clamp(2rem, 1rem + 5vw, 5rem);
+    margin-top: var(--space-xl);
+  }
+  @media (min-width: 56rem) {
+    .fonts {
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+    }
+  }
+  .fonts__eyebrow {
+    font-size: clamp(0.8125rem, 0.75rem + 0.3vw, 1.125rem); /* 13 → 18, same as the other labels */
+    font-weight: 700;
+    letter-spacing: 0.3em;
+  }
+  .fonts__body {
+    display: grid;
+    gap: 1em;
+    max-width: 38rem;
+    margin-top: var(--space-m);
+    font-size: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+    line-height: 1.4;
+  }
+  .fonts__body strong {
+    font-weight: 650;
+  }
+
+  /* ---------- In the wild ---------- */
+  .wild-grid {
+    display: grid;
+    gap: clamp(1rem, 0.4rem + 1.8vw, 2.25rem);
+  }
+  @media (min-width: 48rem) {
+    .wild-grid {
+      grid-template-columns: 434fr 730fr;
+    }
+  }
+
+  /* ---------- Hero: the coach's check-ins ---------- */
+  .notes {
+    display: grid;
+    width: min(100%, 24rem);
+    margin-top: var(--space-l);
+    padding: 0;
+    list-style: none;
+  }
+  @media (min-width: 80rem) {
+    .notes {
+      margin: 0 0 0 auto;
+    }
+  }
+  .note {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    overflow: hidden;
+    margin-bottom: 0.6rem;
+    padding: 0.75rem 0.9rem;
+    border-radius: 1.25rem;
+    background: var(--cream);
+    color: var(--ink);
+    font-size: 0.875rem;
+    line-height: 1.3;
+  }
+  .note__icon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.65rem;
+    background: #1f6c4f;
+  }
+  .note__icon :global(picture) {
+    display: block;
+    width: 62%;
+  }
+  .note__icon :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .note__body {
+    display: grid;
+    flex: 1;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+  .note__head {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+  .note__head span {
+    opacity: 0.55;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cc-concept__panel,
+    .cc-concept__bonus,
+    .cc-concept__plus {
+      transition: none;
+    }
+  }
+</style>

@@ -1,0 +1,782 @@
+---
+// Case study: Puku Puku, "Meet Your Coffee" (spec campaign, animated web ads).
+// Copy rewritten from the old fatimarabi.com/project-5.html. Same case pieces as
+// the other campaigns, plus two page-only moments (src/scripts/puku.ts):
+//  - "The trace": a dashed route draws itself down the page as you scroll,
+//    with a mileage counter, from the bag on the shelf to Vicente.
+//  - "In the wild": all four real ads playing in their slots on a pretend news site.
+import { Picture } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Scribble from '../../components/Scribble.astro';
+import CaseHero from '../../components/case/CaseHero.astro';
+import CaseText from '../../components/case/CaseText.astro';
+import CaseMedia from '../../components/case/CaseMedia.astro';
+import NextProject from '../../components/case/NextProject.astro';
+import CaseLine from '../../components/case/CaseLine.astro';
+import { widthsFor } from '../../utils/image';
+
+import frame1 from '../../assets/puku-puku/frame-1.png';
+import frame2 from '../../assets/puku-puku/frame-2.png';
+import frame3 from '../../assets/puku-puku/frame-3.png';
+import frame4 from '../../assets/puku-puku/frame-4.png';
+import frame5 from '../../assets/puku-puku/frame-5.png';
+import vicente from '../../assets/puku-puku/vicente.png';
+import grocery from '../../assets/puku-puku/grocery.jpg';
+
+const media = '/media/puku-puku';
+
+// The route, from the shelf to the farm. Places come straight off the bag's label.
+const stops = [
+  { place: 'This bag.', note: 'On a grocery shelf, minding its own business.' },
+  { place: 'South America.', aside: 'Where most coffee labels give up.' },
+  { place: 'Peru.', note: 'Getting warmer.' },
+  { place: 'Cusco.', note: 'The region.' },
+  { place: 'Quellouno, Canelón.', note: 'Then a district. Then a smaller one.' },
+  { place: '1,800 metres up.', note: 'One plot, on one hillside.' },
+];
+
+// The half-page ad's five beats (from her storyboard)
+const frames = [
+  { image: frame1, beat: 'The hook', alt: 'See this bag? A Puku Puku coffee bag hangs from a red string.' },
+  { image: frame2, beat: 'The proof', alt: 'Close-up of the map on the bag: We can trace it back 5,000 miles.' },
+  { image: frame3, beat: 'The person', alt: 'Illustrated farmer holding a sack of coffee cherries: To Vicente’s family farm in Cusco, Peru.' },
+  { image: frame4, beat: 'The point', alt: 'That’s traceable Peruvian coffee, with “traceable” highlighted in green.' },
+  { image: frame5, beat: 'The push', alt: 'The Puku Puku crew on the farm: Traceable. Transparent. Tasty. Shop now.' },
+];
+---
+
+<Base
+  title="Puku Puku: Meet Your Coffee"
+  description="Meet Your Coffee: animated web ads for Puku Puku that trace one bag of microlot coffee 5,000 miles back to Vicente’s family farm in Cusco, Peru. By Fatima Rabi."
+>
+  <div data-case class="puku">
+    <CaseHero roles={['Concept', 'Copywriting', 'Illustration', 'Motion']}>
+      <Fragment slot="title">
+        <span class="line"><span>Meet your</span></span>
+        <span class="line"
+          ><span><Scribble type="underline" draw="load" delay={0.9} color="var(--blue)">coffee.</Scribble></span></span
+        >
+      </Fragment>
+      <p>Animated web ads for Puku Puku, microlot coffee from Peru</p>
+
+      <CaseMedia
+        slot="side"
+        class="hero-ad"
+        loop={`${media}/inline.mp4`}
+        poster={`${media}/inline-poster.jpg`}
+        ratio="840 / 994"
+        alt="Animated ad: See this bag? We can trace it back 5,000 miles. To Vicente’s family farm in Cusco, Peru. That’s traceable Peruvian coffee. Traceable. Transparent. Tasty."
+        sizes="(min-width: 80rem) 26rem, calc(100vw - 2 * var(--gutter))"
+      />
+    </CaseHero>
+
+    <!-- The problem -->
+    <section class="case-section theme-cream" aria-labelledby="catch-title">
+      <div class="container">
+        <CaseText eyebrow="The problem" id="catch">
+          <Fragment slot="heading">Most coffee comes from “somewhere in the south.”</Fragment>
+          <p>
+            Vague origins. Faceless plantations. Traceability that ends at the country name, if you’re lucky.
+          </p>
+          <p>
+            Puku Puku sells microlot coffee: every bag traces back to one farm, one plot and one farmer. That’s rare,
+            it’s personal, and it’s a much better story than a mountain silhouette and the word “artisanal.”
+          </p>
+          <p><strong>So the ads skip the rhetoric and just show their work.</strong></p>
+        </CaseText>
+      </div>
+    </section>
+
+    <!-- The trace: the route draws itself as you scroll -->
+    <section class="case-section trace theme-red" aria-labelledby="trace-title">
+      <div class="container trace__grid">
+        <div class="trace__intro">
+          <p class="eyebrow trace__eyebrow" data-reveal>The trace</p>
+          <h2 class="trace__title" id="trace-title" data-reveal>
+            Usually the trail goes cold at the country name. This one keeps{' '}<Scribble
+              type="underline"
+              color="var(--blue)">going.</Scribble
+            >
+          </h2>
+          <p class="trace__odo" data-reveal data-reveal-delay="0.1">
+            <span class="trace__miles"><span data-odo>5,000</span> mi</span>
+            <span class="trace__odo-label">from the shelf to the farm</span>
+          </p>
+        </div>
+
+        <div class="trace__route" data-trace>
+          <p class="trace__pill" aria-hidden="true"><span data-odo>5,000</span> mi</p>
+          <span class="trace__line" aria-hidden="true" data-trace-line>
+            <span class="trace__fill" data-trace-fill></span>
+          </span>
+          <ol class="trace__stops" role="list">
+            {
+              stops.map((s) => (
+                <li class="stop" data-stop>
+                  <span class="stop__dot" aria-hidden="true" />
+                  <p class="stop__place">{s.place}</p>
+                  {s.note && <p class="stop__note">{s.note}</p>}
+                  {s.aside && (
+                    <p class="stop__aside">({s.aside})</p>
+                  )}
+                </li>
+              ))
+            }
+            <li class="stop stop--end" data-stop>
+              <span class="stop__dot" aria-hidden="true"></span>
+              <p class="stop__place">Vicente Pedraza.</p>
+              <p class="stop__note">The man who grew it. 5,000 miles, zero mystery.</p>
+              <Picture
+                src={vicente}
+                alt="Illustrated portrait of Vicente in a straw hat, smiling among coffee plants, holding a sack of red coffee cherries."
+                formats={['avif', 'webp']}
+                widths={widthsFor(vicente)}
+                sizes="(min-width: 56rem) 18rem, 60vw"
+                loading="lazy"
+                class="stop__vicente"
+              />
+            </li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- The answer: five frames -->
+    <section class="case-section theme-cream" aria-labelledby="answer-title">
+      <div class="container">
+        <CaseText eyebrow="The answer" id="answer">
+          <Fragment slot="heading">Five frames, 5,000 miles, one guy named Vicente.</Fragment>
+          <p>
+            Fifteen seconds that walk you from the bag in your hand to the person who grew what’s inside it. <strong
+              >No adjectives until the very last frame, and by then they’ve earned it.</strong
+            >
+          </p>
+          <p>
+            Vicente is a custom illustration, so the hero of the ad is a person, not a product shot. The real crew
+            shows up at the end, to prove he’s not the only one.
+          </p>
+        </CaseText>
+
+        <ol class="frames" role="list">
+          {
+            frames.map((f, i) => (
+              <li class="frame" data-reveal data-reveal-delay={i * 0.08}>
+                <figure>
+                  <Picture
+                    src={f.image}
+                    alt={f.alt}
+                    formats={['avif', 'webp']}
+                    widths={widthsFor(f.image)}
+                    sizes="(min-width: 56rem) 18vw, 60vw"
+                    quality={90}
+                    loading="lazy"
+                    class="frame__img"
+                  />
+                  <figcaption class="frame__cap">
+                    <span class="frame__num">0{i + 1}</span>
+                    {f.beat}
+                  </figcaption>
+                </figure>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </section>
+
+    <!-- In the wild: the four real ads on a pretend news site -->
+    <section class="case-section case-section--tight theme-cream" aria-labelledby="wild-title">
+      <div class="container">
+        <CaseText eyebrow="In the wild" id="wild">
+          <Fragment slot="heading">Four standard sizes. Same trip every time.</Fragment>
+          <p>
+            Leaderboard, billboard, half page, inline rectangle. Each one tells the whole story, whether it gets 90
+            pixels of height or 600.
+          </p>
+          <p>Here they are where they’d actually live: next to the news.</p>
+        </CaseText>
+
+        <div class="paper" data-reveal data-paper>
+          <div class="paper__bar" aria-hidden="true">
+            <span class="paper__dots"><i></i><i></i><i></i></span>
+            <span class="paper__url"></span>
+          </div>
+          <div class="paper__page">
+            <div class="paper__mast">
+              <span class="paper__name">The Daily Grind</span>
+              <span class="paper__nav" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            </div>
+
+            <div class="ad ad--leaderboard">
+              <span class="ad__label">Advertisement</span>
+              <video
+                src={`${media}/leaderboard.mp4`}
+                poster={`${media}/leaderboard-poster.jpg`}
+                muted
+                loop
+                playsinline
+                preload="none"
+                data-ad
+                aria-label="Leaderboard ad, 728 by 90: the same five-beat story in one wide strip."
+              ></video>
+            </div>
+
+            <div class="paper__body">
+              <article class="paper__article">
+                <p class="paper__kicker">Local</p>
+                <p class="paper__headline">Area man has no idea where his coffee comes from</p>
+                <p class="paper__dek">“Somewhere in the south,” he told reporters, between sips.</p>
+                <div class="paper__cols">
+                  <div class="paper__lines" aria-hidden="true">
+                    <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                  </div>
+                  <div class="ad ad--inline">
+                    <span class="ad__label">Advertisement</span>
+                    <video
+                      src={`${media}/inline.mp4`}
+                      poster={`${media}/inline-poster.jpg`}
+                      muted
+                      loop
+                      playsinline
+                      preload="none"
+                      data-ad
+                      aria-label="Inline rectangle ad: the five-beat story, stacked."
+                    ></video>
+                  </div>
+                </div>
+              </article>
+              <aside class="paper__side">
+                <div class="ad ad--half">
+                  <span class="ad__label">Advertisement</span>
+                  <video
+                    src={`${media}/halfpage.mp4`}
+                    poster={`${media}/halfpage-poster.jpg`}
+                    muted
+                    loop
+                    playsinline
+                    preload="none"
+                    data-ad
+                    aria-label="Half-page ad, 300 by 600: See this bag? down to Traceable. Transparent. Tasty."
+                  ></video>
+                </div>
+              </aside>
+            </div>
+
+            <div class="ad ad--billboard">
+              <span class="ad__label">Advertisement</span>
+              <video
+                src={`${media}/billboard.mp4`}
+                poster={`${media}/billboard-poster.jpg`}
+                muted
+                loop
+                playsinline
+                preload="none"
+                data-ad
+                aria-label="Billboard ad, 970 by 250: the five-beat story, wide."
+              ></video>
+            </div>
+            <div class="paper__lines paper__lines--short" aria-hidden="true"><i></i><i></i><i></i></div>
+          </div>
+        </div>
+
+        <button class="ads-toggle" type="button" data-ads-toggle hidden>
+          <svg viewBox="0 0 16 16" aria-hidden="true">
+            <path class="icon-pause" d="M4 3h3v10H4zM9 3h3v10H9z" />
+            <path class="icon-play" d="M5 2.5v11L13.5 8z" />
+          </svg>
+          <span data-ads-label>Pause the ads</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Offline -->
+    <section class="case-section case-section--tight theme-cream" aria-labelledby="offline-title">
+      <div class="container">
+        <CaseText eyebrow="Offline" id="offline">
+          <Fragment slot="heading">And for the people who occasionally leave the house.</Fragment>
+          <p>
+            Right by the grocery store doors, where the bag actually lives, the question turns into an invitation:
+            <strong>Ask us about this bag.</strong>
+          </p>
+          <p>Same dashed line, same map, same Vicente. Now at a walking pace.</p>
+        </CaseText>
+
+        <CaseMedia
+          class="case-section__media"
+          image={grocery}
+          sharp
+          alt="Poster on a wooden wall beside a grocery store entrance, shoppers blurring past: Ask us about this bag. We’ll tell you about Vicente’s family farm in Cusco, Peru. A dashed line runs from an illustration of Vicente to his farm on the bag’s map."
+        />
+      </div>
+    </section>
+
+    <!-- The line -->
+    <CaseLine>
+      <Fragment slot="title">
+          Coffee with a{' '}<Scribble type="circle" color="var(--blue)" delay={0.3}>name</Scribble>{' '}on it.
+      </Fragment>
+          No rhetoric, no mountain silhouettes. Just the fact that this came from someone specific, and he has a name,
+          a farm and a very good hat.
+      <Fragment slot="note">
+        <p class="the-line__note" data-reveal data-reveal-delay="0.2">
+            Spec work: Puku Puku didn’t ask. This idea is fully traceable, though.
+          </p>
+      </Fragment>
+    </CaseLine>
+
+    <NextProject slug="puku-puku" />
+  </div>
+</Base>
+
+<style>
+  .case-section {
+    padding-block: var(--space-xl);
+  }
+  .case-section :global(.case-section__media) {
+    margin-top: var(--space-xl);
+  }
+  .case-section--tight {
+    padding-top: 0;
+  }
+
+  /* ---------- Hero ---------- */
+
+  .puku :global(.hero-ad) {
+    width: min(100%, 26rem);
+    margin: var(--space-xl) auto 0;
+  }
+  @media (min-width: 80rem) {
+    .puku :global(.hero-ad) {
+      margin: 0 0 0 auto;
+    }
+  }
+
+  /* ---------- The trace ---------- */
+
+  .trace {
+    --trace-start: 0.9rem; /* where the line starts, level with the first dot */
+  }
+  .trace__grid {
+    display: grid;
+    gap: var(--space-xl);
+  }
+  @media (min-width: 56rem) {
+    .trace__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(2rem, 1rem + 5vw, 6rem);
+      align-items: start;
+    }
+    .trace__intro {
+      position: sticky;
+      top: calc(var(--header-h) + var(--space-l));
+    }
+  }
+  .trace__eyebrow {
+    font-size: clamp(0.8125rem, 0.75rem + 0.3vw, 1.125rem);
+    font-weight: 700;
+    letter-spacing: 0.3em;
+  }
+  .trace__title {
+    margin-top: var(--space-m);
+    max-width: 12em;
+    font-size: clamp(2.125rem, 1.6rem + 2vw, 3rem);
+    line-height: 1;
+  }
+  .trace__odo {
+    display: grid;
+    margin-top: var(--space-l);
+  }
+  .trace__miles {
+    font-family: var(--font-serif);
+    font-size: clamp(4rem, 2rem + 8vw, 9rem);
+    line-height: 0.9;
+    color: var(--blue);
+    font-variant-numeric: tabular-nums;
+  }
+  .trace__odo-label {
+    margin-top: var(--space-2xs);
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+  /* Phones: the big counter scrolls away, so a small one rides along */
+  .trace__pill {
+    position: sticky;
+    top: var(--space-s);
+    z-index: 2;
+    width: fit-content;
+    margin: 0 0 var(--space-m) auto;
+    padding: 0.35em 0.9em;
+    border-radius: var(--radius-pill);
+    background: var(--blue);
+    color: var(--ink);
+    font-size: 0.875rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  @media (min-width: 56rem) {
+    .trace__pill {
+      display: none;
+    }
+  }
+
+  .trace__route {
+    position: relative;
+    padding-left: 2.75rem;
+  }
+  /* The route: a faint dashed line, with a bright copy revealed on top as you scroll */
+  .trace__line,
+  .trace__fill {
+    position: absolute;
+    width: 3px;
+    background: repeating-linear-gradient(to bottom, currentColor 0 10px, transparent 10px 18px);
+  }
+  .trace__line {
+    left: calc(0.6rem - 1px);
+    top: var(--trace-start);
+    height: var(--trace-h, calc(100% - var(--trace-start)));
+    color: rgb(255 246 232 / 0.25);
+  }
+  .trace__fill {
+    inset: 0;
+    color: var(--blue);
+  }
+  :global(html.js-motion) .trace__fill {
+    clip-path: inset(0 0 100% 0);
+  }
+
+  .trace__stops {
+    display: grid;
+    gap: clamp(3.5rem, 2rem + 6vh, 7rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .stop {
+    position: relative;
+    transition: opacity var(--dur) var(--ease-out);
+  }
+  :global(html.js-motion) .stop:not(.is-reached) {
+    opacity: 0.3;
+  }
+  .stop__dot {
+    position: absolute;
+    left: -2.75rem;
+    top: 0.45rem;
+    width: 1.2rem;
+    height: 1.2rem;
+    border: 3px solid var(--blue);
+    border-radius: 50%;
+    background: var(--red);
+    transition:
+      background-color var(--dur) var(--ease-out),
+      scale var(--dur) var(--ease-out);
+  }
+  .stop.is-reached .stop__dot,
+  :global(html:not(.js-motion)) .stop__dot {
+    background: var(--blue);
+  }
+  .stop__place {
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 1.4rem + 2.4vw, 3.5rem);
+    line-height: 1;
+  }
+  .stop__note {
+    margin-top: var(--space-2xs);
+    font-size: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+    opacity: 0.85;
+  }
+  /* A quiet aside, in the body font */
+  .stop__aside {
+    margin-top: var(--space-2xs);
+    font-size: clamp(0.875rem, 0.85rem + 0.15vw, 1rem);
+    line-height: 1.4;
+    color: var(--cream);
+  }
+  .stop :global(.stop__vicente) {
+    display: block;
+    width: min(100%, 18rem);
+    height: auto;
+    margin-top: var(--space-m);
+  }
+
+  /* Breathing room so circles don't touch the words beside them */
+  .puku :global(.scribble--circle) {
+    margin-inline: 0.12em;
+  }
+
+  /* ---------- The answer: the five frames ---------- */
+
+  .frames {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: min(58vw, 15rem);
+    gap: var(--space-s);
+    margin: var(--space-xl) calc(-1 * var(--gutter)) 0;
+    padding: 0 var(--gutter) var(--space-s);
+    list-style: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+  }
+  @media (min-width: 56rem) {
+    .frames {
+      grid-auto-flow: row;
+      grid-template-columns: repeat(5, 1fr);
+      gap: clamp(0.75rem, 0.25rem + 1vw, 1.5rem);
+      margin-inline: 0;
+      padding: 0;
+      overflow: visible;
+    }
+  }
+  .frame {
+    scroll-snap-align: start;
+  }
+  .frame figure {
+    margin: 0;
+  }
+  .frame :global(.frame__img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+  }
+  .frame__cap {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6em;
+    margin-top: var(--space-s);
+    font-family: var(--font-serif);
+    font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.625rem);
+    color: var(--red);
+  }
+  .frame__num {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: var(--blue-deep);
+  }
+
+  /* ---------- In the wild: the pretend news site ---------- */
+
+  .paper {
+    --line: rgb(34 31 32 / 0.1);
+    margin-top: var(--space-xl);
+    overflow: hidden;
+    border-radius: 12px;
+    background: var(--white);
+    color: var(--ink);
+    box-shadow:
+      0 1px 0 rgb(34 31 32 / 0.08),
+      0 1.5rem 3rem -1rem rgb(34 31 32 / 0.25);
+  }
+  .paper__bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.7rem 1rem;
+    background: #efe6d8;
+  }
+  .paper__dots {
+    display: flex;
+    gap: 0.4rem;
+  }
+  .paper__dots i {
+    width: 0.65rem;
+    height: 0.65rem;
+    border-radius: 50%;
+    background: rgb(34 31 32 / 0.2);
+  }
+  .paper__url {
+    flex: 1;
+    max-width: 22rem;
+    height: 1.4rem;
+    margin-inline: auto;
+    border-radius: var(--radius-pill);
+    background: rgb(255 255 255 / 0.7);
+  }
+  .paper__page {
+    display: grid;
+    gap: clamp(1.25rem, 0.75rem + 2vw, 2.5rem);
+    padding: clamp(1rem, 0.5rem + 2.5vw, 3rem);
+  }
+  .paper__mast {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--ink);
+  }
+  .paper__name {
+    font-family: var(--font-serif);
+    font-size: clamp(1.75rem, 1.2rem + 2vw, 3rem);
+    line-height: 1;
+  }
+  .paper__nav {
+    display: flex;
+    gap: 0.75rem;
+  }
+  .paper__nav i {
+    width: 3.5rem;
+    height: 0.6rem;
+    border-radius: 1rem;
+    background: var(--line);
+  }
+
+  .ad {
+    display: grid;
+    gap: 0.3rem;
+    justify-self: center;
+    width: 100%;
+  }
+  .ad__label {
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgb(34 31 32 / 0.45);
+  }
+  .ad video {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: #eee;
+  }
+  /* Real ad sizes, as a share of a ~1200px page */
+  .ad--leaderboard video {
+    aspect-ratio: 1600 / 198;
+  }
+  .ad--billboard video {
+    aspect-ratio: 2000 / 516;
+  }
+  .ad--half video {
+    aspect-ratio: 594 / 1186;
+  }
+  .ad--inline video {
+    aspect-ratio: 840 / 994;
+  }
+  @media (min-width: 48rem) {
+    .ad--leaderboard {
+      width: 61%;
+    }
+    .ad--billboard {
+      width: 81%;
+    }
+  }
+
+  .paper__body {
+    display: grid;
+    gap: clamp(1.25rem, 0.75rem + 2vw, 2.5rem);
+  }
+  @media (min-width: 48rem) {
+    .paper__body {
+      grid-template-columns: 1fr 27%;
+    }
+  }
+  .paper__kicker {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--red);
+  }
+  .paper__headline {
+    margin-top: 0.5rem;
+    max-width: 16em;
+    font-family: var(--font-serif);
+    font-size: clamp(1.75rem, 1.2rem + 2.2vw, 3.25rem);
+    line-height: 1;
+  }
+  .paper__dek {
+    margin-top: 0.75rem;
+    font-size: clamp(0.9375rem, 0.9rem + 0.2vw, 1.0625rem);
+    font-style: italic;
+    color: rgb(34 31 32 / 0.7);
+  }
+  .paper__cols {
+    display: grid;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+  }
+  @media (min-width: 40rem) {
+    .paper__cols {
+      grid-template-columns: 1fr 40%;
+      align-items: start;
+    }
+  }
+  .paper__lines {
+    display: grid;
+    gap: 0.75rem;
+    align-content: start;
+  }
+  .paper__lines i {
+    height: 0.6rem;
+    border-radius: 1rem;
+    background: var(--line);
+  }
+  .paper__lines i:nth-child(4n) {
+    width: 72%;
+  }
+  .paper__lines i:nth-child(5n + 2) {
+    width: 90%;
+  }
+  .paper__lines--short {
+    width: 81%;
+    justify-self: center;
+  }
+  @media (max-width: 47.99rem) {
+    .ad--half,
+    .ad--inline {
+      max-width: 18.75rem;
+    }
+    .paper__lines--short {
+      width: 100%;
+    }
+  }
+
+  .ads-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    margin-top: var(--space-s);
+    padding: 0.4em 0.9em 0.4em 0.75em;
+    border: 1px solid rgb(34 31 32 / 0.35);
+    border-radius: var(--radius-pill);
+    font-size: 0.875rem;
+    transition: background-color var(--dur-fast) var(--ease-out);
+  }
+  .ads-toggle[hidden] {
+    display: none;
+  }
+  .ads-toggle:hover,
+  .ads-toggle:focus-visible {
+    background: rgb(34 31 32 / 0.06);
+  }
+  .ads-toggle svg {
+    width: 0.75rem;
+    fill: currentColor;
+  }
+  .ads-toggle .icon-play,
+  .ads-toggle.is-paused .icon-pause {
+    display: none;
+  }
+  .ads-toggle.is-paused .icon-play {
+    display: block;
+  }
+
+  /* ---------- The line ---------- */
+
+
+  @media (prefers-reduced-motion: reduce) {
+    .stop,
+    .stop__dot,
+    .ads-toggle {
+      transition: none;
+    }
+  }
+</style>

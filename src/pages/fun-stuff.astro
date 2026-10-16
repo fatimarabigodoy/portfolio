@@ -1,0 +1,934 @@
+---
+// The Fun Stuff: personal work. Four pieces, each shown the way it's meant to
+// be experienced: a film you watch (with its labels as chapters), a poster on
+// a wall, a comic you swipe through like the carousel it was, and a book shown
+// from four angles. Interactions live in src/scripts/fun-stuff.ts.
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Base from '../layouts/Base.astro';
+import Scribble from '../components/Scribble.astro';
+import { widthsFor } from '../utils/image';
+import peru from '../assets/fun-stuff/made-in-peru.png';
+import molly1 from '../assets/fun-stuff/molly-1.png';
+import molly2 from '../assets/fun-stuff/molly-2.png';
+import molly3 from '../assets/fun-stuff/molly-3.png';
+import molly4 from '../assets/fun-stuff/molly-4.png';
+import molly5 from '../assets/fun-stuff/molly-5.png';
+import molly6 from '../assets/fun-stuff/molly-6.png';
+import molly7 from '../assets/fun-stuff/molly-7.png';
+import molly8 from '../assets/fun-stuff/molly-8.png';
+import book1 from '../assets/fun-stuff/book-1.png';
+import book2 from '../assets/fun-stuff/book-2.png';
+import book3 from '../assets/fun-stuff/book-3.png';
+import book4 from '../assets/fun-stuff/book-4.png';
+import mollyPeek from '../assets/fun-stuff/molly-peek.png';
+
+// Made in Peru in Illustrator's outline view. Drop an export named
+// made-in-peru-outline.png (same size as the poster) into src/assets/fun-stuff
+// and the "anchor points" lens turns itself on.
+const outlineFile = Object.values(
+  import.meta.glob<{ default: ImageMetadata }>('../assets/fun-stuff/made-in-peru-outline.png', { eager: true }),
+)[0]?.default;
+
+const pieces = [
+  { id: 'who-am-i', title: 'Who Am I?', medium: 'Video' },
+  { id: 'molly', title: 'A Cat Named Molly', medium: 'Comic' },
+  { id: 'made-in-peru', title: 'Made in Peru', medium: 'Illustration' },
+  { id: 'breasts-and-eggs', title: 'Breasts and Eggs', medium: 'Book cover' },
+];
+
+// The film is a list of labels, so the labels are the chapters (in seconds).
+const chapters = [
+  { label: 'Fa-TEE-ma', at: 3.95 },
+  { label: 'Peruvian, but', at: 8.5 },
+  { label: 'A perfectionist', at: 15 },
+  { label: 'A reader', at: 22.8 },
+  { label: 'Quiet', at: 32.7 },
+  { label: 'An illustrator', at: 43.95 },
+  { label: 'A designer', at: 58.1 },
+  { label: 'A figure-outer', at: 79.7 },
+];
+const clock = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+
+const molly = [
+  { image: molly1, alt: 'Title panel: “My parasocial relationship with a cat named Molly,” with a fluffy cat holding a coffee cup.' },
+  { image: molly2, alt: 'A café called Abisinia. “There is a café a few blocks away from my house that my parents and I have been frequenting since its opening. (Although I can only partake in the tradition when I’m in Lima.)”' },
+  { image: molly3, alt: 'Molly sitting in a window under rays of light. “Sometimes, a cat appears: Molly. She lives next door to the café. She’s been part of the scene for years.”' },
+  { image: molly4, alt: 'Molly glowing in yellow. “We don’t see her that often, even though we pass by all the time. So when we do, we feel lucky. Like she’s a good omen.”' },
+  { image: molly5, alt: 'Molly seen through a magnifying glass. “It’s almost become a little ‘inside’ game with my parents: to see if we get lucky and spot Molly when we go for coffee or pass by.”' },
+  { image: molly6, alt: 'Molly licking her paw in a spotlight. “She probably has no idea who we are. But we adore her. To us, she’s a celebrity. Especially to me, since I only get to see her when I’m back home.”' },
+  { image: molly7, alt: 'Two hands holding coffee cups, Molly’s silhouette between them. “There’s nothing profound about it. Just a small, silly attachment to a cat who’s (sometimes) there when I have coffee with my parents.”' },
+  { image: molly8, alt: 'Fatima sipping coffee. “Maybe it’s the rarity. Maybe it’s my love for cats. Maybe it’s because I don’t live here anymore, and these coffee moments feel fleeting.”' },
+];
+
+const book = [
+  { image: book1, alt: 'Breasts and Eggs cover redesign on a stack of two books: an egg yolk dripping down a pink face, with quotes from Haruki Murakami, Sarah Moss, the Financial Times and Naoise Dolan.' },
+  { image: book2, alt: 'The same book with its cover lifting open, showing the spine and the inside flap.' },
+  { image: book3, alt: 'The book opening further, showing the back flap: “TIME, the 10 best fiction books of 2020” and “New York Times Notable Book of the Year”.' },
+  { image: book4, alt: 'The book open with the back flap readable, including a quote from Yoko Ogawa, author of The Memory Police.' },
+];
+---
+
+<Base
+  title="The Fun Stuff"
+  description="Personal work by Fatima Rabi: a short animated film, a poster, a comic about a cat and a book cover redesign."
+>
+  <div class="fun" data-fun>
+    <!-- ---------- Hero ---------- -->
+    <section class="hero theme-red" aria-labelledby="fun-title">
+      <div class="container hero__grid">
+        <div>
+          <p class="eyebrow" data-reveal>Personal work</p>
+          <h1 class="hero__title" id="fun-title" data-reveal data-reveal-delay="0.05">The fun stuff.</h1>
+          <p class="hero__sub" data-reveal data-reveal-delay="0.1">
+            Some things I made with no brief, point, or purpose. Just work that scratches the creative itch and
+            keeps the former-art-kid in me satisfied.
+          </p>
+        </div>
+        <nav class="contents" aria-label="On this page" data-reveal data-reveal-delay="0.15">
+          <ol>
+            {
+              pieces.map((p, i) => (
+                <li>
+                  <a href={`#${p.id}`}>
+                    <span class="contents__num">0{i + 1}</span>
+                    <span class="contents__title">{p.title}</span>
+                    <span class="contents__medium">{p.medium}</span>
+                  </a>
+                </li>
+              ))
+            }
+          </ol>
+        </nav>
+      </div>
+    </section>
+
+    <!-- ---------- 01 Who Am I? ---------- -->
+    <section class="piece theme-cream" id="who-am-i" aria-labelledby="who-title">
+      <div class="container">
+        <header class="head">
+          <div>
+            <p class="eyebrow" data-reveal>01 · Video</p>
+            <h2 class="head__title" id="who-title" data-reveal data-reveal-delay="0.05">Who Am I?</h2>
+          </div>
+          <div class="head__copy" data-reveal data-reveal-delay="0.1">
+            <p>
+              So, I made a short animated film to get out of the “tell me about yourself” question. It covers how to
+              say my name, where I’m from (it’s complicated) and my habit of teaching myself new things at 2am. This
+              film was one of those things.
+            </p>
+          </div>
+        </header>
+
+        <div class="film" data-film-chapters data-reveal>
+          <div class="film__frame">
+            <video
+              class="film__intro"
+              src="/media/fun-stuff/who-am-i-intro.mp4"
+              poster="/media/fun-stuff/who-am-i-poster.jpg"
+              muted
+              loop
+              playsinline
+              preload="none"
+              aria-hidden="true"
+              data-film-intro></video>
+            <video
+              class="film__main"
+              src="/media/fun-stuff/who-am-i.mp4"
+              poster="/media/fun-stuff/who-am-i-poster.jpg"
+              playsinline
+              preload="none"
+              aria-label="Who Am I?, a short animated film about Fatima"
+              data-film-main></video>
+            <button class="film__play" type="button" data-film-start>
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9-5.5z" fill="currentColor"></path></svg>
+              Play with sound <span class="film__length">1:42</span>
+            </button>
+          </div>
+
+          <div class="chapters">
+            <p class="chapters__lead" id="chapters-lead">I am…</p>
+            <ol class="chapters__list" aria-labelledby="chapters-lead">
+              {
+                chapters.map((c) => (
+                  <li>
+                    <button type="button" class="chapter" data-chapter={c.at}>
+                      <span class="chapter__label">{c.label}</span>
+                      <span class="chapter__time">{clock(c.at)}</span>
+                    </button>
+                  </li>
+                ))
+              }
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- 02 A Cat Named Molly ---------- -->
+    <section class="piece theme-red" id="molly" aria-labelledby="molly-title">
+      <div class="container molly">
+        <header class="head head--side">
+          <div>
+            <p class="eyebrow" data-reveal>02 · Comic</p>
+            <h2 class="head__title" id="molly-title" data-reveal data-reveal-delay="0.05">A Cat Named Molly</h2>
+          </div>
+          <div class="head__copy" data-reveal data-reveal-delay="0.1">
+            <p>
+              Molly lives next door to a café my parents and I have been going to for years. She has no idea who we
+              are. We’ve turned spotting her into a little game anyway. It started life as an Instagram carousel, so
+              it reads best one panel at a time.
+            </p>
+          </div>
+        </header>
+
+        <div class="deck" data-deck data-reveal>
+          <div
+            class="deck__stack"
+            role="region"
+            aria-roledescription="carousel"
+            aria-label="A Cat Named Molly, 8 panels"
+            tabindex="0"
+            data-deck-stack>
+            {
+              molly.map((panel, i) => (
+                <div
+                  class="deck__card"
+                  role="group"
+                  aria-roledescription="panel"
+                  aria-label={`${i + 1} of ${molly.length}`}
+                  data-deck-card>
+                  <Picture
+                    src={panel.image}
+                    alt={panel.alt}
+                    formats={['avif', 'webp']}
+                    widths={widthsFor(panel.image)}
+                    sizes="(min-width: 56rem) 34rem, calc(100vw - 2 * var(--gutter))"
+                    loading={i < 2 ? 'eager' : 'lazy'}
+                    draggable="false"
+                  />
+                </div>
+              ))
+            }
+          </div>
+          <div class="deck__controls">
+            <button type="button" class="deck__btn" data-deck-prev aria-label="Previous panel">←</button>
+            <p class="deck__count" aria-live="polite">
+              <span data-deck-current>1</span> / {molly.length}
+            </p>
+            <button type="button" class="deck__btn" data-deck-next aria-label="Next panel">→</button>
+          </div>
+          <p class="aside deck__hint">(Drag it, or use the arrow keys.)</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- 03 Made in Peru ---------- -->
+    <section class="piece theme-cream" id="made-in-peru" aria-labelledby="peru-title">
+      <div class="container peru">
+        <header class="head head--side">
+          <div>
+            <p class="eyebrow" data-reveal>03 · Illustration</p>
+            <h2 class="head__title" id="peru-title" data-reveal data-reveal-delay="0.05">Made in Peru</h2>
+          </div>
+          <div class="head__copy" data-reveal data-reveal-delay="0.1">
+            <p>
+              You might be thinking, “Okay, flat illustration. How is this impressive?” Well, it isn’t. BUT! This was
+              my first illustration made fully in Illustrator, as a bunch of vectors, and it was a bit of a nightmare.
+              I’m a pen (digital or otherwise) and paper (or tablet) kind of gal, so this was more of a skills
+              exercise. Vectors make you commit to every curve, which was kind of the point.
+            </p>
+            {
+              outlineFile && (
+                <p class="nudge aside" aria-hidden="true">
+                  <span class="nudge__text">
+                    <span class="nudge__hover">
+                      (Hover over it. There are almost 5,700 anchor points under there. Click if you want the whole
+                      mess.)
+                    </span>
+                    <span class="nudge__touch">(Tap it. There are almost 5,700 anchor points under there.)</span>
+                  </span>
+                  <Scribble type="arrow" class="nudge__arrow" delay={0.3} />
+                </p>
+              )
+            }
+          </div>
+        </header>
+
+        <figure class="print" data-reveal>
+          <div class="print__mat">
+            <div
+              class="print__art"
+              data-lens={outlineFile ? '' : undefined}
+              role={outlineFile ? 'button' : undefined}
+              tabindex={outlineFile ? 0 : undefined}
+              aria-pressed={outlineFile ? 'false' : undefined}
+              aria-label={outlineFile ? 'Show the poster in outline view, with all its anchor points' : undefined}>
+              <Picture
+                src={peru}
+                alt="Illustration: a woman with a black bob hugs a fluffy brown alpaca among purple and blue flowers, under the words “Made in · Hecha en Perú”."
+                formats={['avif', 'webp']}
+                widths={widthsFor(peru)}
+                sizes="(min-width: 56rem) 34rem, calc(100vw - 2 * var(--gutter))"
+                loading="lazy"
+              />
+              {
+                outlineFile && (
+                  <div class="print__outline" aria-hidden="true" data-lens-layer>
+                    <Picture
+                      src={outlineFile}
+                      alt=""
+                      formats={['avif', 'webp']}
+                      widths={widthsFor(outlineFile)}
+                      sizes="(min-width: 56rem) 34rem, calc(100vw - 2 * var(--gutter))"
+                      loading="eager"
+                    />
+                  </div>
+                )
+              }
+              {outlineFile && <span class="print__ring" aria-hidden="true" />}
+            </div>
+          </div>
+          {
+            outlineFile && (
+              <figcaption class="aside print__note">
+                (For the record, this was a while ago. I’d use way fewer points now.)
+              </figcaption>
+            )
+          }
+        </figure>
+      </div>
+    </section>
+
+    <!-- ---------- 04 Breasts and Eggs ---------- -->
+    <section class="piece piece--book theme-cream" id="breasts-and-eggs" aria-labelledby="book-title">
+      <div class="container book-wrap" data-book>
+        <header class="head">
+          <div>
+            <p class="eyebrow" data-reveal>04 · Book cover</p>
+            <h2 class="head__title" id="book-title" data-reveal data-reveal-delay="0.05">Breasts and Eggs</h2>
+          </div>
+          <div class="head__copy" data-reveal data-reveal-delay="0.1">
+            <p>
+              I read Breasts and Eggs over one summer and <mark class="hl" data-highlight>highlighted about half of it</mark>. That much
+              feeling had to go somewhere, so it went into a new cover for Mieko Kawakami’s novel. It’s more abstract than what I
+              usually make, but that’s where the concept went.
+            </p>
+          </div>
+        </header>
+
+        <ul class="books">
+          {
+            book.map((b, i) => (
+              <li class="books__item" data-reveal data-reveal-delay={i * 0.08}>
+                <Picture
+                  src={b.image}
+                  alt={b.alt}
+                  formats={['avif', 'webp']}
+                  widths={widthsFor(b.image)}
+                  sizes="(min-width: 56rem) 22vw, 45vw"
+                  loading="lazy"
+                />
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <!-- ---------- Close ---------- -->
+    <section class="close theme-cream" aria-label="More">
+      <div class="container">
+        <div class="close__inner">
+          <div class="peek" data-molly-peek hidden>
+            <div class="peek__clip">
+              <Picture src={mollyPeek} alt="" formats={['avif', 'webp']} widths={[324, 648]} sizes="9rem" />
+            </div>
+            <p class="aside peek__note">(You spotted Molly. Lucky.)</p>
+          </div>
+          <p class="close__line" data-reveal>
+            That’s the fun stuff. The paid stuff lives over in{' '}
+            <a href="/work" class="close__link">Work<span aria-hidden="true"> →</span></a>
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  /* ---------- Shared bits ---------- */
+
+  .eyebrow {
+    margin-bottom: var(--space-s);
+  }
+  .aside {
+    font-size: var(--step--1);
+  }
+  .piece {
+    padding-block: var(--space-2xl);
+  }
+  /* Follows the poster on the same cream, so no extra gap on top */
+  .piece--book {
+    padding-top: 0;
+  }
+
+  /* A highlighter swipe over "highlighted about half of it" */
+  .hl {
+    padding: 0 0.12em;
+    margin: 0 -0.12em;
+    color: inherit;
+    background: linear-gradient(var(--blue), var(--blue)) no-repeat 0 60% / var(--hl, 100%) 78%;
+    border-radius: 0.2em;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+
+  /* Piece header: title on the left, a few lines on the right */
+  .head {
+    display: grid;
+    gap: var(--space-m);
+    margin-bottom: var(--space-xl);
+  }
+  /* Like the project pages: label across the top, then the heading and the
+     paragraph side by side, both starting at the same line */
+  @media (min-width: 56rem) {
+    .head {
+      grid-template-columns: 1fr 1fr;
+      gap: 0 var(--space-l);
+      align-items: start;
+    }
+    .head > div:first-child {
+      display: contents;
+    }
+    .head .eyebrow {
+      grid-column: 1 / -1;
+    }
+    .head .head__title {
+      margin-bottom: var(--space-m);
+    }
+  }
+  .head__title {
+    font-size: var(--step-4);
+    line-height: 1;
+  }
+  /* Headings on cream are red, as on the project pages */
+  .theme-cream .head__title {
+    color: var(--red);
+  }
+  .head__copy {
+    max-width: 34rem;
+    font-size: var(--step-1);
+    line-height: 1.5;
+  }
+  /* ---------- Hero ---------- */
+
+  .hero {
+    padding-top: calc(var(--header-h) + var(--space-xl));
+    padding-bottom: var(--space-xl);
+  }
+  .hero__grid {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: end;
+  }
+  @media (min-width: 56rem) {
+    .hero__grid {
+      grid-template-columns: 1.2fr 1fr;
+      min-height: 52svh;
+    }
+  }
+  .hero__title {
+    font-size: var(--step-5);
+    line-height: 0.95;
+  }
+  .hero__sub {
+    margin-top: var(--space-m);
+    max-width: 32rem;
+    font-size: var(--step-1);
+  }
+
+  .contents ol {
+    list-style: none;
+    padding: 0;
+    border-top: 1px solid color-mix(in srgb, var(--cream) 40%, transparent);
+  }
+  .contents li {
+    border-bottom: 1px solid color-mix(in srgb, var(--cream) 40%, transparent);
+  }
+  .contents a {
+    display: grid;
+    grid-template-columns: 2.25rem 1fr auto;
+    align-items: baseline;
+    gap: var(--space-xs);
+    padding-block: 0.85rem;
+    transition: padding var(--dur-fast) var(--ease-out);
+  }
+  .contents a:hover,
+  .contents a:focus-visible {
+    padding-left: 0.5rem;
+  }
+  .contents__num {
+    font-size: var(--step--1);
+    font-weight: 600;
+    color: var(--blue);
+  }
+  .contents__title {
+    font-family: var(--font-serif);
+    font-size: var(--step-2);
+    line-height: 1.1;
+  }
+  .contents__medium {
+    font-size: var(--step--1);
+    text-align: right;
+  }
+
+  /* ---------- 01 Film ---------- */
+
+  /* Small enough that the film and its labels fit on one screen */
+  .film {
+    max-width: max(36rem, calc((100svh - 13rem) * 16 / 9));
+    margin-inline: auto;
+  }
+
+  .film__frame {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-s);
+    overflow: hidden;
+    background: #e3463a;
+  }
+  .film__frame video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .film__main {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .film.is-playing .film__main {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .film.is-playing .film__intro {
+    visibility: hidden;
+  }
+  .film__play {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+    padding: 0.95em 1.5em;
+    border-radius: var(--radius-pill);
+    background: var(--cream);
+    color: var(--ink);
+    font-weight: 600;
+    white-space: nowrap;
+    transition:
+      background-color var(--dur-fast) var(--ease-out),
+      scale var(--dur-fast) var(--ease-out);
+  }
+  .film__play svg {
+    width: 0.9em;
+    height: 0.9em;
+    color: var(--red);
+  }
+  .film__play:hover {
+    background: var(--white);
+    scale: 1.04;
+  }
+  .film__length {
+    font-weight: 400;
+    opacity: 0.7;
+  }
+  .film.is-playing .film__play {
+    display: none;
+  }
+
+  .chapters {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-s);
+    margin-top: var(--space-m);
+  }
+  .chapters__lead {
+    flex: none;
+    font-family: var(--font-serif);
+    font-size: var(--step-2);
+    line-height: 1;
+  }
+  .chapters__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    list-style: none;
+    padding: 0;
+  }
+  .chapter {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.45em;
+    padding: 0.5em 0.95em;
+    border: 1px solid color-mix(in srgb, var(--ink) 25%, transparent);
+    border-radius: var(--radius-pill);
+    font-weight: 500;
+    transition:
+      background-color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+  }
+  .chapter:hover {
+    border-color: var(--red);
+    color: var(--red);
+  }
+  .chapter__time {
+    font-size: 0.75em;
+    opacity: 0.6;
+    font-variant-numeric: tabular-nums;
+  }
+  .chapter[aria-current='true'] {
+    background: var(--red);
+    border-color: var(--red);
+    color: var(--cream);
+  }
+  @media (max-width: 47.99rem) {
+    .chapters {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-xs);
+    }
+    /* One swipeable row on phones, running to the screen edges */
+    .chapters__list {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      margin-inline: calc(-1 * var(--gutter));
+      padding-inline: var(--gutter);
+      scrollbar-width: none;
+    }
+    .chapters__list::-webkit-scrollbar {
+      display: none;
+    }
+    .chapter {
+      white-space: nowrap;
+    }
+  }
+
+  /* ---------- 02 Poster ---------- */
+
+  @media (min-width: 56rem) {
+    .peru {
+      display: grid;
+      grid-template-columns: 1fr minmax(0, 34rem);
+      gap: var(--space-xl);
+      align-items: center;
+    }
+    .peru .head {
+      grid-template-columns: 1fr;
+      margin-bottom: 0;
+    }
+  }
+  .print__mat {
+    max-width: 34rem;
+    margin-inline: auto;
+  }
+  .print__art {
+    position: relative;
+    border-radius: var(--radius-s);
+    overflow: hidden;
+    /* Safari: keep the rounded corners while the layers animate */
+    isolation: isolate;
+  }
+  .print__art :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .print__outline {
+    position: absolute;
+    inset: 0;
+    background: var(--white);
+    clip-path: circle(0 at var(--lx, 50%) var(--ly, 50%));
+    pointer-events: none;
+  }
+  .print__art.is-lens .print__outline {
+    clip-path: circle(var(--lens) at var(--lx, 50%) var(--ly, 50%));
+  }
+  .print__art.is-outline .print__outline {
+    clip-path: circle(150% at var(--lx, 50%) var(--ly, 50%));
+    transition: clip-path 0.7s var(--ease-in-out);
+  }
+  .print__art[data-lens] {
+    --lens: clamp(4.5rem, 22%, 7rem);
+    cursor: crosshair;
+  }
+  .print__art.is-outline {
+    cursor: pointer;
+  }
+  .print__art:focus-visible {
+    outline: 2px solid var(--blue-deep);
+    outline-offset: 4px;
+  }
+  /* Thin selection-blue ring around the lens, like Illustrator */
+  .print__ring {
+    position: absolute;
+    left: var(--lx, 50%);
+    top: var(--ly, 50%);
+    width: calc(2 * var(--lens));
+    aspect-ratio: 1;
+    translate: -50% -50%;
+    border: 1.5px solid #2f6bff;
+    border-radius: 50%;
+    opacity: 0;
+    scale: 0.6;
+    pointer-events: none;
+    transition:
+      opacity var(--dur-fast) var(--ease-out),
+      scale var(--dur-fast) var(--ease-out);
+  }
+  .print__art.is-lens:not(.is-outline) .print__ring {
+    opacity: 1;
+    scale: 1;
+  }
+
+  /* The nudge: a note with a hand-drawn arrow pointing at the poster */
+  .nudge {
+    position: relative;
+    z-index: 2;
+    margin-top: var(--space-l);
+    color: var(--blue-deep);
+    font-weight: 500;
+  }
+  .nudge__touch {
+    display: none;
+  }
+  @media (hover: none) {
+    .nudge__hover {
+      display: none;
+    }
+    .nudge__touch {
+      display: inline;
+    }
+  }
+  .nudge :global(.nudge__arrow) {
+    --scribble-color: var(--blue-deep);
+    --scribble-width: 2px;
+  }
+  /* Wide screens: the arrow runs all the way across to the poster's edge */
+  @media (min-width: 56rem) {
+    .peru .head__copy {
+      max-width: none;
+    }
+    .peru .head__copy > p:first-child {
+      max-width: 34rem;
+    }
+    .nudge {
+      display: flex;
+      align-items: flex-end;
+      gap: 0.75rem;
+      width: calc(100% + var(--space-xl) + 0.4rem);
+    }
+    .nudge__text {
+      flex: 0 1 20rem;
+    }
+    .nudge :global(.nudge__arrow) {
+      flex: 1 1 4rem;
+      width: auto;
+      height: 3.25rem;
+      aspect-ratio: auto;
+      margin-bottom: 0.6rem;
+    }
+  }
+  /* Phones: the poster is below, so the arrow points down at it */
+  @media (max-width: 55.99rem) {
+    .nudge {
+      max-width: calc(100% - 5rem);
+    }
+    .nudge :global(.nudge__arrow) {
+      --arrow-size: 3.75rem;
+      position: absolute;
+      right: -4.75rem;
+      top: 0.6rem;
+      scale: 1 -1;
+    }
+  }
+
+  .print__note {
+    max-width: 34rem;
+    margin: var(--space-s) auto 0;
+    opacity: 0.75;
+  }
+
+  /* ---------- 03 Deck ---------- */
+
+  @media (min-width: 56rem) {
+    .molly {
+      display: grid;
+      grid-template-columns: minmax(0, 34rem) 1fr;
+      gap: var(--space-xl);
+      align-items: center;
+    }
+    .molly .head {
+      order: 2;
+      grid-template-columns: 1fr;
+      margin-bottom: 0;
+    }
+  }
+  .deck {
+    width: min(100%, 34rem);
+    margin-inline: auto;
+  }
+  .deck__stack {
+    position: relative;
+    aspect-ratio: 1;
+    touch-action: pan-y;
+    user-select: none;
+    outline-offset: 6px;
+    border-radius: var(--radius-s);
+  }
+  .deck__card {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-s);
+    overflow: hidden;
+    background: var(--white);
+    will-change: transform;
+  }
+  .deck__card :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    -webkit-user-drag: none;
+  }
+  .deck__card.is-top {
+    cursor: grab;
+  }
+  .deck__card.is-top:active {
+    cursor: grabbing;
+  }
+  /* Before the script runs, only the first panel shows */
+  .deck__card + .deck__card {
+    visibility: hidden;
+  }
+  .deck.is-ready .deck__card {
+    visibility: visible;
+  }
+  .deck__controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-m);
+    margin-top: var(--space-m);
+  }
+  .deck__btn {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid color-mix(in srgb, currentColor 45%, transparent);
+    border-radius: 50%;
+    font-size: 1.1rem;
+    transition:
+      background-color var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+  }
+  .deck__btn:hover {
+    background: var(--cream);
+    border-color: var(--cream);
+    color: var(--red);
+  }
+  .deck__count {
+    min-width: 4ch;
+    text-align: center;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .deck__hint {
+    margin-top: var(--space-2xs);
+    text-align: center;
+    opacity: 0.85;
+  }
+  @media (hover: none) {
+    .deck__hint {
+      display: none;
+    }
+  }
+
+  /* ---------- 04 Book ---------- */
+
+  /* All four views in a row (two by two on phones), closed to open */
+  .books {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-s);
+    list-style: none;
+    padding: 0;
+  }
+  @media (max-width: 47.99rem) {
+    .books {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .books__item :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* ---------- Close ---------- */
+
+  .close {
+    padding-block: var(--space-xl);
+  }
+  .close__inner {
+    position: relative;
+    padding-top: var(--space-l);
+    border-top: 1px solid color-mix(in srgb, var(--ink) 15%, transparent);
+  }
+  .close__line {
+    font-family: var(--font-serif);
+    font-size: var(--step-3);
+    line-height: 1.1;
+  }
+  .close__link {
+    color: var(--red);
+    white-space: nowrap;
+  }
+  .close__link:hover {
+    color: var(--red-deep);
+  }
+
+  /* Rare Molly: on some visits she peeks over the line */
+  .peek {
+    position: absolute;
+    right: 8%;
+    bottom: 100%;
+    width: clamp(6.5rem, 12vw, 9rem);
+    pointer-events: none;
+  }
+  .peek[hidden] {
+    display: none;
+  }
+  .peek__clip {
+    overflow: hidden;
+  }
+  .peek__clip :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    mix-blend-mode: multiply;
+  }
+  .peek__note {
+    position: absolute;
+    right: 100%;
+    bottom: 30%;
+    margin-right: var(--space-2xs);
+    white-space: nowrap;
+  }
+</style>

@@ -1,0 +1,104 @@
+---
+/**
+ * A story beat in a case study ("The ask", "The insight", "The answer").
+ *
+ * Default: small label on top, headline on the left, paragraphs on the right.
+ * With something in the "aside" slot (an image or video), the label, headline
+ * and paragraphs stack on the left and the aside sits on the right.
+ *
+ *   <CaseText eyebrow="The ask">
+ *     <Fragment slot="heading">Elmwood is making room…</Fragment>
+ *     <p>Paragraph…</p>
+ *   </CaseText>
+ */
+interface Props {
+  eyebrow?: string;
+  id?: string;
+}
+
+const { eyebrow, id } = Astro.props;
+const hasAside = Astro.slots.has('aside');
+const headingId = id ? `${id}-title` : undefined;
+---
+
+<div class:list={['case-text', { 'case-text--aside': hasAside }]} id={id}>
+  <div class="case-text__main">
+    {eyebrow && <p class="eyebrow case-text__eyebrow" data-reveal>{eyebrow}</p>}
+    <h2 class="case-text__heading" id={headingId} data-reveal>
+      <slot name="heading" />
+    </h2>
+    <div class="case-text__body" data-reveal data-reveal-delay="0.1">
+      <slot />
+    </div>
+  </div>
+  {
+    hasAside && (
+      <div class="case-text__aside">
+        <slot name="aside" />
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .case-text__main {
+    display: grid;
+    gap: var(--space-m) clamp(2rem, 1rem + 5vw, 5rem);
+  }
+  .case-text__eyebrow {
+    font-size: clamp(0.8125rem, 0.75rem + 0.3vw, 1.125rem); /* 13 → 18 */
+    font-weight: 700;
+    letter-spacing: 0.3em;
+  }
+  .case-text__heading {
+    font-size: clamp(2.125rem, 1.6rem + 2vw, 3rem); /* 34 → 48 */
+    line-height: 1;
+    letter-spacing: 0;
+  }
+  /* The theme class sits on the page's section, outside this component */
+  :global(.theme-cream) .case-text__heading {
+    color: var(--red);
+  }
+  .case-text__heading :global(em) {
+    font-style: italic;
+  }
+  .case-text__body {
+    display: grid;
+    gap: 1em;
+    max-width: 38rem;
+    font-size: clamp(1rem, 0.95rem + 0.2vw, 1.125rem); /* 16 → 18 */
+    line-height: 1.4;
+  }
+  .case-text__body :global(strong) {
+    font-weight: 650;
+  }
+
+  /* Wide screens, plain version: label across the top, then two columns */
+  @media (min-width: 56rem) {
+    .case-text:not(.case-text--aside) .case-text__main {
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+    }
+    .case-text:not(.case-text--aside) .case-text__eyebrow {
+      grid-column: 1 / -1;
+    }
+    .case-text:not(.case-text--aside) .case-text__heading {
+      max-width: 14em;
+    }
+  }
+
+  /* With an aside: text column + picture column */
+  .case-text--aside {
+    display: grid;
+    gap: var(--space-l) clamp(2rem, 1rem + 5vw, 5rem);
+  }
+  .case-text--aside .case-text__main {
+    align-content: start;
+  }
+  @media (min-width: 56rem) {
+    .case-text--aside {
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+    }
+  }
+</style>

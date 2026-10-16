@@ -1,0 +1,452 @@
+---
+// Case study: Casino Mining, "Built for people with questions."
+// Built from the shared case-study pieces in src/components/case/, plus
+// src/scripts/casino.ts: the deliverables pile up.
+import Base from '../../layouts/Base.astro';
+import Scribble from '../../components/Scribble.astro';
+import CaseHero from '../../components/case/CaseHero.astro';
+import CaseText from '../../components/case/CaseText.astro';
+import CaseMedia from '../../components/case/CaseMedia.astro';
+import CaseLine from '../../components/case/CaseLine.astro';
+import NextProject from '../../components/case/NextProject.astro';
+import Parade, { type ParadeItem } from '../../components/case/Parade.astro';
+
+import meetsCasino from '../../assets/casino/meets-casino.png';
+import reportSpread from '../../assets/casino/report-spread-closeup.jpg';
+import reportCover from '../../assets/casino/report-cover.jpg';
+import handouts from '../../assets/casino/handouts.jpg';
+import factSheet from '../../assets/casino/fact-sheet.jpg';
+import pitOriginal from '../../assets/casino/pit-original.jpg';
+import pitRebuilt from '../../assets/casino/pit-rebuilt.jpg';
+import bookMining from '../../assets/casino/activity-book-1.jpg';
+import bookMinerals from '../../assets/casino/activity-book-2.jpg';
+import bookCrossword from '../../assets/casino/activity-book-3.jpg';
+import bookSafety from '../../assets/casino/activity-book-4.jpg';
+import moose from '../../assets/casino/wildlife/moose.png';
+import pika from '../../assets/casino/wildlife/pika.png';
+import grizzly from '../../assets/casino/wildlife/grizzly.png';
+import bat from '../../assets/casino/wildlife/bat.png';
+import mountainGoat from '../../assets/casino/wildlife/mountain-goat.png';
+import wolverine from '../../assets/casino/wildlife/wolverine.png';
+
+const half = '(min-width: 48rem) min(46vw, 582px), calc(100vw - 2 * var(--gutter))';
+
+// The ask: everything that came in, dropping in one by one
+const deliverables = [
+  'Reports',
+  'Ads',
+  'Posters',
+  'Handouts',
+  'Social posts',
+  'An activity book (for kids)',
+  'Signage',
+  'A mural',
+  'A calendar',
+  'Newsletters',
+];
+
+// The activity book's cast, in parade order. Sizes are roughly true to life
+// (within reason: a to-scale pika would be a dot next to the moose).
+const wildlife: ParadeItem[] = [
+  { name: 'Moose', image: moose, size: 1 },
+  { name: 'Pika', image: pika, size: 0.36, flip: true },
+  { name: 'Grizzly bear', image: grizzly, size: 0.72 },
+  { name: 'Bat', image: bat, size: 0.42, float: true },
+  { name: 'Mountain goat', image: mountainGoat, size: 0.8 },
+  { name: 'Wolverine', image: wolverine, size: 0.48, flip: true },
+];
+---
+
+<Base
+  title="Casino Mining: Built for people with questions"
+  description="Reports, handouts, information graphics and a kids’ activity book for the Casino Project, a public-facing mining project in the Yukon, by Fatima Rabi."
+>
+  <div data-case class="cas">
+    <CaseHero roles={['Brand collateral', 'Information design']}>
+      <Fragment slot="title">
+        <span class="line"><span>Built for people</span></span>
+        <span class="line"
+          ><span
+            >with <Scribble type="underline" draw="load" delay={1} redraw color="var(--blue)">questions.</Scribble
+            ></span
+          ></span
+        >
+      </Fragment>
+      <p>Collateral for Casino Mining Corporation</p>
+      <p>Created as Art Director while at BOLD LIP.</p>
+    </CaseHero>
+
+    <!-- The ask -->
+    <section class="case-section theme-cream" aria-labelledby="ask-title">
+      <div class="container">
+        <CaseText eyebrow="The ask" id="ask">
+          <Fragment slot="heading">The brand’s built! Now it has to show up everywhere.</Fragment>
+          <p>
+            The Casino Project is a mining project in the Yukon. BOLD LIP had already led the brand refresh, and it was
+            a great one. My job was anything that came after.
+          </p>
+          <p>That meant:</p>
+          <ul class="pile" data-pile role="list">
+            {deliverables.map((d) => <li class="pile__item">{d}</li>)}
+            <li class="pile__item pile__item--more">…and whatever came in next</li>
+          </ul>
+          <p>
+            Production work, technically. <strong>Except the people reading it weren’t doing so for fun.</strong>
+          </p>
+          <div slot="aside" class="meet">
+            <CaseMedia
+              image={meetsCasino}
+              alt="Illustration of Fatima, drawn in red, facing a wall of Casino Project layouts."
+              ratio="560 / 386"
+              sizes={half}
+              cutout
+            />
+            <p class="meet__note" data-reveal data-reveal-delay="0.2">
+              <Scribble type="arrow" color="var(--blue)" delay={0.5} class="meet__arrow" />
+              (Me, meeting the new Casino brand.)
+            </p>
+          </div>
+        </CaseText>
+      </div>
+    </section>
+
+    <!-- The guiding light -->
+    <section class="case-section case-section--tight theme-cream" aria-labelledby="light-title">
+      <div class="container">
+        <CaseText eyebrow="The guiding light" id="light">
+          <Fragment slot="heading">Mining doesn’t get the benefit of the doubt.</Fragment>
+          <p>
+            Mining isn’t exactly famous for its ethics. Nor is it known for being particularly easy to understand.
+          </p>
+          <p>
+            Remember, this is a public-facing project in the Yukon. The people reading it, largely First Nation
+            communities, <strong>have every reason to be skeptical and every right to understand.</strong>
+          </p>
+          <p>
+            The way I see it, those two things aren’t really in conflict. Skeptical people, especially in this context,
+            don’t need persuading. They need information they can actually use.
+          </p>
+          <p>
+            TL;DR: Not{' '}<Scribble type="strike" color="var(--blue-deep)" delay={0.2}>“make mining look good”</Scribble
+            >{' '}but{' '}<Scribble type="underline" delay={0.7}>“make it clear.”</Scribble>
+          </p>
+          <CaseMedia
+            slot="aside"
+            image={reportCover}
+            alt="A hand holding the Western Copper and Gold sustainability report cover against a large rock."
+            focus="42% 45%"
+            sizes={half}
+          />
+        </CaseText>
+
+        <!-- Full width, so the figures and tables can actually be read -->
+        <CaseMedia
+          class="case-section__media"
+          image={reportSpread}
+          alt="Close-up of the Casino Project sustainability report: key figures in coloured tiles, an economic impact chart and data tables."
+          ratio="3700 / 2328"
+          sizes="(min-width: 90rem) 1200px, calc(100vw - 2 * var(--gutter))"
+          sharp
+        />
+      </div>
+    </section>
+
+    <!-- The catch -->
+    <section class="case-section case-section--tight theme-cream" aria-labelledby="catch-title">
+      <div class="container">
+        <CaseText eyebrow="The catch" id="catch">
+          <Fragment slot="heading">Lots to say. I mean LOTS.</Fragment>
+          <p>
+            Safety, environmental commitments, and community benefits can’t be cut for space. Neither can the numbers,
+            the maps, the timelines, or the regulatory context. So white space, the designer’s beloved, was mostly off
+            the table.
+          </p>
+          <p>The pages were going to be full. I had to make <em>full</em> feel <em>digestible</em>.</p>
+        </CaseText>
+
+        <div class="case-stack case-section__media">
+          <CaseMedia
+            image={handouts}
+            alt="A spread of Casino Project handouts on wildlife, water and community, in dark green, orange and cream."
+            ratio="1200 / 796"
+          />
+          <CaseMedia
+            image={factSheet}
+            alt="Two Community Fact Sheets side by side, with photos, a map and project milestones."
+            ratio="1200 / 796"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Side quests -->
+    <section class="case-section theme-red" aria-labelledby="quests-title">
+      <div class="container">
+        <h2 class="case-section__title" id="quests-title" data-reveal>Side quests!</h2>
+        <p class="quests__intro" data-reveal data-reveal-delay="0.1">
+          Most of the work was full layouts: reports, ads, posters, the whole composed thing. But every so often,
+          smaller assets showed up and quietly tested me. Like this graphic. The challenge? Turning this diagram{' '}
+          <Scribble type="strike" delay={0.3}>only an engineer could love</Scribble>{' '}
+          into one a neighbour could read.
+        </p>
+
+        <div class="quests__pair">
+          <div class="quests__item">
+            <CaseMedia
+              image={pitOriginal}
+              alt="The original open pit cross-section: technical survey lines, grid marks and tiny labels."
+              ratio="582 / 327"
+              class="quests__media"
+              sizes={half}
+            />
+            <h3 class="quests__title" data-reveal>Original</h3>
+            <div class="quests__body" data-reveal data-reveal-delay="0.1">
+              <p>
+                The task description said this was an open pit mine. I would have guessed a seismograph, or possibly a
+                mountain?
+              </p>
+              <p>
+                In all seriousness, it’s a cross-section graphic, accurate and complete, and built for people who
+                already know how to read one. My first thought was how to get a non-engineer to understand without
+                doing too many mental gymnastics.
+              </p>
+            </div>
+          </div>
+
+          <div class="quests__item">
+            <CaseMedia
+              image={pitRebuilt}
+              alt="The rebuilt cross-section: a plan view and legend beside two colour-coded sections showing pit walls and the post-closure pit lake."
+              ratio="582 / 327"
+              class="quests__media"
+              sizes={half}
+            />
+            <h3 class="quests__title" data-reveal>Rebuilt</h3>
+            <div class="quests__body" data-reveal data-reveal-delay="0.1">
+              <p>
+                Simplifying it ended up meaning redrawing it. A plan view shows where the cuts were taken, and each
+                section’s colour matches its line on the map, so nobody has to cross-reference anything. The
+                post-closure pit lake gets its own colour, since it’s the end state and what most readers want to know
+                about.
+              </p>
+              <p>
+                Is it art? No. But it’s an asset meant to be dropped into decks, reports, and whatever else needs it,
+                and there, clear beats pretty{' '}
+                <Scribble type="strike" delay={0.3}>as much as it pains me to say it</Scribble>.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bonus: the activity book -->
+    <section class="case-section theme-cream" aria-labelledby="book-title">
+      <div class="container">
+        <CaseText eyebrow="Bonus! The activity book" id="book">
+          <Fragment slot="heading">The toughest audience: Kids.</Fragment>
+          <p>Adults will push through a dense report because they have to. Kids sure won’t.</p>
+          <p>
+            This project was a bit of a wildcard. It started with very little direction, which meant <strong
+              >the concept, the specs, and every activity (copy, layout, and graphics) were mine to figure out</strong
+            >.
+          </p>
+          <p>
+            The one thing I knew: this activity book had to explain the ins and outs of a mining project to an
+            audience with zero obligation to care.
+          </p>
+          <p>
+            It was a balancing act, to say the least. It had to stay accurate, because kids repeat things. It had to
+            respect the communities and First Nations the project sits alongside. It had to be fun enough to survive a
+            car ride. And it could <strong>not</strong> feel like a PR move.
+          </p>
+        </CaseText>
+
+        <div class="case-stack case-section__media">
+          <CaseMedia
+            image={bookMining}
+            alt="Activity book spread: “How does mining work?”, matching each step of mining to a picture."
+            ratio="1200 / 672"
+          />
+          <CaseMedia
+            image={bookCrossword}
+            alt="Activity book spread: a wildlife crossword with a bat, bear, moose, sheep and other Yukon animals."
+            ratio="1200 / 759"
+          />
+          <CaseMedia
+            image={bookSafety}
+            alt="Activity book spreads: a “Safety search challenge!” beside a mine-site seek-and-find."
+            ratio="1200 / 759"
+          />
+          <CaseMedia
+            image={bookMinerals}
+            alt="Activity book spread: “Find the minerals!”, with a winding maze across the facing page."
+            ratio="1200 / 759"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Bonus bonus: the wildlife I drew for the activity book -->
+    <section class="wildlife theme-cream" aria-labelledby="wildlife-title">
+      <div class="container wildlife__copy">
+        <p class="eyebrow wildlife__eyebrow" data-reveal>Bonus bonus!</p>
+        <h2 class="wildlife__title" id="wildlife-title" data-reveal>Meet the locals.</h2>
+        <p class="wildlife__body" data-reveal data-reveal-delay="0.1">
+          I drew the Yukon wildlife in the book. These ones wandered off the page.
+        </p>
+      </div>
+      <Parade items={wildlife} label="wildlife parade" />
+    </section>
+
+    <CaseLine>
+      <Fragment slot="title">
+        Clear beats pretty.
+      </Fragment>
+      Nobody picked these up for fun. So instead of trying to win anyone over, every page tried to leave fewer questions
+      than it found. (Pretty still snuck in where it could.)
+    </CaseLine>
+
+    <NextProject slug="casino" />
+  </div>
+</Base>
+
+<style>
+  .case-section {
+    padding-block: var(--space-xl);
+  }
+  /* Follows another cream section: tops the gap up so the space between
+     sections (about 160px on wide screens) is clearly bigger than the space
+     between a section's text and its pictures */
+  .case-section--tight {
+    padding-top: calc(var(--space-2xl) - var(--space-xl));
+  }
+  .case-section :global(.case-section__media) {
+    margin-top: var(--space-xl);
+  }
+  .case-section__title {
+    margin-bottom: var(--space-m);
+    font-size: clamp(2.5rem, 1.6rem + 3.6vw, 4rem); /* 40 → 64 */
+    line-height: 1;
+  }
+
+  /* The ask: a note and hand-drawn arrow pointing at me in the illustration */
+  .meet__note {
+    position: relative;
+    margin-top: 0.5rem;
+    padding-right: 4%;
+    font-size: clamp(0.875rem, 0.85rem + 0.15vw, 1rem);
+    line-height: 1.4;
+    text-align: right;
+    color: var(--blue-deep);
+  }
+  /* Mirrored, so it rises from the note up and to the left, onto my back */
+  .meet__note :global(.meet__arrow) {
+    --arrow-size: clamp(5rem, 3.5rem + 5vw, 8.5rem);
+    --scribble-width: 3px;
+    position: absolute;
+    right: 16%;
+    bottom: 1.2em;
+    scale: -1 1;
+  }
+
+  /* ---------- The ask: the pile of deliverables ---------- */
+  .pile {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    padding: 0;
+    list-style: none;
+  }
+  .pile__item {
+    padding: 0.3em 0.8em 0.35em;
+    border: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
+    border-radius: var(--radius-pill);
+    font-size: 0.9375rem;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+  .pile__item--more {
+    border-color: var(--blue-deep);
+    background: var(--blue);
+    font-weight: 600;
+  }
+
+  /* ---------- Guiding light: spread + cover side by side ---------- */
+  /* Full-width pictures, one under the other */
+  .case-stack {
+    display: grid;
+    gap: clamp(1rem, 0.4rem + 1.8vw, 2.25rem);
+  }
+
+  /* ---------- Bonus bonus: wildlife parade ---------- */
+  /* Light blue, like a Yukon sky: the cream goat would vanish on cream,
+     and the brown animals would go muddy on red. */
+  .wildlife {
+    padding-block: var(--space-xl) var(--space-l);
+    background: var(--blue);
+    color: var(--ink);
+    overflow: hidden;
+  }
+  .wildlife__copy {
+    margin-bottom: var(--space-l);
+    text-align: center;
+  }
+  .wildlife__eyebrow {
+    color: var(--ink);
+    font-size: clamp(0.8125rem, 0.75rem + 0.3vw, 1.125rem); /* 13 → 18 */
+    font-weight: 700;
+    letter-spacing: 0.3em;
+  }
+  .wildlife__title {
+    margin-top: var(--space-s);
+    font-size: clamp(2.125rem, 1.6rem + 2vw, 3rem); /* 34 → 48 */
+    line-height: 1;
+    color: var(--red);
+  }
+  .wildlife__body {
+    margin-top: var(--space-s);
+    font-size: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+    line-height: 1.4;
+  }
+  .wildlife :global(.parade__toggle) {
+    margin-right: var(--gutter);
+  }
+
+  /* ---------- Side quests ---------- */
+  .quests__intro {
+    max-width: 75rem;
+    font-size: clamp(1rem, 0.95rem + 0.2vw, 1.125rem); /* 16 → 18 */
+    line-height: 1.4;
+  }
+  .quests__pair {
+    display: grid;
+    gap: var(--space-xl) clamp(1rem, 0.4rem + 1.8vw, 2.25rem);
+    margin-top: var(--space-l);
+  }
+  /* The diagrams are on white, so their frames are white too */
+  .quests__item :global(.quests__media .media__frame) {
+    background: #fff;
+  }
+  @media (min-width: 48rem) {
+    .quests__pair {
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+    }
+  }
+  .quests__title {
+    margin-top: var(--space-m);
+    font-family: var(--font-sans);
+    font-size: clamp(1.625rem, 1.3rem + 1.1vw, 2.25rem); /* 26 → 36 */
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .quests__body {
+    display: grid;
+    gap: 1em;
+    margin-top: var(--space-s);
+    font-size: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+    line-height: 1.4;
+  }
+</style>

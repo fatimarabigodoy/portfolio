@@ -1,0 +1,204 @@
+---
+/**
+ * Row of concept cards: picture, name, and a "tell me more" line that
+ * opens the story behind the concept. Wired up in src/scripts/case.ts.
+ */
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { widthsFor } from '../../utils/image';
+
+export interface Concept {
+  title: string;
+  /** The playful line on the dropdown, e.g. "Explain this to me, please." */
+  prompt: string;
+  image: ImageMetadata;
+  alt: string;
+  /** Paragraph. Words wrapped in *stars* show in italics. */
+  body: string;
+}
+
+interface Props {
+  concepts: Concept[];
+  id: string;
+}
+
+const { concepts, id } = Astro.props;
+
+const escape = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const rich = (s: string) => escape(s).replace(/\*(.+?)\*/g, '<em>$1</em>');
+---
+
+<ul class="concepts" role="list">
+  {
+    concepts.map((c, i) => {
+      const panelId = `${id}-${i}`;
+      return (
+        <li class="concept" data-concept>
+          <div class="concept__image">
+            <Picture
+              src={c.image}
+              alt={c.alt}
+              formats={['avif', 'webp']}
+              widths={widthsFor(c.image, [400, 600, 800, 1200])}
+              sizes="(min-width: 56rem) min(30vw, 376px), calc(100vw - 2 * var(--gutter))"
+              loading="lazy"
+            />
+          </div>
+          <h3 class="concept__title">{c.title}</h3>
+          <button class="concept__toggle" type="button" aria-expanded="false" aria-controls={panelId} data-concept-toggle>
+            <span>{c.prompt}</span>
+            <span class="concept__plus" aria-hidden="true" />
+          </button>
+          <div class="concept__panel" id={panelId} data-concept-panel>
+            <div>
+              <p set:html={rich(c.body)} />
+            </div>
+          </div>
+        </li>
+      );
+    })
+  }
+</ul>
+
+<style>
+  .concepts {
+    display: grid;
+    gap: var(--space-xl) clamp(1rem, 0.4rem + 1.8vw, 2.25rem);
+    padding: 0;
+    list-style: none;
+  }
+  @media (min-width: 56rem) {
+    .concepts {
+      grid-template-columns: repeat(3, 1fr);
+      align-items: start;
+    }
+  }
+
+  .concept__image {
+    aspect-ratio: 376 / 278;
+    overflow: hidden;
+    border-radius: 12px;
+  }
+  .concept__image :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.2s var(--ease-out);
+  }
+  .concept:hover .concept__image :global(img),
+  .concept.is-open .concept__image :global(img) {
+    transform: scale(1.04);
+  }
+
+  .concept__title {
+    margin-top: var(--space-m);
+    font-family: var(--font-sans);
+    font-size: clamp(1.625rem, 1.3rem + 1.1vw, 2.25rem); /* 26 → 36 */
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  .concept__toggle {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: var(--space-s);
+    padding-block: 0.5rem 0.6rem;
+    border-bottom: 1px solid rgb(255 246 232 / 0.5);
+    font-weight: 500;
+    font-size: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+    text-align: left;
+    transition: border-color var(--dur-fast);
+  }
+  .concept__toggle:hover {
+    border-bottom-color: var(--cream);
+  }
+
+  /* Plus that turns into a cross when open */
+  .concept__plus {
+    position: relative;
+    flex: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    transition:
+      transform var(--dur) var(--ease-out),
+      background-color var(--dur-fast);
+  }
+  .concept__plus::before,
+  .concept__plus::after {
+    content: '';
+    position: absolute;
+    inset: 50% 0.3rem auto;
+    height: 1.5px;
+    margin-top: -0.75px;
+    background: currentColor;
+    border-radius: 2px;
+  }
+  .concept__plus::after {
+    rotate: 90deg;
+  }
+  .concept__toggle:hover .concept__plus {
+    background: rgb(255 246 232 / 0.15);
+  }
+  .concept__toggle[aria-expanded='true'] .concept__plus {
+    transform: rotate(135deg);
+    background: var(--blue);
+    color: var(--ink);
+  }
+
+  /* The story slides open (height animates via grid rows) */
+  .concept__panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.6s var(--ease-out);
+  }
+  .concept__panel > div {
+    min-height: 0;
+    overflow: hidden;
+  }
+  .concept__panel p {
+    padding-top: var(--space-s);
+    font-size: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+    line-height: 1.4;
+    opacity: 0;
+    translate: 0 -0.5rem;
+    transition:
+      opacity 0.4s var(--ease-out),
+      translate 0.6s var(--ease-out);
+  }
+  .concept.is-open .concept__panel {
+    grid-template-rows: 1fr;
+  }
+  .concept.is-open .concept__panel p {
+    opacity: 1;
+    translate: 0 0;
+    transition-delay: 0.12s;
+  }
+  /* Without JavaScript, everything is simply open */
+  :global(html:not(.js-ready)) .concept__panel {
+    grid-template-rows: 1fr;
+  }
+  :global(html:not(.js-ready)) .concept__panel p {
+    opacity: 1;
+    translate: none;
+  }
+  :global(html:not(.js-ready)) .concept__toggle {
+    pointer-events: none;
+  }
+  :global(html:not(.js-ready)) .concept__plus {
+    display: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .concept__panel,
+    .concept__panel p,
+    .concept__plus,
+    .concept__image :global(img) {
+      transition: none;
+    }
+  }
+</style>

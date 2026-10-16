@@ -1,0 +1,34 @@
+---
+import Base from '../layouts/Base.astro';
+import Scribble from '../components/Scribble.astro';
+---
+
+<Base title="Wrong swamp" noindex>
+  <section class="lost theme-red">
+    <div class="container">
+      <p class="eyebrow">404</p>
+      <h1>Wrong <Scribble type="circle" draw="load" delay={0.2}>swamp.</Scribble></h1>
+      <p class="lost__text">The page you’re after has wandered off. Let’s get you back on dry land.</p>
+      <a class="btn" href="/">Take me home</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .lost {
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    padding-block: calc(var(--header-h) + var(--space-l)) var(--space-xl);
+  }
+  h1 {
+    font-size: var(--step-5);
+    line-height: 0.95;
+    margin-block: var(--space-s) var(--space-m);
+  }
+  .lost__text {
+    max-width: 34ch;
+    font-size: var(--step-1);
+    margin-bottom: var(--space-l);
+  }
+</style>

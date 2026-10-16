@@ -1,0 +1,41 @@
+---
+/**
+ * Cream pill with a project's playful line ("Coach what??") that follows the
+ * mouse over any project card (anything with data-card-link + data-cta).
+ * Mouse only; on touch screens it never shows. Wired up in src/scripts/work.ts.
+ */
+---
+
+<div class="cursor" data-cursor aria-hidden="true"><span data-cursor-text>View project</span></div>
+
+<style>
+  .cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 60;
+    display: none;
+    pointer-events: none;
+    scale: 0;
+  }
+  /* The pill hugs its text and sits centred on the pointer */
+  .cursor span {
+    display: block;
+    translate: -50% -50%;
+    padding: 0.55em 1.15em;
+    border-radius: var(--radius-pill);
+    background: var(--cream);
+    color: var(--red);
+    font-size: clamp(1rem, 0.9rem + 0.4vw, 1.25rem);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    box-shadow: 0 0.4em 1.2em rgb(34 31 32 / 0.18);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .cursor {
+      display: block;
+    }
+  }
+</style>

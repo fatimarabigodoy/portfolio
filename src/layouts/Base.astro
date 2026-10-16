@@ -1,0 +1,112 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import '@fontsource/instrument-serif/400.css';
+import '@fontsource/instrument-serif/400-italic.css';
+import '@fontsource-variable/archivo';
+import '../styles/global.css';
+
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Wordmark from '../assets/wordmark.svg';
+import Scribble from '../components/Scribble.astro';
+import { site } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Colour of the page top, so the header starts with the right colours */
+  headerTheme?: 'red' | 'cream';
+  /** Keep this page out of Google (e.g. the 404) */
+  noindex?: boolean;
+}
+
+const { title, description = site.description, headerTheme = 'red', noindex = false } = Astro.props;
+const fullTitle = title ? `${title} — ${site.name}` : site.title;
+const canonical = new URL(Astro.url.pathname, site.url);
+---
+
+<!doctype html>
+<html lang="en" transition:animate="none" data-start-theme={headerTheme}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#c1121f" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={site.name} />
+    <!-- The picture that shows when someone pastes a link (LinkedIn, iMessage, Slack…) -->
+    <meta property="og:image" content={new URL('/og-image.jpg', site.url)} />
+    <meta property="og:image:width" content="2400" />
+    <meta property="og:image:height" content="1260" />
+    <meta property="og:image:alt" content="A multidisciplinary designer who loves the thinking just as much as the making." />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Hide scroll-animated things only when animations will run -->
+    <script is:inline>
+      document.documentElement.classList.add('js-ready');
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches)
+        document.documentElement.classList.add('js-motion');
+    </script>
+
+    <ClientRouter />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <Header />
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <Footer />
+
+    <!-- Red wipe that covers the screen between pages -->
+    <div class="wipe" data-wipe aria-hidden="true" transition:persist="wipe">
+      <div class="wipe__mark" data-wipe-mark><Wordmark /></div>
+      <Scribble type="scribble" draw="manual" color="var(--blue)" class="wipe__line" />
+    </div>
+
+    <script>
+      import '../scripts/motion';
+    </script>
+  </body>
+</html>
+
+<style>
+  .wipe {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    background: var(--red);
+    color: var(--cream);
+    pointer-events: none;
+    clip-path: inset(100% 0 0 0);
+  }
+  .wipe__mark {
+    width: clamp(8rem, 20vw, 14rem);
+    overflow: hidden;
+  }
+  .wipe :global(.wipe__line) {
+    display: block;
+    width: clamp(8rem, 20vw, 14rem);
+    height: 0.6rem;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+  }
+  .wipe__mark :global(svg) {
+    width: 100%;
+    height: auto;
+  }
+</style>

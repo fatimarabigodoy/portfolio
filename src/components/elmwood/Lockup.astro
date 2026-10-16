@@ -1,0 +1,231 @@
+---
+/**
+ * Elmwood: "The lockup". The Space to Lead logo, taken apart. Built from her
+ * vector (src/data/elmwood-lockup.ts).
+ *
+ * The green artboard sticks while three notes scroll past. Each note switches
+ * on one layer: the box round "SPACE TO", the frame the d's swash walks out
+ * of, then the anchor points.
+ *
+ * Logic in src/scripts/elmwood.ts. With reduced motion the layers switch
+ * without animating.
+ */
+import CaseText from '../case/CaseText.astro';
+import { LEAD, SPACE_TO } from '../../data/elmwood-lockup';
+import { anchorsOf } from '../../utils/lockup';
+
+const leadPaths = [LEAD.L, LEAD.e, LEAD.a];
+const all = [...leadPaths, LEAD.d, ...SPACE_TO];
+const points = all.map(anchorsOf);
+const anchors = points.flatMap((p) => p.anchors);
+const handles = points.map((p) => p.handles).join('');
+
+// Square anchor markers, as one path (11 units across)
+const A = 5.5;
+const anchorPath = anchors.map(([x, y]) => `M${x - A} ${y - A}h${A * 2}v${A * 2}h${-A * 2}z`).join('');
+
+const notes = [
+  {
+    title: 'Space is the small word.',
+    body: 'SPACE TO is tucked in up top in tiny caps. Lead gets the rest of the room. Which is the whole campaign, just in type.',
+  },
+  {
+    title: 'Lead doesn’t fit.',
+    body: 'Draw a neat box around the word and the d walks straight out of it. The name is bigger than its container. That part was on purpose.',
+  },
+  {
+    title: 'It started as a font.',
+    body: `Then I got into the points and pushed them around until it stopped looking off the shelf. All ${anchors.length} of them, for the curious.`,
+  },
+];
+
+// The board's view of the logo (room for the swash to grow off the top right)
+const VIEW = '-110 -130 1640 930';
+---
+
+<section class="case-section case-section--tight theme-cream lockup" aria-labelledby="lockup-title" data-lockup>
+  <div class="container">
+    <CaseText eyebrow="The lockup" id="lockup">
+      <Fragment slot="heading">A logo that takes up space.</Fragment>
+      <p>
+        If the name is about space, the logo had better use some. Here’s what it’s doing, one layer at a time.
+      </p>
+    </CaseText>
+
+    <div class="anat">
+      <div class="anat__stick">
+        <div class="anat__board" role="img" aria-label="The Space to Lead logo in white on Elmwood green.">
+          <svg viewBox={VIEW} aria-hidden="true" data-anat-svg>
+            <g class="anat__logo" data-anat-logo>
+              <g data-anat-lead>
+                {leadPaths.map((d) => <path d={d} />)}
+                <path d={LEAD.d} data-swash />
+              </g>
+              <g data-anat-space>{SPACE_TO.map((d) => <path d={d} />)}</g>
+            </g>
+
+            <!-- Layer 1: the small word -->
+            <g class="anat__guide" data-layer="0">
+              <path d="M455 118H1035V300H455Z" data-draw />
+              <path d="M1080 145V275M1068 145H1092M1068 275H1092" data-draw />
+              <path d="M-60 140V686M-72 140H-48M-72 686H-48" data-draw />
+            </g>
+
+            <!-- Layer 2: the box Lead doesn't fit in -->
+            <g class="anat__guide" data-layer="1">
+              <path d="M-35 105H1040V715H-35Z" data-draw />
+            </g>
+
+            <!-- Layer 3: the anchor points -->
+            <g class="anat__points" data-layer="2">
+              <path class="anat__handles" d={handles} />
+              <path class="anat__anchors" d={anchorPath} />
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <ol class="anat__notes">
+        {
+          notes.map((n, i) => (
+            <li class="anat__note" data-anat-note={i}>
+              <p class="anat__count" aria-hidden="true">
+                {i + 1} / {notes.length}
+              </p>
+              <h3 class="anat__title">{n.title}</h3>
+              <p>{n.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .lockup {
+    --elm-green: #0e5638;
+    --elm-gold: #d6a945;
+    /* Follows "The answer" (also cream), same spacing as the page's other sections */
+    padding-top: calc(var(--space-2xl) - var(--space-xl));
+    padding-bottom: var(--space-xl);
+  }
+
+  /* ---------- 1. Take it apart ---------- */
+  .anat {
+    display: grid;
+    margin-top: var(--space-xl);
+  }
+  .anat__board {
+    overflow: hidden;
+    border-radius: var(--radius-s);
+    background: var(--elm-green);
+    color: var(--cream);
+  }
+  .anat__board svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1640 / 930;
+  }
+  .anat__logo {
+    fill: currentColor;
+    stroke: currentColor;
+    stroke-width: 0;
+  }
+  .anat__guide {
+    fill: none;
+    stroke: var(--elm-gold);
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .anat__handles {
+    fill: none;
+    stroke: var(--blue);
+    stroke-width: 2.5;
+  }
+  .anat__anchors {
+    fill: var(--elm-green);
+    stroke: var(--blue);
+    stroke-width: 3;
+  }
+  /* Without JavaScript only the plain logo shows */
+  [data-layer] {
+    opacity: 0;
+  }
+
+  .anat__notes {
+    display: grid;
+    padding: 0;
+    list-style: none;
+  }
+  .anat__note {
+    display: grid;
+    align-content: center;
+    gap: var(--space-xs);
+    max-width: 26rem;
+    font-size: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+    line-height: 1.4;
+  }
+  .anat__count {
+    color: var(--blue-deep);
+    font-size: var(--step--1);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+  }
+  .anat__title {
+    color: var(--red);
+    font-family: var(--font-serif);
+    font-size: var(--step-2);
+    font-weight: 400;
+    line-height: 1.05;
+  }
+
+  /* Phones: the board sticks to the top and the notes scroll up under it */
+  @media (max-width: 55.99rem) {
+    .anat__stick {
+      position: sticky;
+      top: var(--space-s);
+      z-index: 1;
+      padding-bottom: var(--space-s);
+      background: var(--cream);
+    }
+    .anat__note {
+      min-height: 55svh;
+      padding-block: var(--space-l);
+    }
+    /* Nothing scrolls under the board after the last note, so no extra room */
+    .anat__note:last-child {
+      min-height: 0;
+      padding-bottom: 0;
+    }
+  }
+
+  /* Laptops: notes on the left. The board starts right under the intro, then
+     sticks in the middle of the screen while the notes scroll past. */
+  @media (min-width: 56rem) {
+    .anat {
+      --gap: clamp(2rem, 1rem + 4vw, 5rem);
+      /* The board's height, worked out from the column it sits in */
+      --board-h: calc((100cqw - var(--gap)) * 1.7 / 2.7 * 930 / 1640);
+      container-type: inline-size;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.7fr);
+      gap: var(--gap);
+    }
+    .anat__stick {
+      grid-column: 2;
+      grid-row: 1;
+      align-self: start;
+      position: sticky;
+      top: calc(50svh - var(--board-h) / 2);
+    }
+    .anat__notes {
+      grid-column: 1;
+      grid-row: 1;
+    }
+    .anat__note {
+      min-height: 75svh;
+    }
+  }
+</style>

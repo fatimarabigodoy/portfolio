@@ -1,0 +1,120 @@
+---
+/**
+ * "Designer's hand" marks: hand-drawn lines that draw themselves.
+ *
+ * Wrap any words with it:
+ *   <Scribble type="underline">making</Scribble>
+ *   <Scribble type="scribble">thinking</Scribble>
+ *   <Scribble type="circle">this</Scribble>
+ *   <Scribble type="strike">swamp</Scribble>
+ *   <Scribble type="arrow" />   (on its own, no words)
+ *
+ * draw = when it draws: "scroll" (when it comes into view, default),
+ *        "load" (right away), "hover" (only on hover), or "manual" (code decides).
+ * redraw = also redraw every time the words are hovered.
+ * color = any CSS colour. Defaults to blue on red sections and red on cream.
+ *
+ * The line itself is generated in the browser to fit the word exactly
+ * (see src/scripts/scribble.ts).
+ */
+interface Props {
+  type?: 'underline' | 'scribble' | 'circle' | 'strike' | 'arrow';
+  draw?: 'scroll' | 'load' | 'hover' | 'manual';
+  redraw?: boolean;
+  delay?: number;
+  color?: string;
+  class?: string;
+}
+
+const {
+  type = 'underline',
+  draw = 'scroll',
+  redraw = false,
+  delay = 0,
+  color,
+  class: className,
+} = Astro.props;
+
+const strokes = { underline: 1, scribble: 1, circle: 1, strike: 1, arrow: 2 }[type];
+const standalone = type === 'arrow';
+---
+
+<span
+  class:list={['scribble', `scribble--${type}`, { 'scribble--alone': standalone }, className]}
+  data-scribble={draw}
+  data-shape={type}
+  data-redraw={redraw ? '' : undefined}
+  data-delay={delay || undefined}
+  style={color ? `--scribble-color: ${color}` : undefined}
+>
+  {!standalone && <slot />}<svg class="scribble__svg" aria-hidden="true" focusable="false"
+    >{Array.from({ length: strokes }, () => <path />)}</svg
+  ></span
+>
+
+<style>
+  .scribble {
+    position: relative;
+    display: inline-block;
+    white-space: nowrap;
+  }
+
+  .scribble__svg {
+    position: absolute;
+    max-width: none; /* the site-wide image rule would otherwise squash it */
+    overflow: visible;
+    pointer-events: none;
+    fill: none;
+    stroke: var(--scribble-color, var(--red));
+    /* thicker on big headlines, finer on small text */
+    stroke-width: var(--scribble-width, clamp(1.5px, 0.05em, 4px));
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* Default colours: blue on red, red on cream */
+  :global(.theme-red) .scribble__svg {
+    stroke: var(--scribble-color, var(--blue));
+  }
+
+  /* (SVGs need an explicit width/height; left/right alone won't stretch them) */
+  .scribble--underline .scribble__svg {
+    left: -0.05em;
+    width: calc(100% + 0.1em);
+    bottom: -0.2em;
+    height: 0.34em;
+  }
+
+  .scribble--scribble .scribble__svg {
+    left: -0.05em;
+    width: calc(100% + 0.1em);
+    bottom: -0.36em;
+    height: 0.46em;
+  }
+
+  /* Centred on the middle of the lowercase letters (the line box keeps the
+     text centred, so 50% works at any line height) */
+  .scribble--strike .scribble__svg {
+    left: -0.06em;
+    width: calc(100% + 0.12em);
+    top: calc(50% + 0.07em - 0.12em);
+    height: 0.24em;
+  }
+
+  .scribble--circle .scribble__svg {
+    left: -0.3em;
+    top: -0.16em;
+    width: calc(100% + 0.6em);
+    height: calc(100% + 0.32em);
+  }
+
+  .scribble--alone {
+    width: var(--arrow-size, 4rem);
+    aspect-ratio: 5 / 3;
+  }
+  .scribble--alone .scribble__svg {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+</style>

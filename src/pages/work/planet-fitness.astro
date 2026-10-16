@@ -1,0 +1,358 @@
+---
+// Case study: Planet Fitness, "No One Knows" (spec campaign).
+// Copy rewritten from the old fatimarabi.com/project-3.html. Same case pieces as
+// Headspace. The hero finishes the campaign line with a new confession every
+// few seconds (src/scripts/planet-fitness.ts).
+import Base from '../../layouts/Base.astro';
+import Scribble from '../../components/Scribble.astro';
+import CaseHero from '../../components/case/CaseHero.astro';
+import CaseText from '../../components/case/CaseText.astro';
+import CaseMedia from '../../components/case/CaseMedia.astro';
+import NextProject from '../../components/case/NextProject.astro';
+import CaseLine from '../../components/case/CaseLine.astro';
+
+import subway from '../../assets/planet-fitness/subway.jpg';
+import billboard from '../../assets/planet-fitness/billboard.jpg';
+import instagram from '../../assets/planet-fitness/instagram.png';
+
+// Endings for the hero's "No one knows…". The first one is what shows without
+// animation. Kept short so they fit in a few lines on phones.
+const endings = [
+  'you Googled “how to use a treadmill.”',
+  'that’s your sleeping shirt.',
+  'you’ve driven by 12 times.',
+  'you almost failed gym class.',
+  'you rehearsed this in the car.',
+  'you don’t know what a lat is.',
+];
+---
+
+<Base
+  title="Planet Fitness: No One Knows"
+  description="No One Knows: a spec campaign for Planet Fitness that talks to people with gym anxiety instead of people chasing gains. By Fatima Rabi."
+>
+  <div data-case class="pf">
+    <CaseHero roles={['Concept', 'Copywriting', 'Art direction']}>
+      <Fragment slot="title">
+        <span class="line"
+          ><span><Scribble type="underline" draw="load" delay={0.9} color="var(--blue)">No one knows</Scribble></span></span
+        >
+        <span class="line"
+          ><span><span class="endings" data-endings>
+            {
+              endings.map((e, i) => (
+                <span class="ending" data-ending aria-hidden={i > 0 ? 'true' : undefined}>
+                  {e}
+                </span>
+              ))
+            }
+          </span></span></span
+        >
+      </Fragment>
+      <p>Spec campaign for Planet Fitness</p>
+      <button class="hush" type="button" data-endings-toggle hidden>
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <path class="icon-pause" d="M4 3h3v10H4zM9 3h3v10H9z" />
+          <path class="icon-play" d="M5 2.5v11L13.5 8z" />
+        </svg>
+        <span data-endings-label>Pause the confessions</span>
+      </button>
+    </CaseHero>
+
+    <!-- The problem -->
+    <section class="case-section theme-cream" aria-labelledby="catch-title">
+      <div class="container">
+        <CaseText eyebrow="The problem" id="catch">
+          <Fragment slot="heading">Every gym ad is talking to people who already go to the gym.</Fragment>
+          <p>
+            Gains. Grind. Before-and-afters with suspiciously good lighting. Fitness marketing loves preaching to the
+            already converted.
+          </p>
+          <p>
+            Meanwhile, a lot of people would quite like to get healthier, and would also quite like to never be seen
+            doing it.
+          </p>
+          <p>
+            Planet Fitness literally trademarked the Judgement Free Zone®. <strong
+              >So skip the six-packs and talk to the nervous ones.</strong
+            >
+          </p>
+        </CaseText>
+
+        <CaseMedia
+          class="case-section__media"
+          image={subway}
+          sharp
+          alt="Subway poster on a tiled platform, a train blurring past: a man at a cable machine, in purple. No one knows you almost failed gym class in grade 10. Join the Judgement Free Zone®."
+        />
+      </div>
+    </section>
+
+    <!-- The insight -->
+    <section class="case-section insight theme-red" aria-labelledby="insight-title">
+      <div class="container">
+        <CaseText eyebrow="The insight" id="insight">
+          <Fragment slot="heading"
+            >Gym anxiety runs on{' '}<span class="fix"
+              ><span class="fix__mark" data-reveal data-reveal-delay="0.6" aria-hidden="true"
+                ><span class="fix__add">imaginary</span><svg class="fix__caret" viewBox="0 0 24 18"
+                  ><path d="M2.5 16.2 C6 11.5 9.2 6.8 11.6 2.4 C14.2 7 17.4 11.6 21.5 15.6"></path></svg
+                ></span
+              ><span class="sr-only">imaginary</span>{' '}judgement.</span
+            ></Fragment
+          >
+          <p>
+            The barrier usually isn’t fitness. It’s the embarrassing stuff we’re sure is glaringly obvious to everyone
+            else: the ancient T-shirt, the machine we can’t work, the fact that we’re new.
+          </p>
+          <p><strong>Spoiler: nobody’s looking.</strong> They’re all too busy worrying about their own stuff.</p>
+        </CaseText>
+
+        <CaseMedia
+          class="case-section__media"
+          image={billboard}
+          sharp
+          alt="Roadside billboard: a gym seen from inside a parked car at night. No one knows you’ve driven by 12 times to see how busy it is. Join the Judgement Free Zone®."
+        />
+      </div>
+    </section>
+
+    <!-- The answer -->
+    <section class="case-section theme-cream" aria-labelledby="answer-title">
+      <div class="container">
+        <CaseText eyebrow="The answer" id="answer">
+          <Fragment slot="heading">Three words, endless{' '}<Scribble type="underline">confessions.</Scribble></Fragment>
+          <p>
+            Every execution opens with <strong>No one knows</strong> and finishes with a tiny, oddly specific secret.
+          </p>
+          <p>
+            Specific is the whole trick. “Don’t worry, everyone starts somewhere” is wallpaper. “That’s your sleeping
+            shirt” is being caught, and let off the hook, in the same breath.
+          </p>
+        </CaseText>
+
+        <dl class="rules">
+          <div class="rule" data-reveal>
+            <dt class="rule__label">How it talks</dt>
+            <dd class="rule__body">
+              Wry and knowing. Like helpful intel from a friend who gets it, not a lecture from a trainer who doesn’t.
+            </dd>
+          </div>
+          <div class="rule" data-reveal data-reveal-delay="0.1">
+            <dt class="rule__label">How it looks</dt>
+            <dd class="rule__body">
+              Unstaged, caught-in-the-moment photos of regular people. Nobody’s flexing in a mirror.
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- Social: the captions finish the joke -->
+    <section class="case-section case-section--tight theme-cream" aria-labelledby="social-title">
+      <div class="container">
+        <CaseText eyebrow="On your feed" id="social">
+          <Fragment slot="heading">The captions do the follow-through.</Fragment>
+          <p>
+            The post makes the confession. The caption pats you on the back about it: that 2009 T-shirt blends right in
+            with all the fake-vintage band tees anyway. Promise.
+          </p>
+          <CaseMedia
+            slot="aside"
+            class="social__phones"
+            image={instagram}
+            cutout
+            sharp
+            alt="Two Planet Fitness Instagram posts. A man in a locker room holding up a T-shirt: No one knows that’s your sleeping shirt. A woman checking her phone at the gym: No one knows you Googled “how to use a treadmill.” Captions end with: Promise."
+            sizes="(min-width: 56rem) 34rem, calc(100vw - 2 * var(--gutter))"
+          />
+        </CaseText>
+      </div>
+    </section>
+
+    <!-- The line -->
+    <CaseLine>
+      <Fragment slot="title">
+          A gym campaign for people who{' '}<Scribble type="underline" color="var(--blue)" delay={0.3}
+            >don’t love gyms.</Scribble
+          >
+      </Fragment>
+          Never aggressive, never overwhelming. Just the reassurance that whatever feels obvious about your fitness
+          journey, nobody’s actually keeping track. While everyone else fights over the already converted.
+      <Fragment slot="note">
+        <p class="the-line__note" data-reveal data-reveal-delay="0.2">
+            Spec work: Planet Fitness didn’t ask. (No one knows.)
+          </p>
+      </Fragment>
+    </CaseLine>
+
+    <NextProject slug="planet-fitness" />
+  </div>
+</Base>
+
+<style>
+  .case-section {
+    padding-block: var(--space-xl);
+  }
+  .case-section :global(.case-section__media) {
+    margin-top: var(--space-xl);
+  }
+  .case-section--tight {
+    padding-top: 0;
+  }
+
+  /* ---------- Hero: one ending at a time ---------- */
+
+  /* All endings sit in the same spot, so the hero is always as tall as the
+     longest one and nothing below it jumps when they swap. */
+  .endings {
+    display: grid;
+    width: 100%;
+    /* Room for the underline under "No one knows" */
+    margin-top: 0.12em;
+    max-width: 11em;
+  }
+  .ending {
+    grid-area: 1 / 1;
+    color: var(--blue);
+    font-style: italic;
+  }
+  /* Without animation, only the first ending shows */
+  .ending:not(:first-child) {
+    visibility: hidden;
+  }
+  :global(html.js-motion) .endings {
+    /* Masks the endings as they slide in and out (room for descenders) */
+    clip-path: inset(-0.1em -0.5em -0.25em -0.5em);
+  }
+
+  /* "Pause the confessions": only shown when the endings are moving */
+  .hush {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    margin-top: var(--space-s);
+    padding: 0.4em 0.9em 0.4em 0.75em;
+    border: 1px solid rgb(255 246 232 / 0.5);
+    border-radius: var(--radius-pill);
+    font-size: 0.875rem;
+    transition:
+      background-color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out);
+  }
+  .hush[hidden] {
+    display: none;
+  }
+  .hush:hover,
+  .hush:focus-visible {
+    border-color: var(--cream);
+    background: rgb(255 246 232 / 0.1);
+  }
+  .hush svg {
+    width: 0.75rem;
+    fill: currentColor;
+  }
+  .hush .icon-play,
+  .hush.is-paused .icon-pause {
+    display: none;
+  }
+  .hush.is-paused .icon-play {
+    display: block;
+  }
+
+  /* ---------- The insight: "imaginary" written in above the line ---------- */
+
+  .fix {
+    position: relative;
+    white-space: nowrap;
+  }
+  /* The added word and its caret come in together */
+  .fix__mark {
+    position: absolute;
+    left: -0.13em;
+    top: 0;
+    bottom: 0;
+    width: 0;
+    color: var(--blue);
+  }
+  .fix__add {
+    position: absolute;
+    left: 0;
+    bottom: 100%;
+    translate: -50% 0.1em;
+    font-style: italic;
+    font-size: 0.7em;
+    line-height: 1;
+    rotate: -4deg;
+    white-space: nowrap;
+  }
+  /* A hand-drawn proofreader's caret, sitting in the gap before the word */
+  .fix__caret {
+    position: absolute;
+    left: -0.22em;
+    bottom: 0.1em;
+    width: 0.44em;
+    max-width: none; /* the site caps svgs at their parent's width, which is 0 here */
+    height: 0.36em;
+    overflow: visible;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  /* Room above the line for the added word (the heading wraps on phones, so
+     every line gets the extra room, not just the first) */
+  .insight :global(.case-text__heading) {
+    padding-top: 0.35em;
+    line-height: 1.6;
+  }
+
+  /* ---------- The answer: two small rules ---------- */
+
+  .rules {
+    display: grid;
+    gap: var(--space-l) clamp(2rem, 1rem + 5vw, 5rem);
+    margin: var(--space-xl) 0 0;
+  }
+  @media (min-width: 56rem) {
+    .rules {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .rule {
+    padding-top: var(--space-m);
+    border-top: 1px solid rgb(34 31 32 / 0.2);
+  }
+  .rule__label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--blue-deep);
+  }
+  .rule__body {
+    margin: var(--space-s) 0 0;
+    max-width: 30rem;
+    font-family: var(--font-serif);
+    font-size: clamp(1.5rem, 1.2rem + 1.1vw, 2.125rem);
+    line-height: 1.15;
+    color: var(--red);
+  }
+
+  /* ---------- Social ---------- */
+
+  .pf :global(.social__phones) {
+    max-width: 34rem;
+    margin-inline: auto;
+  }
+
+  /* ---------- The line ---------- */
+
+
+  @media (prefers-reduced-motion: reduce) {
+    .hush {
+      transition: none;
+    }
+  }
+</style>

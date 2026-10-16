@@ -1,0 +1,301 @@
+---
+// Case study: Ottawa Public Library, "Start That Project" (spec campaign).
+// Copy rewritten from the old fatimarabi.com/project-4.html. Same case pieces as
+// Planet Fitness. The excuses get crossed out as they scroll in.
+import Base from '../../layouts/Base.astro';
+import Scribble from '../../components/Scribble.astro';
+import CaseHero from '../../components/case/CaseHero.astro';
+import CaseText from '../../components/case/CaseText.astro';
+import CaseMedia from '../../components/case/CaseMedia.astro';
+import NextProject from '../../components/case/NextProject.astro';
+import CaseLine from '../../components/case/CaseLine.astro';
+
+import shelter from '../../assets/opl/shelter.jpg';
+import billboard from '../../assets/opl/billboard.jpg';
+import poster from '../../assets/opl/poster.jpg';
+
+// The excuses that get crossed out (the last one can't be, see below)
+const excuses = ['“It’s too expensive.”', '“I’m too old for this.”', '“I’m not the creative type.”'];
+
+// The three executions' headlines; "that" is set apart in each
+const dares = [
+  ['Make', 'tote bag.'],
+  ['Take', 'portrait.'],
+  ['Learn', 'chord.'],
+];
+---
+
+<Base
+  title="Ottawa Public Library: Start That Project"
+  description="Start That Project: a spec campaign for Ottawa Public Library that sells the guitars, cameras and sewing machines you can borrow, and the projects you keep putting off. By Fatima Rabi."
+>
+  <div data-case class="opl">
+    <CaseHero roles={['Concept', 'Copywriting', 'Art direction']}>
+      <Fragment slot="title">
+        <span class="line"
+          ><span>Start{' '}<Scribble type="circle" draw="load" delay={0.9} color="var(--blue)">that</Scribble></span
+          ></span
+        >
+        <span class="line"><span>project.</span></span>
+      </Fragment>
+      <p>Spec campaign for Ottawa Public Library</p>
+    </CaseHero>
+
+    <!-- The problem -->
+    <section class="case-section theme-cream" aria-labelledby="catch-title">
+      <div class="container">
+        <CaseText eyebrow="The problem" id="catch">
+          <Fragment slot="heading">Everyone thinks the library lends books. They’re underselling it by one guitar.</Fragment>
+          <p>
+            Ottawa Public Library also lends cameras, sewing machines and, yes, guitars. Free, with a card most people
+            already have in their wallet.
+          </p>
+          <p>
+            Meanwhile, half the city has a project they’ve been “definitely starting soon” since 2019. The gear sits on
+            a shelf. So does the project.
+          </p>
+          <p><strong>So skip the quiet book place, and sell the thing people actually want to do.</strong></p>
+        </CaseText>
+
+        <CaseMedia
+          class="case-section__media"
+          image={shelter}
+          sharp
+          alt="Bus shelter poster as a bus blurs past: a young man at a sewing machine. Make that tote bag. We have the machines. Faites ce sac fourre-tout. On a les machines. A hand holds out an Ottawa Public Library card: If it’s out there, it’s in here."
+        />
+      </div>
+    </section>
+
+    <!-- The insight: the excuses get crossed out -->
+    <section class="case-section theme-red" aria-labelledby="insight-title">
+      <div class="container">
+        <CaseText eyebrow="The insight" id="insight">
+          <Fragment slot="heading">We’re world-class at excuses.</Fragment>
+          <p>
+            Cost. Age. Talent. Time. We build elaborate reasons to put off the things we’re genuinely curious about.
+          </p>
+          <p>
+            Take them away one by one and you’re left alone with the thing you’ve been dodging. <strong
+              >Terrifying. Also, the point.</strong
+            >
+          </p>
+        </CaseText>
+
+        <ul class="excuses" role="list">
+          {
+            excuses.map((e, i) => (
+              <li class="excuse" data-reveal data-reveal-delay={i * 0.08}>
+                <Scribble type="strike" color="var(--blue)" delay={0.35 + i * 0.25}>
+                  {e}
+                </Scribble>
+                <span class="sr-only">(crossed out)</span>
+              </li>
+            ))
+          }
+          <li class="excuse excuse--last" data-reveal data-reveal-delay="0.24">
+            “I don’t have time.”
+            <span class="excuse__aside">(Okay, we can’t lend you time. Everything else, though.)</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- The answer -->
+    <section class="case-section theme-cream" aria-labelledby="answer-title">
+      <div class="container">
+        <CaseText eyebrow="The answer" id="answer">
+          <Fragment slot="heading">Don’t sell the library. Name the project.</Fragment>
+          <p>
+            Every execution is a tiny dare, then the permission slip: <strong
+              >Do that thing. We have the gear.</strong
+            >
+          </p>
+          <p>
+            The hardest-working word is <em>that</em>. Not a portrait. <em>That</em> portrait. The one you’ve been meaning
+            to take for years. You already know which one.
+          </p>
+        </CaseText>
+
+        <p class="dares" aria-label="Make that tote bag. Take that portrait. Learn that chord.">
+          {
+            dares.map(([verb, thing], i) => (
+              <span class="dare" data-reveal data-reveal-delay={i * 0.1} aria-hidden="true">
+                {verb}{' '}
+                <Scribble type="underline" delay={0.3 + i * 0.2}>
+                  <em>that</em>
+                </Scribble>{' '}
+                {thing}
+              </span>
+            ))
+          }
+        </p>
+
+        <CaseMedia
+          class="case-section__media"
+          image={billboard}
+          sharp
+          alt="Billboard on a brick wall: a woman shooting with a big DSLR. Take that portrait. We have the cameras. Prenez ce portrait. On a les appareils. A hand holds out an Ottawa Public Library card."
+        />
+      </div>
+    </section>
+
+    <!-- The details -->
+    <section class="case-section case-section--tight theme-cream" aria-labelledby="details-title">
+      <div class="container">
+        <CaseText eyebrow="The details" id="details">
+          <Fragment slot="heading">The library card closes every deal.</Fragment>
+          <p>
+            Every poster ends the same way: a hand holding out an actual OPL card, printed with the library’s own line, <em
+              >If it’s out there, it’s in here.</em
+            > The whole argument, wallet-sized.
+          </p>
+          <p>
+            And because this is Ottawa, every dare runs twice, with equal billing.{' '}
+            <strong>Apprenez cet accord.</strong> Same nudge, more accents.
+          </p>
+        </CaseText>
+
+        <CaseMedia
+          class="case-section__media"
+          image={poster}
+          sharp
+          alt="Street poster outside a café: an older woman learning guitar. Learn that chord. We have the guitars. Apprenez cet accord. On a les guitares. A hand holds out an Ottawa Public Library card."
+        />
+
+        <dl class="rules">
+          <div class="rule" data-reveal>
+            <dt class="rule__label">How it talks</dt>
+            <dd class="rule__body">Short, encouraging, a little bossy. Like a friend who’s done hearing about the tote bag.</dd>
+          </div>
+          <div class="rule" data-reveal data-reveal-delay="0.1">
+            <dt class="rule__label">How it looks</dt>
+            <dd class="rule__body">People mid-first-attempt, not mid-mastery. Nobody’s a pro yet.</dd>
+          </div>
+          <div class="rule" data-reveal data-reveal-delay="0.2">
+            <dt class="rule__label">Who it’s for</dt>
+            <dd class="rule__body">Any age, any skill level. The guitar doesn’t check ID.</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- The line -->
+    <CaseLine>
+      <Fragment slot="title">
+          From quiet book place to the place that says{' '}<Scribble
+            type="underline"
+            color="var(--blue)"
+            delay={0.3}>yes.</Scribble
+          >
+      </Fragment>
+          The barrier was never really the gear. This campaign doesn’t sell library services, it sells permission: no
+          credit card, no judgement, no excuses. Just a library card and the thing you’ve been meaning to try.
+      <Fragment slot="note">
+        <p class="the-line__note" data-reveal data-reveal-delay="0.2">
+            Spec work: Ottawa Public Library didn’t ask. Consider it on loan.
+          </p>
+        <p class="the-line__note the-line__note--small" data-reveal data-reveal-delay="0.25">
+            P.S. This was made before OPL’s brand refresh, so the logo’s a little vintage. Still checks out, though.
+          </p>
+      </Fragment>
+    </CaseLine>
+
+    <NextProject slug="ottawa-public-library" />
+  </div>
+</Base>
+
+<style>
+  .case-section {
+    padding-block: var(--space-xl);
+  }
+  .case-section :global(.case-section__media) {
+    margin-top: var(--space-xl);
+  }
+  .case-section--tight {
+    padding-top: 0;
+  }
+
+  /* ---------- Hero ---------- */
+
+  /* Breathing room so the circle round "that" doesn't touch "Start" */
+  .opl :global(.case-hero__title .scribble--circle) {
+    margin-left: 0.14em;
+  }
+
+  /* ---------- The insight: crossed-out excuses ---------- */
+
+  .excuses {
+    display: grid;
+    gap: 0.35em;
+    margin: var(--space-xl) 0 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-serif);
+    font-size: clamp(1.75rem, 1.2rem + 2.6vw, 3.75rem);
+    line-height: 1.1;
+  }
+  .excuse--last {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.2em 0.6em;
+  }
+  /* A quiet aside, in the body font */
+  .excuse__aside {
+    font-family: var(--font-sans);
+    font-size: clamp(0.875rem, 0.85rem + 0.15vw, 1rem);
+    line-height: 1.4;
+    color: var(--cream);
+  }
+
+  /* ---------- The answer: the three dares ---------- */
+
+  .dares {
+    display: grid;
+    gap: 0.1em;
+    margin: var(--space-xl) 0 0;
+    font-family: var(--font-serif);
+    font-size: clamp(2.5rem, 1.4rem + 5vw, 6.5rem);
+    line-height: 1;
+    color: var(--red);
+  }
+  .dare :global(em) {
+    color: var(--blue-deep);
+    font-style: italic;
+  }
+
+  /* ---------- The details: three small rules ---------- */
+
+  .rules {
+    display: grid;
+    gap: var(--space-l) clamp(2rem, 1rem + 3vw, 4rem);
+    margin: var(--space-xl) 0 0;
+  }
+  @media (min-width: 56rem) {
+    .rules {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .rule {
+    padding-top: var(--space-m);
+    border-top: 1px solid rgb(34 31 32 / 0.2);
+  }
+  .rule__label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--blue-deep);
+  }
+  .rule__body {
+    margin: var(--space-s) 0 0;
+    max-width: 24rem;
+    font-family: var(--font-serif);
+    font-size: clamp(1.5rem, 1.25rem + 0.8vw, 2rem);
+    line-height: 1.15;
+    color: var(--red);
+  }
+
+  /* ---------- The line ---------- */
+
+</style>

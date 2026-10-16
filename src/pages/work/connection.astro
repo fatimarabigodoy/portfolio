@@ -1,0 +1,312 @@
+---
+// Case study: Big Brothers Big Sisters of Ottawa, "Connection" (Boot Camp, 24 hours).
+// Copy rewritten from the old fatimarabi.com/project-1.html. Same case pieces as Elmwood.
+import Base from '../../layouts/Base.astro';
+import Scribble from '../../components/Scribble.astro';
+import CaseHero from '../../components/case/CaseHero.astro';
+import CaseText from '../../components/case/CaseText.astro';
+import CaseMedia from '../../components/case/CaseMedia.astro';
+import NextProject from '../../components/case/NextProject.astro';
+
+import instagram from '../../assets/connection/instagram-campaign-showcase.png';
+import story from '../../assets/connection/instagram-story.png';
+import facebook from '../../assets/connection/facebook-desktop.png';
+import hero from '../../assets/connection/hero.jpg';
+
+const media = '/media/connection';
+const team = ['Jenna Bastarache', 'Erica Tran', 'Lindsay Ott', 'Nick Parry'];
+---
+
+<Base
+  title="Big Brothers Big Sisters of Ottawa: Connection"
+  description="Connection: a 24-hour campaign for Big Brothers Big Sisters of Ottawa, adopted as their 2026 organizational theme. Art direction by Fatima Rabi."
+>
+  <div data-case>
+    <CaseHero roles={['Art direction']}>
+      <Fragment slot="title">
+        <span class="line"><span>Some futures have</span></span>
+        <span class="line"
+          ><span
+            >been buffering<span class="spinner" aria-hidden="true"
+              >{Array.from({ length: 8 }, (_, i) => <i style={`--i: ${i}`} />)}</span
+            ></span
+          ></span
+        >
+      </Fragment>
+      <p>Campaign for Big Brothers Big Sisters of Ottawa</p>
+    </CaseHero>
+
+    <!-- The catch -->
+    <section class="case-section theme-cream" aria-labelledby="catch-title">
+      <div class="container">
+        <CaseText eyebrow="The catch" id="catch">
+          <Fragment slot="heading">We met the client that morning. The pitch was due the next day.</Fragment>
+          <p>
+            Boot Camp is a 24-hour challenge where teams compete without knowing who the client is. We found out it was
+            Big Brothers Big Sisters of Ottawa that morning, then had until the next day to research, strategize, create,
+            and present a full campaign.
+          </p>
+          <p><strong>The constraint was the point:</strong> how good can your thinking get when there’s no time to overthink?</p>
+          <p>(Pretty good, it turns out. We won.)</p>
+        </CaseText>
+
+        <CaseMedia
+          class="case-section__media"
+          image={hero}
+          alt="Four young people, faces pixelated under yellow buffering wheels, beside the Big Brothers Big Sisters of Ottawa logo."
+        />
+      </div>
+    </section>
+
+    <!-- The ask -->
+    <section class="case-section case-section--tight theme-cream" aria-labelledby="ask-title">
+      <div class="container">
+        <CaseText eyebrow="The ask" id="ask">
+          <Fragment slot="heading">Build a base of monthly donors. Not a one-time spike.</Fragment>
+          <p>
+            Not one-off gifts. Not event donations. Consistent, monthly support that keeps mentorship running all year
+            long.
+          </p>
+          <p><strong>In other words, they wanted something continuous.</strong></p>
+          <p>So naturally, we started with everything that isn’t.</p>
+        </CaseText>
+      </div>
+    </section>
+
+    <!-- The thinking -->
+    <section class="case-section theme-red" aria-labelledby="thinking-title">
+      <div class="container">
+        <CaseText eyebrow="The thinking" id="thinking">
+          <Fragment slot="heading">What’s the opposite of continuous?</Fragment>
+          <p>
+            Interruption. And what interruption drives absolutely everyone insane? <strong>Lost connection.</strong> The
+            video that buffers for three seconds and somehow ruins your whole evening.
+          </p>
+          <p>
+            So we made that maddening little wheel the metaphor. Because without consistent mentorship, some young
+            people’s futures have been buffering for{' '}
+            <Scribble type="strike" delay={0.3}>three seconds</Scribble>{' '}
+            <strong>years.</strong>
+          </p>
+          <p class="thinking__role">
+            <span class="eyebrow">My role</span>
+            I art directed: led the visual strategy and steered how a backwards idea became something you could actually
+            look at, across every touchpoint.
+          </p>
+        </CaseText>
+      </div>
+    </section>
+
+    <!-- The answer -->
+    <section class="case-section theme-cream" aria-labelledby="answer-title">
+      <div class="container">
+        <CaseText eyebrow="The answer" id="answer">
+          <Fragment slot="heading">Their future is still{' '}<Scribble type="underline">loading.</Scribble></Fragment>
+          <p><strong>One formula, every execution.</strong></p>
+          <p>
+            A young person doing what they love: cooking, painting, shooting hoops, making music. Their face pixelated,
+            a buffering wheel spinning on top.
+          </p>
+          <p>
+            Their story isn’t over, it’s interrupted. Potential, on pause. And the fix is right there in the line:{' '}
+            <em>No one likes losing connection.</em> Monthly donations keep it strong.
+          </p>
+          <CaseMedia
+            slot="aside"
+            loop={`${media}/loop.mp4`}
+            poster={`${media}/loop-poster.jpg`}
+            alt="Campaign post: a teen holding a basketball, face pixelated, with a yellow buffering wheel spinning over it. “No one likes losing connection.”"
+            ratio="4 / 5"
+          />
+        </CaseText>
+      </div>
+    </section>
+
+    <!-- Why digital + gallery -->
+    <section class="case-section case-section--tight theme-cream" aria-labelledby="digital-title">
+      <div class="container">
+        <CaseText eyebrow="The medium" id="digital">
+          <Fragment slot="heading">The spinning wheel lives on a screen. So the campaign did too.</Fragment>
+          <p>
+            Going fully digital was intentional, and not just because the client asked us to focus on social. Buffering
+            is a screen-native frustration: you’re stuck waiting, annoyed, wanting it to just <em>continue</em>.
+          </p>
+          <p>
+            We wanted people to feel that loop, mid-scroll, and realize some kids in Ottawa are stuck in it. A monthly
+            donation upgrades their connection, so their story doesn’t have to buffer indefinitely.
+          </p>
+        </CaseText>
+
+        <div class="gallery">
+          <CaseMedia
+            image={instagram}
+            cutout
+            sharp
+            alt="Three Instagram posts from @bbbsottawa: a young chef, a basketball player and a painter, each with a pixelated face and a buffering wheel."
+          />
+          <div class="gallery__pair">
+            <CaseMedia
+              image={story}
+              cutout
+              alt="Instagram story on a phone: a young coder with a pixelated face. “No one likes losing connection. Swipe up to become a monthly donor.”"
+              sizes="(min-width: 48rem) 40vw, calc(100vw - 2 * var(--gutter))"
+            />
+            <CaseMedia
+              image={facebook}
+              cutout
+              alt="Sponsored Facebook post on a desktop screen: “His beat shouldn’t skip.” A young musician with a pixelated face and a buffering wheel."
+              sizes="(min-width: 48rem) 50vw, calc(100vw - 2 * var(--gutter))"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- The verdict -->
+    <section class="case-section verdict theme-red" aria-labelledby="verdict-title">
+      <div class="container">
+        <h2 class="verdict__title" id="verdict-title" data-reveal>
+          Connection restored.
+        </h2>
+        <ul class="verdict__list">
+          <li data-reveal>
+            BBBSO adopted it as their{' '}
+            <Scribble type="circle" delay={0.2}>2026 organizational theme.</Scribble>
+          </li>
+          <li data-reveal data-reveal-delay="0.1">It got called “hyper emotional” and “inescapable.” We’ll take both.</li>
+          <li data-reveal data-reveal-delay="0.2">
+            The client said it respected both their mission and their donors’ intelligence.
+          </li>
+          <li data-reveal data-reveal-delay="0.3">
+            And the{' '}
+            <a
+              class="verdict__link"
+              href="https://www.algonquincollege.com/college-blog/no-one-likes-losing-connection-student-campaign-launches-with-bbbso/"
+              target="_blank"
+              rel="noopener"
+              ><Scribble type="underline" delay={0.5} redraw color="var(--blue)">AC Blog wrote about it.</Scribble
+              ><span class="verdict__arrow" aria-hidden="true">↗</span></a
+            >
+          </li>
+        </ul>
+        <p class="verdict__team" data-reveal>
+          Team: {team.join(', ')} and me.
+        </p>
+      </div>
+    </section>
+
+    <NextProject slug="connection" />
+  </div>
+</Base>
+
+<style>
+  .case-section {
+    padding-block: var(--space-xl);
+  }
+  .case-section :global(.case-section__media) {
+    margin-top: var(--space-xl);
+  }
+  .case-section--tight {
+    padding-top: calc(var(--space-2xl) - var(--space-xl));
+  }
+
+  /* The campaign's buffering wheel, in blue, after "buffering" in the hero */
+  .spinner {
+    position: relative;
+    display: inline-block;
+    width: 0.62em;
+    height: 0.62em;
+    margin-left: 0.22em;
+    vertical-align: -0.02em;
+  }
+  .spinner i {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0.11em;
+    height: 0.11em;
+    margin: -0.055em;
+    border-radius: 50%;
+    background: var(--blue);
+    transform: rotate(calc(var(--i) * 45deg)) translateY(-0.26em);
+    animation: buffer 1.2s linear infinite;
+    animation-delay: calc(var(--i) * 0.15s - 1.2s);
+  }
+  @keyframes buffer {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.2;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .spinner i {
+      animation: none;
+      opacity: calc(0.25 + var(--i) * 0.1);
+    }
+  }
+
+  .thinking__role {
+    margin-top: var(--space-m);
+    padding-top: var(--space-m);
+    border-top: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+  }
+  .thinking__role .eyebrow {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--blue);
+  }
+
+  .gallery {
+    display: grid;
+    gap: clamp(1rem, 0.4rem + 1.8vw, 2.25rem);
+    margin-top: var(--space-xl);
+  }
+  .gallery__pair {
+    display: grid;
+    gap: var(--space-l);
+    align-items: center;
+  }
+  @media (min-width: 48rem) {
+    .gallery__pair {
+      grid-template-columns: 4fr 5fr;
+      padding-inline: 4%;
+    }
+  }
+
+  .verdict__title {
+    margin-block: 0 var(--space-l);
+    font-size: clamp(2.75rem, 1.5rem + 5vw, 6rem);
+    line-height: 1;
+  }
+  .verdict__list {
+    display: grid;
+    gap: var(--space-m);
+    max-width: 52rem;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-serif);
+    font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem);
+    line-height: 1.2;
+  }
+  .verdict__link {
+    color: inherit;
+    white-space: nowrap;
+  }
+  .verdict__arrow {
+    display: inline-block;
+    margin-left: 0.2em;
+    color: var(--blue);
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+  .verdict__link:hover .verdict__arrow,
+  .verdict__link:focus-visible .verdict__arrow {
+    transform: translate(0.12em, -0.12em);
+  }
+  .verdict__team {
+    margin-top: var(--space-l);
+    font-size: 0.875rem;
+    opacity: 0.85;
+  }
+</style>

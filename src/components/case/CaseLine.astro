@@ -1,0 +1,57 @@
+---
+/**
+ * "The line": the short red punchline that closes a case study, right before
+ * Next project.
+ *
+ * Slots: "title" (the big line, Scribbles welcome), the default slot (one short
+ * paragraph), and an optional "note" (small print underneath, e.g. "Spec work…").
+ * Notes can be several <p class="the-line__note">; add the-line__note--small for
+ * an extra-quiet P.S.
+ */
+const hasNote = Astro.slots.has('note');
+---
+
+<section class="the-line theme-red" aria-labelledby="line-title">
+  <div class="container the-line__copy">
+    <h2 class="the-line__title" id="line-title" data-reveal>
+      <slot name="title" />
+    </h2>
+    <p class="the-line__body" data-reveal data-reveal-delay="0.1">
+      <slot />
+    </p>
+    {hasNote && <slot name="note" />}
+  </div>
+</section>
+
+<style>
+  .the-line {
+    padding-block: var(--space-2xl);
+  }
+  .the-line__copy {
+    text-align: center;
+  }
+  .the-line__title {
+    max-width: 12em;
+    margin: 0 auto;
+    font-size: clamp(2.75rem, 1.5rem + 5vw, 6.5rem);
+    line-height: 1;
+  }
+  .the-line__body {
+    max-width: 34rem;
+    margin: var(--space-l) auto 0;
+    font-size: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+    line-height: 1.5;
+  }
+  .the-line__copy :global(.the-line__note) {
+    margin-top: var(--space-l);
+    font-size: 0.875rem;
+    opacity: 0.8;
+  }
+  .the-line__copy :global(.the-line__note--small) {
+    max-width: 34rem;
+    text-wrap: balance;
+    margin: var(--space-2xs) auto 0;
+    font-size: 0.8125rem;
+    opacity: 0.65;
+  }
+</style>

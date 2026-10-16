@@ -1,0 +1,333 @@
+---
+// Case study: Elmwood School, "Space to Lead".
+// Built from the shared case-study pieces in src/components/case/, plus
+// src/scripts/elmwood.ts: "space." spreads out in the hero, and the lockup
+// section (src/components/elmwood/Lockup.astro) takes the logo apart.
+import Base from '../../layouts/Base.astro';
+import Scribble from '../../components/Scribble.astro';
+import CaseHero from '../../components/case/CaseHero.astro';
+import CaseText from '../../components/case/CaseText.astro';
+import CaseMedia from '../../components/case/CaseMedia.astro';
+import ConceptCards, { type Concept } from '../../components/case/ConceptCards.astro';
+import NextProject from '../../components/case/NextProject.astro';
+import CaseLine from '../../components/case/CaseLine.astro';
+import Lockup from '../../components/elmwood/Lockup.astro';
+
+import roomToLead from '../../assets/elmwood/concept-room-to-lead.jpg';
+import builtForBeyond from '../../assets/elmwood/concept-built-for-beyond.jpg';
+import takeUpSpace from '../../assets/elmwood/concept-take-up-space.jpg';
+import coverSpread from '../../assets/elmwood/cover-spread.jpg';
+import emblem from '../../assets/elmwood/emblem.jpg';
+import spreadOne from '../../assets/elmwood/spread-one.jpg';
+import spreadTwo from '../../assets/elmwood/spread-two.jpg';
+import banner from '../../assets/elmwood/banner.jpg';
+
+const media = '/media/elmwood';
+
+const concepts: Concept[] = [
+  {
+    title: 'Room to Lead',
+    prompt: 'Explain this to me, please.',
+    image: roomToLead,
+    alt: 'Room to Lead concept: Elmwood students cheering, with the campaign name in a handwritten script.',
+    body: 'The double meaning was the whole pitch. “Room” as in the literal spaces being built. And “room” as in the permission, capacity, and freedom to lead without someone moving out of your way first. The risk was that it leaned more spatial than female-forward, which is why it eventually got Frankensteined into something that could carry both.',
+  },
+  {
+    title: 'Built for Beyond',
+    prompt: 'Beyond what????',
+    image: builtForBeyond,
+    alt: 'Built for Beyond concept: Elmwood students cheering, with “Beyond” breaking out of its frame.',
+    body: 'This one came from sitting with a line in the brief: the girls are already extraordinary, now their environment must match them. The campus wasn’t ahead of the girls. The girls were ahead of the campus. So the build was overdue. *Built for Beyond* tried to say that. The type treatment I developed for it ended up doing a lot of the heavy lifting: “Beyond” breaking out of the frame, the underline that keeps going past the word. The concept that the name exceeds its own container felt right for girls who do the same thing.',
+  },
+  {
+    title: 'Take up Space',
+    prompt: 'Oooo we’re getting bolder!',
+    image: takeUpSpace,
+    alt: 'Take up Space concept: Elmwood students cheering under a bold “Take up Space” headline.',
+    body: 'My favourite of the three to develop. There’s something that happens when you tell girls to take up space. It lands differently than any other instruction. It’s specific, it’s culturally loaded in the best way, and Elmwood could actually back it up with a century of proof. The challenge was keeping it from tipping into slogan territory. It had to feel like a truth the school had always held, not a trend it was borrowing.',
+  },
+];
+---
+
+<Base
+  title="Elmwood School: Space to Lead"
+  description="Space to Lead: concept and design for Elmwood School’s $10M capital campaign, by Fatima Rabi."
+>
+  <div data-case class="elm">
+    <CaseHero roles={['Concept development', 'Design']}>
+      <Fragment slot="title">
+        <span class="line"><span>Advocating for girls</span></span>
+        <span class="line"
+          ><span
+            >to take up <Scribble type="underline" draw="load" delay={1} redraw color="var(--blue)" class="elm-space"
+              >space.</Scribble
+            ></span
+          ></span
+        >
+      </Fragment>
+      <p>Campaign for Elmwood School</p>
+      <p>Created as Art Director while at BOLD LIP.</p>
+    </CaseHero>
+
+    <!-- The ask -->
+    <section class="case-section theme-cream" aria-labelledby="ask-title">
+      <div class="container">
+        <CaseText eyebrow="The ask" id="ask">
+          <Fragment slot="heading">Elmwood is making room for the next generation of leaders.</Fragment>
+          <p>
+            And I mean “room” in the most literal sense. Elmwood was preparing to launch a $10M capital campaign to
+            support a $20M campus expansion.
+          </p>
+          <p><strong>But this campaign was not meant to be about brick-and-mortar.</strong></p>
+          <p>
+            Instead of selling buildings, we had to sell what the buildings make possible: the next generation of
+            female leaders.
+          </p>
+          <p>
+            Performance halls, fitness facilities, and shared spaces are not nice-to-have amenities, they are
+            leadership infrastructure. These are the spaces where girls figure out who they are, what they like, and
+            what they’re capable of.
+          </p>
+        </CaseText>
+
+        <CaseMedia
+          class="case-section__media"
+          loop={`${media}/hero.mp4`}
+          poster={`${media}/hero-poster.jpg`}
+          alt="The Space to Lead script writes itself across a rendering of Elmwood’s new campus."
+          ratio="1280 / 520"
+          mobileRatio="16 / 9"
+          focus="50% 50%"
+        />
+      </div>
+    </section>
+
+    <!-- The insight -->
+    <section class="case-section case-section--tight theme-cream" aria-labelledby="insight-title">
+      <div class="container">
+        <CaseText eyebrow="The insight" id="insight">
+          <Fragment slot="heading">Women have always been told to take up less space.</Fragment>
+          <p>Sit smaller. Speak softer. Take up less.</p>
+          <p><strong>Elmwood has spent over a century fighting for the opposite.</strong></p>
+          <p>
+            One thing’s for sure: Elmwood produces leaders. Their girls don’t shrink. They expand, they lead, they
+            take up exactly as much space as they need.
+          </p>
+          <p>
+            So when it came time to campaign for new physical spaces? The metaphor was already there. We just had to
+            not waste it.
+          </p>
+        </CaseText>
+      </div>
+    </section>
+
+    <!-- Initial concepts -->
+    <section class="case-section theme-red" aria-labelledby="concepts-title">
+      <div class="container">
+        <h2 class="case-section__title" id="concepts-title" data-reveal>Initial Concepts</h2>
+        <ConceptCards concepts={concepts} id="elmwood-concept" />
+
+        <!-- How two pitches became the final name -->
+        <p class="merge" aria-label="Room to Lead plus Take up Space became Space to Lead.">
+          <span class="merge__part" data-reveal aria-hidden="true"
+            ><Scribble type="strike" delay={0.4}>Room</Scribble> to Lead</span
+          >
+          <span class="merge__op" data-reveal data-reveal-delay="0.1" aria-hidden="true">+</span>
+          <span class="merge__part" data-reveal data-reveal-delay="0.2" aria-hidden="true"
+            ><Scribble type="strike" delay={0.8}>Take up</Scribble> Space</span
+          >
+          <span class="merge__op" data-reveal data-reveal-delay="0.3" aria-hidden="true">=</span>
+          <span class="merge__part merge__part--final" data-reveal data-reveal-delay="0.5" aria-hidden="true"
+            ><Scribble type="underline" delay={1.4}>Space to Lead</Scribble></span
+          >
+        </p>
+      </div>
+    </section>
+
+    <!-- The answer -->
+    <section class="case-section theme-cream" aria-labelledby="answer-title">
+      <div class="container">
+        <CaseText eyebrow="The answer" id="answer">
+          <Fragment slot="heading"><em>Space.</em> The literal kind, and the kind women have always had to fight for.</Fragment>
+          <p><strong>What if the campaign’s language did two things at once?</strong></p>
+          <p>
+            <em>Space to Lead.</em> Literally: new spaces being built for girls to lead from. And less literally: the
+            kind of space women have been claiming for themselves for decades. One name carrying both.
+          </p>
+          <p>
+            The whole campaign language follows the same logic: she’s not being handed anything. She’s already
+            leading. The space just has to catch up.
+          </p>
+          <p>
+            Now, I’m no copywriter, but I had lots of fun coming up with taglines and supporting lines! If you’re a
+            copywriter, though, look away (please).
+          </p>
+          <CaseMedia
+            slot="aside"
+            loop={`${media}/tagline.mp4`}
+            poster={`${media}/tagline-poster.jpg`}
+            alt="Campaign taglines cycling on Elmwood green: “Don’t just believe in her potential. Build for it.” and more."
+            ratio="560 / 504"
+          />
+        </CaseText>
+      </div>
+    </section>
+
+    <Lockup />
+
+    <!-- Gallery -->
+    <section class="case-gallery theme-cream" aria-label="The campaign out in the world">
+      <div class="container case-gallery__grid">
+        <CaseMedia
+          image={coverSpread}
+          alt="The Space to Lead case-for-support booklet, open beside its cover."
+          ratio="1200 / 529"
+          focus="50% 52%"
+        />
+        <div class="case-gallery__pair">
+          <CaseMedia
+            image={emblem}
+            alt="Cover of The Elmwood Emblem magazine, with a Space to Lead badge: “New spaces that shape confidence, creativity, and wellbeing.”"
+            ratio="1436 / 1665"
+            sizes="(min-width: 48rem) min(46vw, 582px), calc(100vw - 2 * var(--gutter))"
+          />
+          <div class="case-gallery__stack">
+            <CaseMedia
+              image={spreadTwo}
+              alt="Booklet spread: “Don’t just believe in her potential. Build for it.” beside two Elmwood students."
+              fill
+              mobileRatio="582 / 320"
+              sizes="(min-width: 48rem) min(46vw, 582px), calc(100vw - 2 * var(--gutter))"
+            />
+            <CaseMedia
+              image={spreadOne}
+              alt="Booklet spread showing the new entrance and plaza with its timber canopy."
+              fill
+              mobileRatio="582 / 320"
+              sizes="(min-width: 48rem) min(46vw, 582px), calc(100vw - 2 * var(--gutter))"
+            />
+          </div>
+        </div>
+        <CaseMedia
+          image={banner}
+          alt="Space to Lead banner on a golf course, with two students and a QR code."
+          ratio="1200 / 529"
+          focus="50% 62%"
+        />
+      </div>
+    </section>
+
+    <!-- The film -->
+    <section class="case-section case-section--tight film theme-cream" aria-labelledby="film-title">
+      <div class="container">
+        <h2 class="case-section__title film__title" id="film-title" data-reveal>
+          Roll the{' '}<Scribble type="underline" delay={0.3}>film.</Scribble>
+        </h2>
+        <p class="film__intro" data-reveal data-reveal-delay="0.1">
+          The whole campaign in a couple of minutes. Sound on, if you can.
+        </p>
+        <CaseMedia
+          film={`${media}/space-to-lead.mp4`}
+          poster={`${media}/film-poster.jpg`}
+          alt="Space to Lead campaign film."
+          ratio="1200 / 617"
+        >
+          <Fragment slot="caption"
+            >Video produced by <a href="https://www.nohands.ca/" target="_blank" rel="noopener">no hands</a>.</Fragment
+          >
+        </CaseMedia>
+      </div>
+    </section>
+
+    <CaseLine>
+      <Fragment slot="title">
+        Big new spaces. Even bigger plans for the girls in them.
+      </Fragment>
+      So, yes, it’s a fundraising campaign about buildings. It just doesn’t sound like one.
+    </CaseLine>
+
+    <NextProject slug="elmwood" />
+  </div>
+</Base>
+
+<style>
+  .case-section {
+    padding-block: var(--space-xl);
+  }
+  /* Follows another cream section: tops the gap up so the space between
+     sections (about 160px on wide screens) is clearly bigger than the space
+     between a section's text and its pictures */
+  .case-section--tight {
+    padding-top: calc(var(--space-2xl) - var(--space-xl));
+  }
+  .case-section :global(.case-section__media) {
+    margin-top: var(--space-xl);
+  }
+  .case-section__title {
+    margin-bottom: var(--space-l);
+    font-size: clamp(2.5rem, 1.6rem + 3.6vw, 4rem); /* 40 → 64 */
+    line-height: 1;
+  }
+
+  /* ---------- Concepts: how two names became one ---------- */
+  .merge {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.2em 0.45em;
+    margin-top: var(--space-xl);
+    font-family: var(--font-serif);
+    font-size: clamp(1.75rem, 1rem + 3vw, 3.5rem);
+    line-height: 1.15;
+    text-align: center;
+  }
+  .merge__op {
+    color: var(--blue);
+  }
+  /* Phones: one piece per line, so the sum reads top to bottom */
+  @media (max-width: 40rem) {
+    .merge {
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+  }
+  .merge__part--final {
+    white-space: nowrap;
+  }
+
+  /* ---------- Gallery and film ---------- */
+  .film__title {
+    margin-bottom: var(--space-s);
+  }
+  .film__intro {
+    margin-bottom: var(--space-l);
+    font-size: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+  }
+
+  .case-gallery {
+    padding-bottom: var(--space-xl);
+  }
+  .case-gallery__grid {
+    display: grid;
+    gap: clamp(1rem, 0.4rem + 1.8vw, 2.25rem);
+  }
+  .case-gallery__pair,
+  .case-gallery__stack {
+    display: grid;
+    gap: clamp(1rem, 0.4rem + 1.8vw, 2.25rem);
+  }
+  @media (min-width: 48rem) {
+    .case-gallery__pair {
+      grid-template-columns: 1fr 1fr;
+    }
+    /* The booklets don't add height: the magazine sets the row height and
+       the two booklets split it, so there's no gap under the magazine. */
+    .case-gallery__stack {
+      grid-template-rows: 1fr 1fr;
+      height: 0;
+      min-height: 100%;
+    }
+  }
+</style>

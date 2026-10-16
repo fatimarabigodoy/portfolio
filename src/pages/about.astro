@@ -1,0 +1,1593 @@
+---
+// About page. Built around one idea: "terrible with labels". The hero swaps
+// her photo for her drawing; the rest of the page fills in the person behind
+// the titles. Interactions live in src/scripts/about.ts.
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Scribble from '../components/Scribble.astro';
+import headshot from '../assets/home/headshot.png';
+import drawing from '../assets/about/fatima-drawing.png';
+import linkedinHeadshot from '../assets/about/linkedin-headshot.jpg';
+import { site } from '../data/site';
+import firstDeansList from '../assets/about/comics/first-deans-list.jpg';
+import deansListAgain from '../assets/about/comics/deans-list-again.jpg';
+import loveAds from '../assets/about/comics/love-ads.jpg';
+import deansListEmail from '../assets/about/comics/deans-list-email.jpg';
+import itsOver from '../assets/about/comics/its-over.jpg';
+import honourList from '../assets/about/comics/honour-list.jpg';
+import deansListAppearer from '../assets/about/comics/deans-list-appearer.jpg';
+import imDone from '../assets/about/comics/im-done.jpg';
+import helloBoldLip from '../assets/about/comics/hello-bold-lip.jpg';
+import goodbyeDeansList from '../assets/about/comics/goodbye-deans-list.jpg';
+import pc01 from '../assets/about/portfolio-comic/p01.jpg';
+import pc02 from '../assets/about/portfolio-comic/p02.jpg';
+import pc03 from '../assets/about/portfolio-comic/p03.jpg';
+import pc04 from '../assets/about/portfolio-comic/p04.jpg';
+import pc05 from '../assets/about/portfolio-comic/p05.jpg';
+import pc06 from '../assets/about/portfolio-comic/p06.jpg';
+import pc07 from '../assets/about/portfolio-comic/p07.jpg';
+import pc08 from '../assets/about/portfolio-comic/p08.jpg';
+import pc09 from '../assets/about/portfolio-comic/p09.jpg';
+import pc10 from '../assets/about/portfolio-comic/p10.jpg';
+import pc11 from '../assets/about/portfolio-comic/p11.jpg';
+import pc12 from '../assets/about/portfolio-comic/p12.jpg';
+import { widthsFor } from '../utils/image';
+
+// Report card from ad school. Design gets the star.
+const subjects = [
+  { name: 'Strategy', mark: 'check' },
+  { name: 'Copywriting', mark: 'check' },
+  { name: 'Digital marketing', mark: 'check' },
+  { name: 'Media planning', mark: 'check', note: true },
+  { name: 'Design', mark: 'star' },
+];
+
+// The path so far, oldest first.
+const path = [
+  {
+    when: 'School',
+    title: 'Algonquin College',
+    text: 'Advertising and Marketing Communications. Specialized in design, survived the rate cards.',
+  },
+  {
+    when: 'Last year of school',
+    title: 'Intern at BOLD LIP Studio',
+    text: 'Fully remote, so I asked a lot of questions on a lot of calls and tried very hard not to sound like the new kid.',
+  },
+  {
+    when: 'After the internship',
+    title: 'Art Director at BOLD LIP Studio',
+    text: 'They kept me around, so I went from intern to Art Director. Mostly it meant the same work, more of it, and a scarier title.',
+  },
+  {
+    when: 'In that time',
+    title: 'Small businesses to national campaigns',
+    text: 'Brand creation, web, campaigns, naming, editorial, socials, and every kind of print from flyers to OOH.',
+    link: { label: 'See the work', href: '/work' },
+  },
+  {
+    when: 'Now',
+    title: 'Figuring out what’s next',
+    text: 'Ideally with a team that gets as excited about the idea as it does about the execution.',
+  },
+];
+
+// The tools section is a passport. The data page is home turf (expertise);
+// the visa page is every other tool a client has thrown at me.
+const passportData = [
+  { label: 'Name', value: 'Fatima Rabi' },
+  { label: 'Nationality', value: 'Adobe Creative Cloud' },
+  { label: 'Permanent residence', value: 'Figma' },
+  { label: 'Native in', value: 'Photoshop, Illustrator, InDesign' },
+  { label: 'Also speaks', value: 'After Effects, Premiere' },
+];
+// shape: round | rect | oval | double. ink: red | blue. tilt in degrees.
+const visas = [
+  { name: 'Canva', note: 'not a fan, but sure', shape: 'round', ink: 'red', tilt: -12 },
+  { name: 'PowerPoint', note: 'my mac hates it, but oh well', shape: 'rect', ink: 'blue', tilt: 4 },
+  { name: 'In-house tools', note: 'whatever a client runs on', shape: 'rect', ink: 'red', tilt: -4 },
+  { name: 'Google Slides', note: 'shared with edit access', shape: 'double', ink: 'blue', tilt: 6 },
+];
+
+// LinkedIn comics, oldest first. Images were saved from the posts (originals
+// also in raw-assets/about/linkedin). The top card's caption shows under the pile.
+const li = (slug: string) => `https://www.linkedin.com/posts/fatima-rabi_${slug}/`;
+const comics = [
+  {
+    image: firstDeansList,
+    when: 'Feb 2024',
+    caption: 'My first Dean’s List. We don’t have those in Peru, so I had to google it before I could brag about it.',
+    alt: 'Comic: Fatima confused by a Dean’s List letter, then showing it to everyone two seconds later.',
+    href: li('im-one-week-late-but-i-cant-miss-the-opportunity-share-7166452896526454785-OVia'),
+  },
+  {
+    image: deansListAgain,
+    when: 'Jun 2024',
+    caption: 'Made it again. The semester itself looked a lot more like the bottom half.',
+    alt: 'Comic: Fatima proudly holding up her Dean’s List letter, next to a drawing of her collapsed on a desk.',
+    href: li('its-that-time-of-the-year-again-im-thrilled-share-7204849418490060801-B6Vl'),
+  },
+  {
+    image: loveAds,
+    when: 'Aug 2024',
+    caption: 'Back to school, and back to loving ads. When they’re not stressing me out.',
+    alt: 'Drawing: Fatima beaming under the words “I love ads (when they are not stressing me out)”.',
+    href: li('back-to-school-next-week-cue-mixed-emotions-share-7234243383693623299-VcRg'),
+  },
+  {
+    image: deansListEmail,
+    when: 'Jan 2025',
+    caption: 'Another Dean’s List email, so naturally I made it everyone’s problem. Again.',
+    alt: 'Comic: Fatima gets the Dean’s List email and shoves the letter in a friend’s face.',
+    href: li('another-semester-on-the-deans-honours-list-share-7287100558719557632-41vK'),
+  },
+  {
+    image: itsOver,
+    when: 'Apr 2025',
+    caption: 'End of semester. It’s over (for now).',
+    alt: 'Drawing: Fatima slumped over her desk next to a laptop and coffee, under the words “It’s over (for now)”.',
+    href: li('these-past-8-months-have-been-30-working-share-7319873631147241472-skhA'),
+  },
+  {
+    image: honourList,
+    when: 'Jun 2025',
+    caption: 'Dean’s Honour List, year two, take two.',
+    alt: 'Drawing: Fatima grinning and holding a Dean’s Honour List sign over her head.',
+    href: li('deans-honour-list-year-2-take-2-grateful-share-7336391863341301762-dbdB'),
+  },
+  {
+    image: deansListAppearer,
+    when: 'Feb 2026',
+    caption: 'Professional Dean’s List appearer. Read as: perfectionism.',
+    alt: 'Drawing: Fatima holding a laptop over her annotated Dean’s List letter, labelled “Dean’s List appearer”.',
+    href: li('what-is-another-semester-on-the-deans-list-share-7427778526394769408-1MHo'),
+  },
+  {
+    image: imDone,
+    when: 'Feb 2026',
+    caption: 'Sat down to lock in, then remembered I’d already submitted everything.',
+    alt: 'Comic: Fatima ready to work, then realizing she has already submitted everything. “I’m done?”',
+    href: li('yes-you-are-you-can-go-to-bed-early-tonight-share-7431840925703860224-veSs'),
+  },
+  {
+    image: helloBoldLip,
+    when: 'Mar 2026',
+    caption: 'Hello, BOLD LIP! The internship, officially.',
+    alt: 'Drawing: Fatima bursting out of a cupcake in an intern shirt, under the words “Hello, BOLD LIP!!!!”.',
+    href: li('taps-mic-ridiculously-excited-to-announce-share-7434029640031199232-D3Xa'),
+  },
+  {
+    image: goodbyeDeansList,
+    when: 'Jun 2026',
+    caption: 'Goodbye, Dean’s List. Fall ’23 to Winter ’26, and it’s been a weird run.',
+    alt: 'Drawing: Fatima hugging her last Dean’s List letter, surrounded by her older Dean’s List comics.',
+    href: li('goodbye-deans-list-its-been-a-weird-share-7468537656172331008-rIui'),
+  },
+];
+
+// The "first portfolio" comic, a 12-page LinkedIn carousel about building the
+// old site. Pages extracted from the original PDF (raw-assets/about/portfolio-comic).
+// The alt text transcribes each page's hand lettering. `note` = a margin note
+// from present-day me, under the page.
+const portfolioComic = [
+  {
+    image: pc01,
+    alt: 'Page 1: “Last semester, my biggest project wasn’t an assignment. Worse. It was building my first portfolio.” A hand lifts a cloche off a laptop on a platter, with PORTFOLIO in giant letters on the screen.',
+  },
+  {
+    image: pc02,
+    alt: 'Page 2: “Before doing anything, I had to answer: What am I? (professionally).” Three shadowy figures labelled Designer, Student and Marketing generalist grab my shoulders. “Unnecessarily existential for a Tuesday.”',
+  },
+  {
+    image: pc03,
+    alt: 'Page 3: “Tried on every title: Advertising student, expiring soon. Designer, too broad. Marketing communications designer, too specific?” A pile of crossed-out name tags, with one on top: “Hello my name is: designer that specializes in marcomms??” “If I’m putting myself in a box, might as well label it correctly.”',
+    note: '(It’s Art Director now. Still terrible with labels.)',
+  },
+  {
+    image: pc04,
+    alt: 'Page 4: “Show process or just the outcome? Explain everything or let the work speak?” I balance on a tightrope holding a messy stack of thumbnails and insights in one hand and a tiny sparkly final piece in the other. “Did both. Carefully.”',
+  },
+  {
+    image: pc05,
+    alt: 'Page 5: “I wanted full control, so I coded it myself… with zero coding experience. My only credentials? A customized Tumblr blog from when I was 13.” I’m face down on my desk under a lamp, saying “Should’ve used Wix.”',
+    note: '(Still didn’t.)',
+  },
+  {
+    image: pc06,
+    alt: 'Page 6: “Obsessed over details. Spent hours on 2-pixel adjustments that no one will notice. Except me. Especially me.” I clutch my head under a block of CSS, wondering if I can use half a spacing step. (You can’t.)',
+  },
+  {
+    image: pc07,
+    alt: 'Page 7: “Came up with ideas. Loved them.” Me beaming at a page: “This is great!” Behind me, a ghostly me crumples it under a wall of self-criticism. “Waited 48 hours. Hated them.”',
+  },
+  {
+    image: pc08,
+    alt: 'Page 8: “Big lesson: when to commit and when to scrap it. Sometimes perseverance wins. Sometimes it’s just ego.” I stand at a fork in the road between Push through and Start over. “‘Kill your darlings’ if you will.”',
+  },
+  {
+    image: pc09,
+    alt: 'Page 9: “I’d also look at incredible professional portfolios online and spiral because mine wasn’t ‘on their level.’” I’m curled up on the floor in front of a wall of sparkly websites. “Dramatization (…maybe).”',
+  },
+  {
+    image: pc10,
+    alt: 'Page 10: “Eventually, those same portfolios became something else: proof of what’s possible.” I throw the websites into a bright folder labelled Inspo bookmarks. “A benchmark. Just not for today.”',
+  },
+  {
+    image: pc11,
+    alt: 'Page 11: “Oh, and I asked for feedback. …Then asked again. Rinse and repeat until I showed up with version 9.” I stare at my phone sending: thoughts on this? / ok revised it, better? / sorry one more look / last time I promise. “To my victims: I’m sorry.”',
+    note: '(They got texted again for this one. Sorry, again.)',
+  },
+  {
+    image: pc12,
+    alt: 'Page 12: “This is version one. I’ll outgrow it. That’s not a flaw. That’s the point. Find it at fatimarabi.com.”',
+    note: '(You’re here. Hi.)',
+  },
+];
+---
+
+<Base
+  title="About"
+  description="Fatima Rabi is a junior designer and art director in Ottawa who loves the thinking just as much as the making."
+  headerTheme="cream"
+>
+  <div data-about class="about-page">
+    <!-- ---------- Hero: two Fatimas and a pile of labels ---------- -->
+    <section class="hero theme-cream" aria-labelledby="about-title">
+      <div class="container hero__grid">
+        <div class="hero__text">
+          <h1 class="hero__title" id="about-title" data-reveal>
+            Hi, I’m Fatima. I’m terrible with labels.
+          </h1>
+          <p class="hero__sub" data-reveal data-reveal-delay="0.1">Junior designer and art director, based in Ottawa.</p>
+          <p class="hero__body" data-reveal data-reveal-delay="0.15">
+            So which one am I? Depends on the day. Whatever the title says, I care about getting the idea
+            right first, and then making it look like it couldn’t have gone any other way.
+          </p>
+        </div>
+
+        <div class="hero__visual" data-reveal data-reveal-delay="0.1">
+          <button class="duo" type="button" aria-pressed="false" data-duo>
+            <span class="sr-only">Switch between my photo and the drawing of me</span>
+            <span class="duo__arch" aria-hidden="true"></span>
+            <span class="duo__img duo__img--photo">
+              <Image
+                src={headshot}
+                alt="Fatima smiling, wearing a “Hello, my name is Fatima” name tag."
+                widths={[300, 505]}
+                sizes="(min-width: 48rem) 22rem, 15rem"
+                loading="eager"
+              />
+            </span>
+            <span class="duo__img duo__img--drawing">
+              <Image
+                src={drawing}
+                alt="A drawing of Fatima, flustered and frowning, hugging a sketchbook with a pen in hand."
+                widths={[300, 505]}
+                sizes="(min-width: 48rem) 22rem, 15rem"
+                loading="eager"
+              />
+            </span>
+          </button>
+          <p class="duo__caption" aria-hidden="true">
+            <span class="duo__on-paper">on paper</span>
+            <span class="duo__slash">/</span>
+            <span class="duo__in-practice">in practice</span>
+          </p>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- Thinking & making ---------- -->
+    <section class="block theme-red" aria-labelledby="thinking-title">
+      <div class="container narrow">
+        <h2 class="big" id="thinking-title" data-reveal data-reveal-delay="0.05">
+          I’ll happily push pixels all day, but I’m way more annoying about the{' '}
+          <Scribble type="scribble" color="var(--blue)">idea</Scribble> that comes before them.
+        </h2>
+        <div class="prose" data-reveal data-reveal-delay="0.1">
+          <p>
+            Concepting, writing, poking holes in my own idea until it finally holds up. To me that’s as much the job as
+            the layout is, because a beautiful execution of a meh idea is still, well, meh.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- Ad school ---------- -->
+    <section class="block theme-cream" aria-labelledby="school-title">
+      <div class="container school">
+        <div class="school__text">
+          <h2 class="big" id="school-title" data-reveal data-reveal-delay="0.05">
+            I studied advertising, actually.
+          </h2>
+          <div class="prose" data-reveal data-reveal-delay="0.1">
+            <p>
+              I studied Advertising and Marketing Communications at Algonquin College. Design was my specialty, but the
+              program doesn’t really let you hide in a corner, so I got my hands dirty with everything else too.
+            </p>
+            <p>
+              It gave me a{' '}
+              <Scribble type="strike" delay={0.3}>holistic</Scribble>{' '}
+              (sorry, I hate that word) view of the work. Basically, I can’t look at a layout anymore without wondering
+              who it’s for, where it’s running and whether anyone will actually read it.
+            </p>
+          </div>
+        </div>
+
+        <div class="report" data-reveal data-reveal-delay="0.1" data-report>
+          <p class="report__head">
+            <span>Report card</span>
+            <span class="report__sub">abridged</span>
+          </p>
+          <ul class="report__rows">
+            {
+              subjects.map((s) => (
+                <li class:list={['report__row', { 'report__row--star': s.mark === 'star' }]}>
+                  <span class="report__name">
+                    {s.name}
+                    {s.note && <sup class="report__ref">*</sup>}
+                  </span>
+                  <svg class="report__mark" viewBox="0 0 40 40" aria-hidden="true">
+                    {s.mark === 'check' ? (
+                      <path d="M7 22 C 11 25, 14 29, 16 32 C 21 22, 27 13, 34 6" />
+                    ) : (
+                      <path d="M20 4 L 24.5 15 L 36 15.5 L 27 23 L 30.5 35 L 20 28 L 9.5 35 L 13 23 L 4 15.5 L 15.5 15 Z" />
+                    )}
+                  </svg>
+                  <span class="sr-only">{s.mark === 'star' ? 'my specialty' : 'covered'}</span>
+                </li>
+              ))
+            }
+          </ul>
+          <p class="report__foot"><sup>*</sup> Traumatized by rate cards, blocking charts, and spreadsheets. Would love to never do it again.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- The path ---------- -->
+    <section class="block block--tight theme-cream" aria-labelledby="path-title">
+      <div class="container path-wrap">
+        <div class="path-wrap__head">
+          <p class="eyebrow" data-reveal>The path, so far</p>
+          <h2 class="big" id="path-title" data-reveal data-reveal-delay="0.05">Short, but pretty busy.</h2>
+        </div>
+        <ol class="path" data-path>
+          {
+            path.map((p) => (
+              <li class="path__item" data-reveal>
+                <p class="path__when">{p.when}</p>
+                <h3 class="path__title">{p.title}</h3>
+                <p class="path__text">{p.text}</p>
+                {p.link && (
+                  <a class="more-link" href={p.link.href}>
+                    <Scribble type="underline" draw="hover">
+                      {p.link.label}
+                    </Scribble>
+                    <span class="more-link__arrow" aria-hidden="true">
+                      ↗
+                    </span>
+                  </a>
+                )}
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </section>
+
+    <!-- ---------- The junior thing ---------- -->
+    <section class="block theme-red" aria-labelledby="junior-title">
+      <div class="container junior">
+        <div class="junior__text">
+          <p class="eyebrow" data-reveal>The elephant in the portfolio</p>
+          <h2 class="huge" id="junior-title" data-reveal data-reveal-delay="0.05">
+            Yes, I’m a junior.
+          </h2>
+          <div class="prose" data-reveal data-reveal-delay="0.1">
+            <p>
+              I can’t hand you years of experience, and I’m not going to pretend otherwise. What I can promise is that
+              if I don’t know how to do something yet, I will figure it out.
+            </p>
+          </div>
+        </div>
+
+        <div class="junior__side">
+          <dl class="dict" data-reveal data-reveal-delay="0.1">
+            <dt>
+              <span class="dict__word">fig·ure-out·er</span>
+              <span class="dict__type">noun</span>
+            </dt>
+            <dd>
+              Someone who hears “have you done this before?” and quietly starts googling under the table. Gets there
+              anyway. And once it’s learned, it stays learned.
+            </dd>
+          </dl>
+
+          <div class="prose" data-reveal>
+            <p>
+              Look, my first idea isn’t always the best one, and I’m pretty quick to admit it when it isn’t. I’d much
+              rather the work win than my ego.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ---------- The portfolio comic ----------
+         Phones (and reduced motion): a swipe row. Laptops: the section pins
+         and the pages slide sideways as you scroll (about.ts adds .is-filmstrip). -->
+    <section class="pc theme-cream" id="portfolio-comic" aria-labelledby="pc-title" data-pc>
+      <a class="skip-link" href="#tools-title">Skip the comic</a>
+      <div class="pc__track" data-pc-track>
+        <header class="pc__intro">
+          <h2 class="big" id="pc-title" data-reveal>
+            I once drew my messy process of building a portfolio.
+          </h2>
+          <div class="prose" data-reveal data-reveal-delay="0.05">
+            <p>
+              (Fair warning: it’s about my old site. Purple everywhere, a job title I’ve since outgrown, and about the
+              same amount of overthinking.)
+            </p>
+            <p aria-hidden="true">
+              <span class="pc__hint--scroll">Keep scrolling, it reads sideways →</span>
+              <span class="pc__hint--swipe">Swipe →</span>
+            </p>
+          </div>
+          <a class="more-link" href="https://lnkd.in/p/e4mzvZSn" target="_blank" rel="noopener" data-reveal>
+            <Scribble type="underline" draw="hover">See the original post</Scribble>
+            <span class="more-link__arrow" aria-hidden="true">↗</span>
+          </a>
+        </header>
+
+        <div class="pc__window" data-pc-window>
+        <ol class="pc__row" data-pc-row tabindex="0" aria-label="The comic, 12 pages">
+          {
+            portfolioComic.map((p, i) => (
+              <li class="pc__page" data-pc-page>
+                <figure>
+                  <div class="pc__frame">
+                    <Image
+                      src={p.image}
+                      alt={p.alt}
+                      widths={widthsFor(p.image)}
+                      sizes="(min-width: 48rem) 70vh, 82vw"
+                      loading={i < 2 ? 'eager' : 'lazy'}
+                    />
+                  </div>
+                  {p.note && (
+                    <figcaption class="aside pc__note">{p.note}</figcaption>
+                  )}
+                </figure>
+              </li>
+            ))
+          }
+          <li class="pc__page pc__page--end" data-pc-page>
+            <div class="pc__frame pc__end">
+              <p class="pc__end-small">Called it.</p>
+              <p class="pc__end-big">
+                This is version{' '}
+                <Scribble type="circle" draw="manual" color="var(--blue)" class="pc__circle">two</Scribble>.
+              </p>
+            </div>
+          </li>
+        </ol>
+        </div>
+      </div>
+      <p class="pc__count" aria-hidden="true"><span data-pc-count>01</span> / 13</p>
+    </section>
+
+    <!-- ---------- Tools ---------- -->
+    <section class="block theme-cream" aria-labelledby="tools-title">
+      <div class="container tools">
+        <div class="tools__text">
+          <p class="eyebrow" data-reveal>Tools</p>
+          <h2 class="big" id="tools-title" data-reveal data-reveal-delay="0.05">I’m never above a platform.</h2>
+
+        <div class="prose" data-reveal data-reveal-delay="0.1">
+          <p>
+            Like your average designer, I live in <strong>Adobe Creative Cloud</strong> and often jump on{' '}
+            <strong>Figma</strong>.
+          </p>
+          <p>
+            Past those two, I’ll use whatever the job needs, and if I don’t know it yet, see above re: figuring it out. Client needs
+            Canva templates? Gotcha. A PowerPoint deck in the big 2026? Sure, let me just install Microsoft Office on
+            my Mac real quick.
+          </p>
+        </div>
+      </div>
+
+      <div class="passport" data-reveal data-reveal-delay="0.1" data-passport>
+        <!-- Worn edges for the stamps' ink -->
+        <svg class="passport__defs" aria-hidden="true" focusable="false">
+          <filter id="stamp-wear" x="-10%" y="-10%" width="120%" height="120%">
+            <feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="1" seed="7" result="noise" />
+            <feColorMatrix
+              in="noise"
+              type="matrix"
+              values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.6 1.75"
+              result="holes"
+            />
+            <feComposite in="SourceGraphic" in2="holes" operator="in" />
+          </filter>
+        </svg>
+
+        <!-- Data page: home turf -->
+        <div class="passport__page passport__page--data">
+          <p class="passport__head">
+            <span>Passport</span>
+          </p>
+          <div class="passport__id">
+            <div class="passport__photo">
+              <Image src={drawing} alt="" widths={[160, 320]} sizes="7rem" />
+            </div>
+            <dl class="passport__fields">
+              {
+                passportData.map((f) => (
+                  <div class="passport__field">
+                    <dt>{f.label}</dt>
+                    <dd>{f.value}</dd>
+                  </div>
+                ))
+              }
+            </dl>
+          </div>
+          <p class="passport__mrz" aria-hidden="true">
+            P&lt;CCFIGMA&lt;RABI&lt;&lt;FATIMA&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;<br />
+            FIGURE&lt;OUTER&lt;&lt;WILL&lt;LEARN&lt;IT&lt;&lt;&lt;&lt;
+          </p>
+        </div>
+
+        <!-- Visa page: everything else -->
+        <div class="passport__page passport__page--visas">
+          <p class="passport__head">
+            <span>Visas</span>
+          </p>
+          <ul class="passport__stamps">
+            {
+              visas.map((v) => (
+                <li
+                  class:list={['stamp', `stamp--${v.shape}`, `stamp--${v.ink}`]}
+                  style={`--tilt:${v.tilt}deg`}
+                  data-stamp
+                >
+                  <span class="stamp__ink">
+                    <span class="stamp__name">{v.name}</span>
+                    <span class="sr-only">:</span>
+                    <span class="stamp__note">{v.note}</span>
+                  </span>
+                </li>
+              ))
+            }
+          </ul>
+          <button class="stamp-slot" type="button" aria-pressed="false" data-stamp-slot>
+            <span class="stamp-slot__empty">Your tool here</span>
+            <span class="stamp stamp--rect stamp--red stamp--final" style="--tilt:-7deg" aria-hidden="true">
+              <span class="stamp__ink">
+                <span class="stamp__name">Admitted</span>
+                <span class="stamp__note">will figure it out</span>
+              </span>
+            </span>
+            <span class="sr-only">Stamp your tool: I will figure it out</span>
+          </button>
+        </div>
+      </div>
+      </div>
+    </section>
+
+    <!-- ---------- Comics ---------- -->
+    <section class="block theme-cream comics-block" aria-labelledby="comics-title">
+      <div class="container comics">
+        <div class="comics__text">
+          <p class="eyebrow" data-reveal>Off the clock</p>
+          <h2 class="big" id="comics-title" data-reveal data-reveal-delay="0.05">
+            I draw little comics about my life.
+          </h2>
+          <div class="prose" data-reveal data-reveal-delay="0.1">
+            <p>
+              Dean’s List announcements, end-of-semester drawings, whatever’s going on that month. Most of them end up
+              on LinkedIn, and they explain the human in me better than this page does.
+            </p>
+          </div>
+          <a class="more-link" href={site.socials[0].href} target="_blank" rel="noopener" data-reveal>
+            <Scribble type="underline" draw="hover">See them on LinkedIn</Scribble>
+            <span class="more-link__arrow" aria-hidden="true">↗</span>
+          </a>
+        </div>
+
+        <div class="stack" data-reveal data-reveal-delay="0.1">
+          <ul class="stack__cards" data-stack>
+            {
+              comics.map((c, i) => (
+                <li class="comic" data-comic style={`--i:${i}`}>
+                  <article class="post">
+                    <header class="post__head">
+                      <span class="post__avatar">
+                        <Image src={linkedinHeadshot} alt="" widths={[96, 160]} sizes="2.75rem" />
+                      </span>
+                      <div class="post__who">
+                        <p class="post__name">Fatima Rabi</p>
+                        <p class="post__meta">
+                          {c.when} ·{' '}
+                          <svg class="post__globe" viewBox="0 0 16 16" aria-hidden="true">
+                            <circle cx="8" cy="8" r="6.5" />
+                            <path d="M1.5 8h13M8 1.5c2 2 2.8 4.2 2.8 6.5S10 12.5 8 14.5M8 1.5C6 3.5 5.2 5.7 5.2 8S6 12.5 8 14.5" />
+                          </svg>
+                        </p>
+                      </div>
+                      <a class="post__link" href={c.href} target="_blank" rel="noopener">
+                        See the post <span aria-hidden="true">↗</span>
+                      </a>
+                    </header>
+                    <p class="post__text">{c.caption}</p>
+                    <div class="post__media" style={`aspect-ratio: ${c.image.width} / ${c.image.height}`}>
+                      <Image src={c.image} alt={c.alt} widths={[400, 800]} sizes="(min-width: 48rem) 23rem, 85vw" />
+                    </div>
+                    <div class="post__actions" aria-hidden="true">
+                      <span>
+                        <svg viewBox="0 0 24 24"><path d="M7 11v9H4v-9h3Zm0 0 4-7c1.6 0 2.5 1.2 2.1 2.8L12.5 10H19a2 2 0 0 1 2 2.3l-1.2 6A2 2 0 0 1 17.8 20H7" /></svg>
+                        Like
+                      </span>
+                      <span>
+                        <svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4V5Z" /></svg>
+                        Comment
+                      </span>
+                      <span>
+                        <svg viewBox="0 0 24 24"><path d="M7 4 4 7l3 3M4 7h12a3 3 0 0 1 3 3v1M17 20l3-3-3-3M20 17H8a3 3 0 0 1-3-3v-1" /></svg>
+                        Repost
+                      </span>
+                      <span>
+                        <svg viewBox="0 0 24 24"><path d="M21 3 3 10.5l7 2.5 2.5 7L21 3ZM10 13l5-5" /></svg>
+                        Send
+                      </span>
+                    </div>
+                  </article>
+                </li>
+              ))
+            }
+          </ul>
+          <button class="stack__next" type="button" data-stack-next>
+            Next comic <span aria-hidden="true">↻</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- Status, leading into the footer ---------- -->
+    <section class="status theme-cream" aria-label="What I'm up to">
+      <div class="container status__inner" data-reveal>
+        <p class="status__line">If you’ve read this far, we should probably talk.</p>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  /* ---------- Shared bits ---------- */
+
+  .block {
+    padding-block: var(--space-2xl);
+  }
+  .block--tight {
+    padding-top: 0;
+  }
+  /* Text-led sections keep a readable width but stay on the page's left edge */
+  .narrow > :where(*) {
+    max-width: 52rem;
+  }
+  .eyebrow {
+    margin-bottom: var(--space-s);
+  }
+  .big {
+    font-size: var(--step-3);
+    line-height: 1.08;
+  }
+  .huge {
+    font-size: var(--step-5);
+    line-height: 0.95;
+  }
+  .prose {
+    margin-top: var(--space-m);
+    max-width: 38rem;
+    font-size: var(--step-1);
+    line-height: 1.5;
+  }
+  .prose p + p {
+    margin-top: 0.8em;
+  }
+
+  .more-link {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.35em;
+    margin-top: var(--space-m);
+    color: var(--red);
+    font-weight: 600;
+    --scribble-color: var(--red);
+  }
+  .more-link__arrow {
+    display: inline-block;
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+  .more-link:hover .more-link__arrow,
+  .more-link:focus-visible .more-link__arrow {
+    transform: translate(3px, -3px);
+  }
+
+  /* ---------- Hero ---------- */
+
+  .hero {
+    padding-top: calc(var(--header-h) + var(--space-xl));
+    padding-bottom: var(--space-2xl);
+    overflow: hidden;
+  }
+  .hero__grid {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+  @media (min-width: 56rem) {
+    .hero__grid {
+      grid-template-columns: 1.15fr 1fr;
+      gap: var(--space-l);
+    }
+  }
+  .hero__title {
+    font-size: var(--step-5);
+    line-height: 0.98;
+    max-width: 9em;
+  }
+  .hero__sub {
+    margin-top: var(--space-m);
+    font-size: var(--step-1);
+    font-weight: 600;
+  }
+  .hero__body {
+    margin-top: var(--space-s);
+    max-width: 32rem;
+    font-size: var(--step-1);
+  }
+
+  .hero__visual {
+    position: relative;
+    width: min(100%, 22rem);
+    margin-inline: auto;
+  }
+  @media (max-width: 55.99rem) {
+    .hero__visual {
+      width: min(62%, 16rem);
+    }
+  }
+
+  /* The swappable portrait: blue arch behind, photo and drawing stacked */
+  .duo {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 505 / 872;
+    cursor: pointer;
+    border-radius: 999px 999px 0 0;
+  }
+  .duo__arch {
+    position: absolute;
+    inset: 12% 0 0;
+    border-radius: 999px;
+    background: var(--blue);
+    transition: background-color var(--dur) var(--ease-out);
+  }
+  .duo[aria-pressed='true'] .duo__arch {
+    background: var(--red);
+  }
+  .duo__img {
+    position: absolute;
+    inset: 0;
+    transition: opacity 0.35s var(--ease-out);
+  }
+  .duo__img :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: bottom;
+  }
+  .duo__img--drawing {
+    opacity: 0;
+  }
+  .duo[aria-pressed='true'] .duo__img--photo {
+    opacity: 0;
+  }
+  .duo[aria-pressed='true'] .duo__img--drawing {
+    opacity: 1;
+  }
+
+  .duo__caption {
+    margin-top: var(--space-s);
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--blue-deep);
+  }
+  .duo__caption span {
+    transition: opacity var(--dur-fast) var(--ease-out);
+  }
+  .duo__slash {
+    margin-inline: 0.3em;
+    opacity: 0.4;
+  }
+  .duo__in-practice,
+  .hero__visual:has(.duo[aria-pressed='true']) .duo__on-paper {
+    opacity: 0.35;
+  }
+  .hero__visual:has(.duo[aria-pressed='true']) .duo__in-practice {
+    opacity: 1;
+    color: var(--red);
+  }
+
+
+  /* ---------- Ad school + report card ---------- */
+
+  .school {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+  @media (min-width: 56rem) {
+    .school {
+      grid-template-columns: 1.2fr 1fr;
+    }
+  }
+  .report {
+    width: 100%;
+    max-width: 26rem;
+    margin-inline: auto;
+    padding: var(--space-m) var(--space-m) var(--space-s);
+    background: var(--white);
+    border-radius: 4px;
+    border: 1.5px solid rgb(34 31 32 / 0.15);
+    rotate: 1.5deg;
+    /* Ruled paper */
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0 calc(2.75rem - 1px),
+      rgb(63 106 168 / 0.18) calc(2.75rem - 1px) 2.75rem
+    );
+    background-position: 0 3.5rem;
+  }
+  .report__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-bottom: var(--space-xs);
+    border-bottom: 2px solid var(--red);
+    font-family: var(--font-serif);
+    font-size: var(--step-2);
+    line-height: 1;
+  }
+  .report__sub {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--blue-deep);
+  }
+  .report__rows {
+    list-style: none;
+    padding: 0;
+  }
+  .report__row {
+    display: flex;
+    align-items: center;
+    gap: 0.6em;
+    min-height: 2.75rem;
+  }
+  .report__name {
+    flex: 1;
+    font-weight: 500;
+  }
+  .report__ref {
+    color: var(--red);
+    font-weight: 700;
+  }
+  .report__mark {
+    flex: none;
+    width: 1.9rem;
+    height: 1.9rem;
+    fill: none;
+    stroke: var(--red);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .report__row--star .report__mark {
+    stroke: var(--blue-deep);
+    width: 2.3rem;
+    height: 2.3rem;
+  }
+  .report__foot {
+    margin-top: var(--space-xs);
+    font-size: var(--step--1);
+    color: var(--blue-deep);
+  }
+  .report__foot sup {
+    color: var(--red);
+    font-weight: 700;
+  }
+
+  /* ---------- Path ---------- */
+
+  .path-wrap {
+    display: grid;
+    gap: var(--space-l);
+  }
+  @media (min-width: 56rem) {
+    .path-wrap {
+      grid-template-columns: 1fr 1.3fr;
+      align-items: start;
+    }
+    .path-wrap__head {
+      position: sticky;
+      top: calc(var(--header-h) + var(--space-m));
+    }
+  }
+  .path {
+    position: relative;
+    list-style: none;
+    padding: 0 0 0 2rem;
+  }
+  /* The red line; about.ts draws it down as you scroll (--line goes 0 → 1) */
+  .path::before {
+    content: '';
+    position: absolute;
+    left: 0.4rem;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 2px;
+    background: var(--red);
+    transform-origin: top;
+    transform: scaleY(var(--line, 1));
+  }
+  .path__item {
+    position: relative;
+    padding-bottom: var(--space-l);
+  }
+  .path__item:last-child {
+    padding-bottom: 0;
+  }
+  .path__item::before {
+    content: '';
+    position: absolute;
+    left: calc(-2rem + 0.4rem + 1px);
+    top: 0.45rem;
+    width: 0.85rem;
+    height: 0.85rem;
+    translate: -50% 0;
+    border-radius: 50%;
+    background: var(--cream);
+    border: 2px solid var(--red);
+  }
+  .path__item:last-child::before {
+    background: var(--blue);
+    border-color: var(--blue-deep);
+  }
+  .path__when {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--blue-deep);
+  }
+  .path__title {
+    margin-top: 0.3rem;
+    font-size: var(--step-2);
+  }
+  .path__text {
+    margin-top: 0.4rem;
+    max-width: 34rem;
+  }
+  .path .more-link {
+    margin-top: var(--space-xs);
+  }
+
+  /* ---------- Junior ---------- */
+
+  .junior {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: start;
+  }
+  @media (min-width: 56rem) {
+    .junior {
+      grid-template-columns: 1fr 1fr;
+      align-items: end;
+    }
+  }
+  .dict {
+    margin-top: var(--space-l);
+    padding: var(--space-m);
+    max-width: 34rem;
+    border: 1.5px solid rgb(255 246 232 / 0.4);
+    border-radius: var(--radius-s);
+  }
+  .dict dt {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75em;
+  }
+  .dict__word {
+    font-family: var(--font-serif);
+    font-size: var(--step-3);
+    line-height: 1;
+  }
+  .dict__type {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: var(--step-1);
+    color: var(--blue);
+  }
+  .dict dd {
+    margin-top: var(--space-xs);
+    font-size: var(--step-1);
+  }
+
+
+  /* ---------- The portfolio comic ---------- */
+
+  .pc {
+    position: relative;
+    padding-block: var(--space-2xl);
+    overflow: hidden;
+  }
+  .pc .aside {
+    font-size: var(--step--1);
+    color: var(--blue-deep);
+    font-weight: 500;
+  }
+  .pc__intro {
+    padding-inline: var(--gutter);
+    max-width: calc(40rem + 2 * var(--gutter));
+  }
+  .pc__hint--scroll {
+    display: none;
+  }
+
+  /* Swipe row (phones, reduced motion, and before the JS runs) */
+  .pc__row {
+    display: flex;
+    list-style: none;
+    gap: var(--space-m);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    padding: var(--space-l) var(--gutter) var(--space-s);
+    scrollbar-width: thin;
+    scrollbar-color: var(--blue) transparent;
+  }
+  .pc__row:focus-visible {
+    outline-offset: -4px;
+  }
+  .pc__page {
+    flex: 0 0 min(82vw, 28rem);
+    scroll-snap-align: start;
+  }
+  .pc__page figure {
+    position: relative;
+  }
+  .pc__frame {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: #fff;
+    border: 1.5px solid rgb(34 31 32 / 0.1);
+    border-radius: var(--radius-s);
+  }
+  .pc__frame :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .pc__note {
+    margin-top: var(--space-xs);
+    max-width: 22rem;
+  }
+
+  /* The last page, in the new colours: the comic's answer */
+  .pc__end {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--space-s);
+    padding: var(--space-l);
+    background: var(--red);
+    border-color: var(--red);
+    color: var(--cream);
+    text-align: center;
+  }
+  .pc__end-small {
+    font-size: var(--step-1);
+    font-weight: 600;
+  }
+  .pc__end-big {
+    font-family: var(--font-serif);
+    font-size: var(--step-4);
+    line-height: 1;
+  }
+  .pc__end :global(.pc__circle) {
+    --scribble-width: clamp(2px, 0.05em, 4px);
+  }
+
+  .pc__count {
+    display: none;
+  }
+
+  /* Laptops with motion: the section pins, the intro holds still and the
+     pages slide left through the window beside it */
+  .pc.is-filmstrip {
+    display: flex;
+    align-items: center;
+    height: 100svh;
+    padding-block: 0;
+  }
+  .pc.is-filmstrip .pc__track {
+    display: flex;
+    align-items: center;
+    gap: var(--space-l);
+    width: 100%;
+    padding-inline: var(--gutter);
+  }
+  .pc.is-filmstrip .pc__intro {
+    flex: none;
+    width: min(26rem, 32vw);
+    padding-inline: 0;
+  }
+  .pc.is-filmstrip .pc__window {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    /* room above for the arrows, below for the notes */
+    padding-block: 1rem 3rem;
+    /* pages fade out as they slide under the intro */
+    mask-image: linear-gradient(to right, transparent, #000 2.5rem);
+  }
+  .pc.is-filmstrip .pc__row {
+    width: max-content;
+    overflow: visible;
+    gap: var(--space-l);
+    padding: 0 0 0 2.5rem;
+    will-change: transform;
+  }
+  .pc.is-filmstrip .pc__page {
+    flex: none;
+    height: min(70svh, 50rem);
+    aspect-ratio: 4 / 5;
+  }
+  .pc.is-filmstrip .pc__frame {
+    height: 100%;
+  }
+  .pc.is-filmstrip .pc__note {
+    position: absolute;
+    top: 100%;
+    left: 0;
+  }
+  .pc.is-filmstrip .pc__hint--scroll {
+    display: inline;
+  }
+  .pc.is-filmstrip .pc__hint--swipe {
+    display: none;
+  }
+  .pc.is-filmstrip .pc__count {
+    display: block;
+    position: absolute;
+    right: var(--gutter);
+    bottom: var(--space-m);
+    font-size: var(--step--1);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.08em;
+    color: var(--blue-deep);
+  }
+
+  /* ---------- Tools ---------- */
+
+  .tools {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+  @media (min-width: 56rem) {
+    .tools {
+      grid-template-columns: 0.8fr 1.2fr;
+    }
+  }
+
+  /* An open passport, drawn flat (border, no shadow). Left page = home turf,
+     right page = visa stamps from every other tool. */
+  .passport {
+    position: relative;
+    display: grid;
+    width: 100%;
+    max-width: 42rem;
+    margin-inline: auto;
+    background: var(--white);
+    border: 1.5px solid rgb(34 31 32 / 0.15);
+    border-radius: 14px;
+  }
+  @media (min-width: 40rem) {
+    .passport {
+      grid-template-columns: 1fr 1fr;
+    }
+    /* The spine */
+    .passport__page--visas {
+      border-left: 1.5px dashed rgb(34 31 32 / 0.18);
+    }
+  }
+  @media (max-width: 39.99rem) {
+    .passport__page--visas {
+      border-top: 1.5px dashed rgb(34 31 32 / 0.18);
+    }
+  }
+  .passport__defs {
+    position: absolute;
+    width: 0;
+    height: 0;
+  }
+  .passport__page {
+    container-type: inline-size;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    padding: var(--space-m);
+    min-width: 0;
+  }
+  .passport__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5em;
+    padding-bottom: var(--space-xs);
+    border-bottom: 2px solid var(--red);
+    font-family: var(--font-serif);
+    font-size: var(--step-2);
+    line-height: 1;
+  }
+
+  /* Data page */
+  .passport__id {
+    display: grid;
+    grid-template-columns: 5.5rem 1fr;
+    gap: var(--space-s);
+    align-items: start;
+  }
+  .passport__photo {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: 4px;
+    background: var(--blue);
+  }
+  .passport__photo :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+  }
+  .passport__fields {
+    display: grid;
+    gap: 0.55rem;
+  }
+  .passport__field dt {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--blue-deep);
+  }
+  .passport__field dd {
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    line-height: 1.1;
+  }
+  /* Machine-readable zone, for the nerds */
+  .passport__mrz {
+    margin-top: auto;
+    padding-top: var(--space-s);
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 0.68rem;
+    line-height: 1.5;
+    letter-spacing: 0.08em;
+    color: rgb(34 31 32 / 0.4);
+    overflow-wrap: anywhere;
+  }
+
+  /* Visa page */
+  .passport__stamps {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--space-s) var(--space-xs);
+    place-items: center;
+    flex: 1;
+    align-content: center;
+  }
+  .stamp {
+    display: inline-grid;
+    place-items: center;
+    max-width: 100%;
+    padding: 0.5rem 0.7rem;
+    border: 2.5px solid currentColor;
+    border-radius: 6px;
+    text-align: center;
+    text-transform: uppercase;
+    rotate: var(--tilt, 0deg);
+    filter: url(#stamp-wear);
+    opacity: 0.92;
+  }
+  .stamp--red {
+    color: var(--red);
+  }
+  .stamp--blue {
+    color: var(--blue-deep);
+  }
+  .stamp--round {
+    width: min(7.2rem, 42cqi);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border-width: 3px;
+    outline: 1.5px solid currentColor;
+    outline-offset: -7px;
+  }
+  .stamp--oval {
+    border-radius: 50%;
+    padding: 0.9rem 1.3rem;
+  }
+  .stamp--double {
+    border: 5px double currentColor;
+  }
+  .stamp__ink {
+    display: grid;
+    gap: 0.15rem;
+  }
+  .stamp__name {
+    font-weight: 800;
+    /* Shrinks with the page so long names (PowerPoint) never poke out */
+    font-size: clamp(0.62rem, 4.2cqi, 0.95rem);
+    letter-spacing: 0.05em;
+    line-height: 1.05;
+  }
+  .stamp__note {
+    font-size: clamp(0.5rem, 3.2cqi, 0.6rem);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    line-height: 1.3;
+  }
+
+  /* The empty slot: press it and the last stamp lands */
+  .stamp-slot {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: 6.5rem;
+    border: 1.5px dashed rgb(34 31 32 / 0.3);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: border-color var(--dur-fast) var(--ease-out);
+  }
+  .stamp-slot:hover,
+  .stamp-slot:focus-visible {
+    border-color: var(--red);
+  }
+  .stamp-slot__empty {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgb(34 31 32 / 0.45);
+    transition: opacity var(--dur-fast) var(--ease-out);
+  }
+  .stamp--final {
+    position: absolute;
+    opacity: 0;
+    scale: 1.5;
+    transition:
+      opacity 0.12s ease-out,
+      scale 0.28s cubic-bezier(0.3, 1.6, 0.5, 1);
+  }
+  .stamp-slot[aria-pressed='true'] .stamp--final {
+    opacity: 0.92;
+    scale: 1;
+  }
+  .stamp-slot[aria-pressed='true'] .stamp-slot__empty {
+    opacity: 0;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .stamp--final,
+    .stamp-slot__empty {
+      transition: none;
+    }
+  }
+
+  /* ---------- Comics ---------- */
+
+  .comics-block {
+    padding-top: 0;
+    /* The tilted cards (and the one flying off on shuffle) can't make the page scroll sideways */
+    overflow-x: clip;
+  }
+  .comics {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+  @media (min-width: 56rem) {
+    .comics {
+      grid-template-columns: 1fr 1fr;
+    }
+    /* Flipped from the Tools section above: pile left, copy right */
+    .stack {
+      order: -1;
+    }
+  }
+  .stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-m);
+  }
+  .stack__cards {
+    display: grid;
+    list-style: none;
+    padding: 0;
+    width: min(100%, 23rem);
+  }
+  /* Every post sits in the same grid cell, so the pile is as tall as the tallest
+     post. The top few tilt a little; the rest hide behind them. */
+  .comic {
+    grid-area: 1 / 1;
+    align-self: center;
+    z-index: calc(20 - var(--i));
+  }
+  /* Posts under the top one are blank backs, so only one post's text and buttons show */
+  .post > * {
+    transition: opacity 0.3s var(--ease-out);
+  }
+  .comic:not(:first-child) .post > * {
+    opacity: 0;
+  }
+  /* A LinkedIn-style post, drawn flat */
+  .post {
+    overflow: hidden;
+    background: var(--white);
+    border: 1.5px solid rgb(34 31 32 / 0.15);
+    border-radius: 10px;
+    rotate: calc(min(var(--i), 3) * 2.5deg);
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+  .post__head {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 0.6rem;
+    align-items: start;
+    padding: 0.8rem 0.8rem 0;
+  }
+  /* Her LinkedIn headshot */
+  .post__avatar {
+    display: block;
+    width: 2.75rem;
+    height: 2.75rem;
+    overflow: hidden;
+    border-radius: 50%;
+    background: var(--blue);
+  }
+  .post__avatar :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .post__name {
+    font-weight: 700;
+  }
+  .post__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.25em;
+    font-size: 0.72rem;
+    color: rgb(34 31 32 / 0.55);
+  }
+  .post__globe {
+    width: 0.75rem;
+    height: 0.75rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.3;
+  }
+  .post__link {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--blue-deep);
+    white-space: nowrap;
+  }
+  .post__link:hover {
+    text-decoration: underline;
+  }
+  .post__text {
+    padding: 0.6rem 0.8rem 0.7rem;
+  }
+  .post__media {
+    border-block: 1px solid rgb(34 31 32 / 0.08);
+  }
+  .post__media :global(img) {
+    width: 100%;
+    height: 100%;
+  }
+  .post__actions {
+    display: flex;
+    justify-content: space-around;
+    padding: 0.35rem 0.4rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: rgb(34 31 32 / 0.6);
+  }
+  .post__actions span {
+    display: flex;
+    align-items: center;
+    gap: 0.3em;
+    padding: 0.35rem 0.3rem;
+  }
+  .post__actions svg {
+    width: 1.05rem;
+    height: 1.05rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  @media (max-width: 24rem) {
+    .post__actions span {
+      font-size: 0;
+      gap: 0;
+    }
+  }
+  .stack__next {
+    padding: 0.6em 1.2em;
+    border: 1.5px solid var(--red);
+    border-radius: var(--radius-pill);
+    color: var(--red);
+    font-weight: 600;
+    font-size: var(--step--1);
+    transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  }
+  .stack__next:hover {
+    background: var(--red);
+    color: var(--cream);
+  }
+
+  /* ---------- Status ---------- */
+
+  .status {
+    padding-bottom: var(--space-xl);
+  }
+  .status__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-s);
+    text-align: center;
+  }
+  .status__line {
+    font-family: var(--font-serif);
+    font-size: var(--step-2);
+  }
+  .status__line::after {
+    content: ' ↓';
+    color: var(--red);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .duo__img {
+      transition-duration: 0.2s;
+    }
+  }
+</style>

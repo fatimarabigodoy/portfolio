@@ -1,0 +1,148 @@
+---
+/**
+ * The strip of client logos that slides along forever (Home page hero).
+ *
+ * The list is printed twice side by side; the animation slides it left by
+ * exactly one copy and loops, so there's never a gap. Scrolling the page
+ * gives it a little push (and reverses it when you scroll back up).
+ * Hovering slows it down; the pause button stops it.
+ * With "reduce motion" turned on it doesn't move: logos simply wrap onto rows.
+ * Moving parts live in src/scripts/home.ts.
+ */
+import { Image } from 'astro:assets';
+import { clients } from '../data/clients';
+
+// Long, thin logos look bigger than they are; tall, compact ones look smaller.
+// This evens them out so they all feel about the same weight.
+const height = (c: (typeof clients)[number]) => {
+  const ratio = c.logo.width / c.logo.height;
+  return +(Math.pow(3.9 / ratio, 0.6) * (c.size ?? 1)).toFixed(3);
+};
+---
+
+<section class="marquee" aria-labelledby="clients-title" data-marquee>
+  <h2 class="sr-only" id="clients-title">Clients I’ve worked with</h2>
+  <div class="marquee__viewport">
+    <div class="marquee__track" data-marquee-track>
+      {
+        [0, 1].map((copy) => (
+          <ul class="marquee__list" role="list" aria-hidden={copy ? 'true' : undefined}>
+            {clients.map((c) => (
+              <li class="marquee__item" style={`--h: ${height(c)}`}>
+                <Image
+                  src={c.logo}
+                  alt={copy ? '' : c.name}
+                  widths={[240, 480]}
+                  sizes="240px"
+                  loading="eager"
+                  decoding="async"
+                />
+              </li>
+            ))}
+          </ul>
+        ))
+      }
+    </div>
+  </div>
+
+  <button class="marquee__toggle" type="button" data-marquee-toggle aria-pressed="false">
+    <span class="sr-only" data-marquee-label>Pause the logo strip</span>
+    <svg viewBox="0 0 16 16" aria-hidden="true" class="icon-pause"><path d="M5 3v10M11 3v10"></path></svg>
+    <svg viewBox="0 0 16 16" aria-hidden="true" class="icon-play"><path d="M5 3l8 5-8 5z"></path></svg>
+  </button>
+</section>
+
+<style>
+  .marquee {
+    display: flex;
+    flex-direction: column;
+    padding-top: var(--space-m);
+  }
+
+  .marquee__viewport {
+    overflow: hidden;
+    /* soft fade at both ends */
+    mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+  }
+
+  .marquee__track {
+    display: flex;
+    width: max-content;
+    will-change: transform;
+  }
+
+  .marquee__list {
+    display: flex;
+    align-items: center;
+    gap: var(--logo-gap);
+    padding: 0 calc(var(--logo-gap) / 2);
+    --logo-gap: clamp(2.25rem, 1.5rem + 4vw, 5rem);
+  }
+
+  .marquee__item {
+    list-style: none;
+    flex: none;
+  }
+  .marquee__item :global(img) {
+    height: calc(var(--logo-base) * var(--h));
+    width: auto;
+    max-width: none;
+    --logo-base: clamp(1.6rem, 1.1rem + 2.2vw, 3.5rem);
+  }
+
+  /* Pause / play: small cream circle tucked under the end of the strip */
+  .marquee__toggle {
+    align-self: flex-end;
+    margin: var(--space-xs) var(--gutter) 0 0;
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    border: 1px solid color-mix(in srgb, var(--cream) 45%, transparent);
+    color: var(--cream);
+    opacity: 0.55;
+    transition:
+      opacity var(--dur-fast) var(--ease-out),
+      background-color var(--dur-fast) var(--ease-out);
+  }
+  .marquee__toggle:hover,
+  .marquee__toggle:focus-visible {
+    opacity: 1;
+    background: color-mix(in srgb, var(--cream) 12%, transparent);
+  }
+  .marquee__toggle svg {
+    width: 0.8rem;
+    height: 0.8rem;
+    fill: currentColor;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .icon-play,
+  .marquee__toggle[aria-pressed='true'] .icon-pause {
+    display: none;
+  }
+  .marquee__toggle[aria-pressed='true'] .icon-play {
+    display: block;
+  }
+
+  /* No motion: one copy, logos wrap onto centred rows, no button */
+  :global(html:not(.js-motion)) .marquee__track {
+    width: auto;
+  }
+  :global(html:not(.js-motion)) .marquee__list {
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: var(--space-m);
+    padding-inline: var(--gutter);
+  }
+  :global(html:not(.js-motion)) .marquee__list[aria-hidden],
+  :global(html:not(.js-motion)) .marquee__toggle {
+    display: none;
+  }
+  :global(html:not(.js-motion)) .marquee__viewport {
+    mask-image: none;
+  }
+</style>
